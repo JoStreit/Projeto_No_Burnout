@@ -128,7 +128,7 @@ export default function Home() {
                     </>
                   )}
                 </div>
-                <span className="text-[10px] text-teal-400 mt-0.5">Área do Profissional</span>
+                <span className="text-xs text-green-800 mt-0.5 font-medium">Área do Profissional</span>
               </div>
             )}
           </div>
