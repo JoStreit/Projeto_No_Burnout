@@ -30,7 +30,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center gap-2.5 shrink-0">
-            <Image src="/logo.png" alt="SaúdeConnect" width={42} height={42} className="rounded-xl" />
+            <Image src="/logo.png" alt="SaúdeConnect" width={64} height={64} className="mix-blend-multiply" />
             <span className="font-bold text-green-900 text-lg">SaúdeConnect</span>
           </div>
 
