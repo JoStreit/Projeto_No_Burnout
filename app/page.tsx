@@ -6,88 +6,127 @@ import AnaliseGratuitaModal from "@/components/AnaliseGratuitaModal";
 import CadastroPacienteModal from "@/components/CadastroPacienteModal";
 import CadastroProfissionalModal from "@/components/CadastroProfissionalModal";
 import LoginModal from "@/components/LoginModal";
+import LoginProfissionalModal from "@/components/LoginProfissionalModal";
 import BuscarProfissionaisModal from "@/components/BuscarProfissionaisModal";
+import DashboardProfissionalModal from "@/components/DashboardProfissionalModal";
 import { useAuth } from "@/components/AuthProvider";
 
 export default function Home() {
-  const { paciente, carregando, logout } = useAuth();
+  const { paciente, carregandoPaciente, logoutPaciente, profissional, carregandoProfissional, logoutProfissional } = useAuth();
 
   const [analiseAberta, setAnaliseAberta] = useState(false);
   const [pacienteAberto, setPacienteAberto] = useState(false);
   const [profissionalAberto, setProfissionalAberto] = useState(false);
   const [loginAberto, setLoginAberto] = useState(false);
+  const [loginProfAberto, setLoginProfAberto] = useState(false);
   const [buscarAberto, setBuscarAberto] = useState(false);
+  const [dashboardAberto, setDashboardAberto] = useState(false);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50">
       {/* Navbar */}
       <nav className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+          {/* Logo */}
+          <div className="flex items-center gap-2 shrink-0">
             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
               <span className="text-white font-bold text-sm">S</span>
             </div>
             <span className="font-bold text-gray-900 text-lg">SaúdeConnect</span>
           </div>
 
-          <div className="flex items-center gap-3">
-            {carregando ? null : paciente ? (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setBuscarAberto(true)}
-                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
-                >
-                  Buscar Profissionais
-                </Button>
-                <div className="flex items-center gap-2 pl-2 border-l border-gray-200">
-                  <span className="text-sm text-gray-600">
-                    Olá, <strong>{paciente.nome.split(" ")[0]}</strong>
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={logout}
-                    className="text-gray-500 hover:text-red-600"
-                  >
-                    Sair
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setLoginAberto(true)}
-                  className="border-gray-200 text-gray-700 hover:bg-gray-50"
-                >
-                  Entrar
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPacienteAberto(true)}
-                  className="border-blue-200 text-blue-700 hover:bg-blue-50"
-                >
-                  Sou Paciente
-                </Button>
-                <Button
-                  size="sm"
-                  onClick={() => setProfissionalAberto(true)}
-                  className="bg-violet-600 hover:bg-violet-700"
-                >
-                  Sou Profissional
-                </Button>
-              </>
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            {/* ─── Área do Paciente ─── */}
+            {!carregandoPaciente && (
+              <div className="flex items-center gap-2 pr-3 border-r border-gray-200">
+                {paciente ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setBuscarAberto(true)}
+                      className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                    >
+                      Buscar Profissionais
+                    </Button>
+                    <span className="text-sm text-gray-600 hidden sm:inline">
+                      <strong>{paciente.nome.split(" ")[0]}</strong>
+                    </span>
+                    <Button variant="ghost" size="sm" onClick={logoutPaciente} className="text-gray-400 hover:text-red-500 text-xs">
+                      Sair
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" size="sm" onClick={() => setLoginAberto(true)} className="text-gray-600">
+                      Entrar
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setPacienteAberto(true)}
+                      className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                    >
+                      Sou Paciente
+                    </Button>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* ─── Área do Profissional ─── */}
+            {!carregandoProfissional && (
+              <div className="flex items-center gap-2">
+                {profissional ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDashboardAberto(true)}
+                      className="border-violet-200 text-violet-700 hover:bg-violet-50"
+                    >
+                      Meu Perfil
+                    </Button>
+                    <span className="text-sm text-gray-600 hidden sm:inline">
+                      <strong>{profissional.nome.split(" ")[0]}</strong>
+                    </span>
+                    <Button variant="ghost" size="sm" onClick={logoutProfissional} className="text-gray-400 hover:text-red-500 text-xs">
+                      Sair
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setLoginProfAberto(true)}
+                      className="text-violet-600"
+                    >
+                      Entrar
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => setProfissionalAberto(true)}
+                      className="bg-violet-600 hover:bg-violet-700"
+                    >
+                      Sou Profissional
+                    </Button>
+                  </>
+                )}
+              </div>
             )}
           </div>
+        </div>
+
+        {/* Labels de área */}
+        <div className="max-w-6xl mx-auto px-6 pb-1 flex justify-end gap-8 text-[10px] text-gray-400">
+          <span>Área do Paciente</span>
+          <span>Área do Profissional</span>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-6 pt-24 pb-20 text-center">
+      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
         <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           Plataforma de saúde personalizada
@@ -116,7 +155,7 @@ export default function Home() {
         </p>
       </section>
 
-      {/* Cards de recursos */}
+      {/* Cards */}
       <section className="max-w-6xl mx-auto px-6 pb-24">
         <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
@@ -140,10 +179,7 @@ export default function Home() {
               recomendações ao longo do tempo.
             </p>
             {!paciente && (
-              <button
-                onClick={() => setPacienteAberto(true)}
-                className="mt-4 text-sm text-blue-600 hover:text-blue-700 font-medium"
-              >
+              <button onClick={() => setPacienteAberto(true)} className="mt-4 text-sm text-blue-600 hover:text-blue-700 font-medium">
                 Cadastrar agora →
               </button>
             )}
@@ -158,12 +194,11 @@ export default function Home() {
               Cadastre-se como profissional de saúde e seja recomendado para
               pacientes que precisam do seu perfil.
             </p>
-            <button
-              onClick={() => setProfissionalAberto(true)}
-              className="mt-4 text-sm text-violet-600 hover:text-violet-700 font-medium"
-            >
-              Quero me cadastrar →
-            </button>
+            {!profissional && (
+              <button onClick={() => setProfissionalAberto(true)} className="mt-4 text-sm text-violet-600 hover:text-violet-700 font-medium">
+                Quero me cadastrar →
+              </button>
+            )}
           </div>
         </div>
       </section>
@@ -183,15 +218,25 @@ export default function Home() {
       <CadastroProfissionalModal
         aberto={profissionalAberto}
         onFechar={() => setProfissionalAberto(false)}
+        onLoginClick={() => setLoginProfAberto(true)}
       />
       <LoginModal
         aberto={loginAberto}
         onFechar={() => setLoginAberto(false)}
         onCadastrar={() => setPacienteAberto(true)}
       />
+      <LoginProfissionalModal
+        aberto={loginProfAberto}
+        onFechar={() => setLoginProfAberto(false)}
+        onCadastrar={() => setProfissionalAberto(true)}
+      />
       <BuscarProfissionaisModal
         aberto={buscarAberto}
         onFechar={() => setBuscarAberto(false)}
+      />
+      <DashboardProfissionalModal
+        aberto={dashboardAberto}
+        onFechar={() => setDashboardAberto(false)}
       />
     </main>
   );

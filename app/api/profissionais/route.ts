@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 import { criarProfissional, listarProfissionais } from "@/lib/db";
 import { validarCPF } from "@/lib/cpf";
+import { criarToken } from "@/lib/auth";
 
 const RAMOS_VALIDOS = [
   "Fisioterapeuta",
@@ -21,7 +23,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento } = body;
+  const { nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento, senha } = body;
 
   if (!nome?.trim())
     return Response.json({ erro: "Nome é obrigatório" }, { status: 400 });
@@ -47,6 +49,9 @@ export async function POST(request: NextRequest) {
   if (!Array.isArray(atendimento) || atendimento.length === 0)
     return Response.json({ erro: "Selecione ao menos uma modalidade de atendimento" }, { status: 400 });
 
+  if (!senha || senha.length < 6)
+    return Response.json({ erro: "Senha deve ter pelo menos 6 caracteres" }, { status: 400 });
+
   try {
     const profissional = criarProfissional({
       nome: nome.trim(),
@@ -57,7 +62,19 @@ export async function POST(request: NextRequest) {
       cidade: cidade.trim(),
       email: email.trim(),
       atendimento,
+      senha,
     });
+
+    // Auto-login após cadastro
+    const token = criarToken(profissional.id);
+    const cookieStore = await cookies();
+    cookieStore.set("session_prof", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
     return Response.json(profissional, { status: 201 });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Erro ao cadastrar";

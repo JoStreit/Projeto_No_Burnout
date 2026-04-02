@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { validarCPF, formatarCPF } from "@/lib/cpf";
 import { ESTADOS, buscarCidadesPorEstado } from "@/lib/brasil";
+import { useAuth } from "@/components/AuthProvider";
 
 const RAMOS = ["Fisioterapeuta", "Nutricionista", "Psicólogo", "Personal Trainer"];
 
@@ -33,6 +34,7 @@ const OPCOES_ESTADO = ESTADOS.map((e) => ({
 interface Props {
   aberto: boolean;
   onFechar: () => void;
+  onLoginClick?: () => void;
 }
 
 type Erros = {
@@ -44,10 +46,13 @@ type Erros = {
   cidade?: string;
   email?: string;
   atendimento?: string;
+  senha?: string;
+  confirmarSenha?: string;
   geral?: string;
 };
 
-export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
+export default function CadastroProfissionalModal({ aberto, onFechar, onLoginClick }: Props) {
+  const { recarregarProfissional } = useAuth();
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [carteirinha, setCarteirinha] = useState("");
@@ -57,6 +62,8 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
   const [email, setEmail] = useState("");
   const [atendOnline, setAtendOnline] = useState(false);
   const [atendPresencial, setAtendPresencial] = useState(false);
+  const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
 
   const [opcoesCidades, setOpcoesCidades] = useState<{ value: string; label: string }[]>([]);
   const [carregandoCidades, setCarregandoCidades] = useState(false);
@@ -108,6 +115,9 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
     if (!atendOnline && !atendPresencial)
       novos.atendimento = "Selecione ao menos uma modalidade";
 
+    if (senha.length < 6) novos.senha = "Mínimo de 6 caracteres";
+    if (senha !== confirmarSenha) novos.confirmarSenha = "Senhas não conferem";
+
     setErros(novos);
     return Object.keys(novos).length === 0;
   }
@@ -125,7 +135,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
       const res = await fetch("/api/profissionais", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento }),
+        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento, senha }),
       });
 
       const data = await res.json();
@@ -135,6 +145,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
       } else {
         setNomeRegistrado(nome);
         setRamoRegistrado(ramo);
+        await recarregarProfissional();
         setSucesso(true);
       }
     } catch {
@@ -148,6 +159,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
     setNome(""); setCpf(""); setCarteirinha(""); setRamo("");
     setEstado(""); setCidade(""); setEmail("");
     setAtendOnline(false); setAtendPresencial(false);
+    setSenha(""); setConfirmarSenha("");
     setErros({}); setSucesso(false); setOpcoesCidades([]);
     onFechar();
   }
@@ -301,6 +313,34 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
               )}
             </div>
 
+            {/* Senha */}
+            <div className="space-y-1.5">
+              <Label htmlFor="prof-senha">Senha</Label>
+              <Input
+                id="prof-senha"
+                type="password"
+                value={senha}
+                onChange={(e) => { setSenha(e.target.value); limparErro("senha"); }}
+                placeholder="Mínimo 6 caracteres"
+                className={erros.senha ? "border-red-400" : ""}
+              />
+              {erros.senha && <p className="text-xs text-red-500">{erros.senha}</p>}
+            </div>
+
+            {/* Confirmar Senha */}
+            <div className="space-y-1.5">
+              <Label htmlFor="prof-confirmar">Confirmar senha</Label>
+              <Input
+                id="prof-confirmar"
+                type="password"
+                value={confirmarSenha}
+                onChange={(e) => { setConfirmarSenha(e.target.value); limparErro("confirmarSenha"); }}
+                placeholder="Repita a senha"
+                className={erros.confirmarSenha ? "border-red-400" : ""}
+              />
+              {erros.confirmarSenha && <p className="text-xs text-red-500">{erros.confirmarSenha}</p>}
+            </div>
+
             {erros.geral && (
               <div className="bg-red-50 border border-red-200 rounded-md px-3 py-2">
                 <p className="text-sm text-red-600">{erros.geral}</p>
@@ -319,6 +359,19 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
                 {carregando ? "Salvando..." : "Cadastrar"}
               </Button>
             </div>
+
+            {onLoginClick && (
+              <p className="text-center text-sm text-gray-500 pb-1">
+                Já tem conta?{" "}
+                <button
+                  type="button"
+                  onClick={() => { fechar(); onLoginClick(); }}
+                  className="text-violet-600 hover:text-violet-700 font-medium"
+                >
+                  Fazer login
+                </button>
+              </p>
+            )}
           </form>
         ) : (
           <div className="space-y-5 text-center py-4">

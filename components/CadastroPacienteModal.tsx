@@ -39,7 +39,7 @@ const OPCOES_ESTADO = ESTADOS.map((e) => ({
 }));
 
 export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }: Props) {
-  const { recarregar } = useAuth();
+  const { recarregarPaciente: recarregar } = useAuth();
 
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");

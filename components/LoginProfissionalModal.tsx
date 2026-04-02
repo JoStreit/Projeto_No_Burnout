@@ -19,8 +19,8 @@ interface Props {
   onCadastrar?: () => void;
 }
 
-export default function LoginModal({ aberto, onFechar, onCadastrar }: Props) {
-  const { recarregarPaciente: recarregar } = useAuth();
+export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }: Props) {
+  const { recarregarProfissional } = useAuth();
   const [cpf, setCpf] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
@@ -30,18 +30,12 @@ export default function LoginModal({ aberto, onFechar, onCadastrar }: Props) {
     e.preventDefault();
     setErro("");
 
-    if (!validarCPF(cpf)) {
-      setErro("CPF inválido");
-      return;
-    }
-    if (!senha) {
-      setErro("Informe sua senha");
-      return;
-    }
+    if (!validarCPF(cpf)) { setErro("CPF inválido"); return; }
+    if (!senha) { setErro("Informe sua senha"); return; }
 
     setCarregando(true);
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/auth/login-profissional", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ cpf, senha }),
@@ -50,7 +44,7 @@ export default function LoginModal({ aberto, onFechar, onCadastrar }: Props) {
       if (!res.ok) {
         setErro(data.erro);
       } else {
-        await recarregar();
+        await recarregarProfissional();
         fechar();
       }
     } catch {
@@ -61,9 +55,7 @@ export default function LoginModal({ aberto, onFechar, onCadastrar }: Props) {
   }
 
   function fechar() {
-    setCpf("");
-    setSenha("");
-    setErro("");
+    setCpf(""); setSenha(""); setErro("");
     onFechar();
   }
 
@@ -71,16 +63,16 @@ export default function LoginModal({ aberto, onFechar, onCadastrar }: Props) {
     <Dialog open={aberto} onOpenChange={fechar}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-gray-800">
-            Entrar na sua conta
+          <DialogTitle className="text-xl font-bold text-violet-700">
+            Área do Profissional
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="login-cpf">CPF</Label>
+            <Label htmlFor="lprof-cpf">CPF</Label>
             <Input
-              id="login-cpf"
+              id="lprof-cpf"
               value={cpf}
               onChange={(e) => { setCpf(formatarCPF(e.target.value)); setErro(""); }}
               placeholder="000.000.000-00"
@@ -89,9 +81,9 @@ export default function LoginModal({ aberto, onFechar, onCadastrar }: Props) {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="login-senha">Senha</Label>
+            <Label htmlFor="lprof-senha">Senha</Label>
             <Input
-              id="login-senha"
+              id="lprof-senha"
               type="password"
               value={senha}
               onChange={(e) => { setSenha(e.target.value); setErro(""); }}
@@ -105,23 +97,19 @@ export default function LoginModal({ aberto, onFechar, onCadastrar }: Props) {
             </div>
           )}
 
-          <Button
-            type="submit"
-            className="w-full bg-emerald-600 hover:bg-emerald-700"
-            disabled={carregando}
-          >
+          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={carregando}>
             {carregando ? "Entrando..." : "Entrar"}
           </Button>
         </form>
 
         {onCadastrar && (
           <p className="text-center text-sm text-gray-500">
-            Não tem conta?{" "}
+            Ainda não é cadastrado?{" "}
             <button
               onClick={() => { fechar(); onCadastrar(); }}
-              className="text-emerald-600 hover:text-emerald-700 font-medium"
+              className="text-violet-600 hover:text-violet-700 font-medium"
             >
-              Cadastre-se gratuitamente
+              Cadastre-se
             </button>
           </p>
         )}

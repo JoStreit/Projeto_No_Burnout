@@ -35,8 +35,14 @@ export interface Profissional {
   cidade: string;
   email: string;
   atendimento: string[];
+  senhaHash: string;
+  vigenciaInicio: string;
+  vigenciaFim: string;
+  status: "Ativo" | "Inativo";
   criadoEm: string;
 }
+
+export type ProfissionalPublico = Omit<Profissional, "senhaHash">;
 
 interface DB {
   pacientes: Paciente[];
@@ -52,13 +58,20 @@ function salvarDB(db: DB): void {
   fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
 }
 
-function toPublico(p: Paciente): PacientePublico {
+function pacienteToPublico(p: Paciente): PacientePublico {
   const { senhaHash: _, ...pub } = p;
   return pub;
 }
 
+function profissionalToPublico(p: Profissional): ProfissionalPublico {
+  const { senhaHash: _, ...pub } = p;
+  return pub;
+}
+
+// ─── Pacientes ────────────────────────────────────────────────────────────────
+
 export function listarPacientes(): PacientePublico[] {
-  return lerDB().pacientes.map(toPublico);
+  return lerDB().pacientes.map(pacienteToPublico);
 }
 
 export function buscarPacientePorCPF(cpf: string): Paciente | null {
@@ -68,7 +81,7 @@ export function buscarPacientePorCPF(cpf: string): Paciente | null {
 
 export function buscarPacientePorId(id: string): PacientePublico | null {
   const p = lerDB().pacientes.find((p) => p.id === id);
-  return p ? toPublico(p) : null;
+  return p ? pacienteToPublico(p) : null;
 }
 
 export function criarPaciente(dados: {
@@ -82,15 +95,11 @@ export function criarPaciente(dados: {
   const db = lerDB();
   const cpfLimpo = dados.cpf.replace(/\D/g, "");
 
+  // CPF único apenas dentro dos pacientes
   if (db.pacientes.some((p) => p.cpf === cpfLimpo)) {
-    throw new Error("CPF já cadastrado");
+    throw new Error("CPF já cadastrado como paciente");
   }
-
-  if (
-    db.pacientes.some(
-      (p) => p.email.toLowerCase() === dados.email.toLowerCase()
-    )
-  ) {
+  if (db.pacientes.some((p) => p.email.toLowerCase() === dados.email.toLowerCase())) {
     throw new Error("E-mail já cadastrado");
   }
 
@@ -107,36 +116,40 @@ export function criarPaciente(dados: {
 
   db.pacientes.push(paciente);
   salvarDB(db);
-  return toPublico(paciente);
+  return pacienteToPublico(paciente);
 }
 
-export function verificarSenhaPaciente(
-  cpf: string,
-  senha: string
-): PacientePublico | null {
+export function verificarSenhaPaciente(cpf: string, senha: string): PacientePublico | null {
   const paciente = buscarPacientePorCPF(cpf);
-  if (!paciente) return null;
-  if (!paciente.senhaHash) return null;
+  if (!paciente?.senhaHash) return null;
   if (!bcrypt.compareSync(senha, paciente.senhaHash)) return null;
-  return toPublico(paciente);
+  return pacienteToPublico(paciente);
 }
+
+// ─── Profissionais ────────────────────────────────────────────────────────────
 
 export function listarProfissionais(filtros?: {
   ramo?: string;
   cidade?: string;
-}): Profissional[] {
+}): ProfissionalPublico[] {
   let lista = lerDB().profissionais;
   if (filtros?.ramo) {
-    lista = lista.filter(
-      (p) => p.ramo.toLowerCase() === filtros.ramo!.toLowerCase()
-    );
+    lista = lista.filter((p) => p.ramo.toLowerCase() === filtros.ramo!.toLowerCase());
   }
   if (filtros?.cidade) {
-    lista = lista.filter((p) =>
-      p.cidade.toLowerCase().includes(filtros.cidade!.toLowerCase())
-    );
+    lista = lista.filter((p) => p.cidade.toLowerCase().includes(filtros.cidade!.toLowerCase()));
   }
-  return lista;
+  return lista.map(profissionalToPublico);
+}
+
+export function buscarProfissionalPorId(id: string): ProfissionalPublico | null {
+  const p = lerDB().profissionais.find((p) => p.id === id);
+  return p ? profissionalToPublico(p) : null;
+}
+
+export function buscarProfissionalPorCPF(cpf: string): Profissional | null {
+  const cpfLimpo = cpf.replace(/\D/g, "");
+  return lerDB().profissionais.find((p) => p.cpf === cpfLimpo) ?? null;
 }
 
 export function criarProfissional(dados: {
@@ -148,21 +161,22 @@ export function criarProfissional(dados: {
   cidade: string;
   email: string;
   atendimento: string[];
-}): Profissional {
+  senha: string;
+}): ProfissionalPublico {
   const db = lerDB();
   const cpfLimpo = dados.cpf.replace(/\D/g, "");
 
+  // CPF único apenas dentro dos profissionais (pode ter mesmo CPF como paciente)
   if (db.profissionais.some((p) => p.cpf === cpfLimpo)) {
-    throw new Error("CPF já cadastrado");
+    throw new Error("CPF já cadastrado como profissional");
   }
-
-  if (
-    db.profissionais.some(
-      (p) => p.email.toLowerCase() === dados.email.toLowerCase()
-    )
-  ) {
+  if (db.profissionais.some((p) => p.email.toLowerCase() === dados.email.toLowerCase())) {
     throw new Error("E-mail já cadastrado");
   }
+
+  const agora = new Date();
+  const vigenciaFim = new Date(agora);
+  vigenciaFim.setDate(vigenciaFim.getDate() + 3);
 
   const profissional: Profissional = {
     id: crypto.randomUUID(),
@@ -174,10 +188,44 @@ export function criarProfissional(dados: {
     cidade: dados.cidade,
     email: dados.email.toLowerCase(),
     atendimento: dados.atendimento,
-    criadoEm: new Date().toISOString(),
+    senhaHash: bcrypt.hashSync(dados.senha, 10),
+    vigenciaInicio: agora.toISOString(),
+    vigenciaFim: vigenciaFim.toISOString(),
+    status: "Ativo",
+    criadoEm: agora.toISOString(),
   };
 
   db.profissionais.push(profissional);
   salvarDB(db);
-  return profissional;
+  return profissionalToPublico(profissional);
+}
+
+export function verificarSenhaProfissional(cpf: string, senha: string): ProfissionalPublico | null {
+  const profissional = buscarProfissionalPorCPF(cpf);
+  if (!profissional?.senhaHash) return null;
+  if (!bcrypt.compareSync(senha, profissional.senhaHash)) return null;
+  return profissionalToPublico(profissional);
+}
+
+export function atualizarStatusProfissional(
+  id: string,
+  novoStatus: "Ativo" | "Inativo"
+): ProfissionalPublico {
+  const db = lerDB();
+  const idx = db.profissionais.findIndex((p) => p.id === id);
+  if (idx === -1) throw new Error("Profissional não encontrado");
+
+  const prof = db.profissionais[idx];
+
+  if (novoStatus === "Ativo") {
+    const agora = new Date();
+    const fim = new Date(prof.vigenciaFim);
+    if (agora > fim) {
+      throw new Error("Não é possível ativar fora do período de vigência");
+    }
+  }
+
+  db.profissionais[idx] = { ...prof, status: novoStatus };
+  salvarDB(db);
+  return profissionalToPublico(db.profissionais[idx]);
 }
