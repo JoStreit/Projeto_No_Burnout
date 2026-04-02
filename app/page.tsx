@@ -24,13 +24,24 @@ export default function Home() {
   const [dashboardAberto, setDashboardAberto] = useState(false);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-green-50 via-white to-teal-50">
+    <main className="relative min-h-screen bg-gradient-to-br from-green-50 via-white to-teal-50 overflow-hidden">
+      {/* Marca d'água */}
+      <div className="pointer-events-none select-none absolute inset-0 flex items-center justify-center z-0">
+        <Image
+          src="/logo.png"
+          alt=""
+          width={900}
+          height={900}
+          className="opacity-[0.055] object-contain"
+        />
+      </div>
+
       {/* Navbar */}
       <nav className="border-b border-green-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center gap-2.5 shrink-0">
-            <Image src="/logo.png" alt="SaúdeConnect" width={64} height={64} className="mix-blend-multiply" />
+            <Image src="/logo.png" alt="SaúdeConnect" width={80} height={80} className="object-contain rounded-xl" />
             <span className="font-bold text-green-900 text-lg">SaúdeConnect</span>
           </div>
 
@@ -125,7 +136,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
         <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           Plataforma de saúde personalizada
@@ -155,7 +166,7 @@ export default function Home() {
       </section>
 
       {/* Cards */}
-      <section className="max-w-6xl mx-auto px-6 pb-24">
+      <section className="relative z-10 max-w-6xl mx-auto px-6 pb-24">
         <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
             <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
