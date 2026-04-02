@@ -174,26 +174,42 @@ export default function Home() {
             </div>
             <h3 className="font-semibold text-green-900 mb-2">Análise Personalizada</h3>
             <p className="text-sm text-gray-500">
-              Nosso algoritmo analisa seu perfil e recomenda o profissional mais
-              adequado para suas necessidades.
+              {profissional
+                ? "Nosso algoritmo analisa o perfil do usuário e recomenda o profissional adequado para a necessidade dele — e este profissional pode ser você! Mantenha seu perfil ativo."
+                : "Nosso algoritmo analisa seu perfil e recomenda o profissional mais adequado para suas necessidades."}
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
-              <span className="text-2xl">👤</span>
-            </div>
-            <h3 className="font-semibold text-green-900 mb-2">Cadastro de Paciente</h3>
-            <p className="text-sm text-gray-500">
-              Crie seu perfil como paciente para acompanhar suas consultas e
-              recomendações ao longo do tempo.
-            </p>
-            {!paciente && (
-              <button onClick={() => setPacienteAberto(true)} className="mt-4 text-sm text-green-600 hover:text-green-700 font-medium">
-                Cadastrar agora →
+          {profissional ? (
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-teal-100 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">✏️</span>
+              </div>
+              <h3 className="font-semibold text-green-900 mb-2">Editar Perfil</h3>
+              <p className="text-sm text-gray-500">
+                Atualize suas informações de cadastro, modalidade de atendimento e mantenha seu perfil sempre em dia.
+              </p>
+              <button onClick={() => setDashboardAberto(true)} className="mt-4 text-sm text-teal-600 hover:text-teal-700 font-medium">
+                Abrir perfil →
               </button>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">👤</span>
+              </div>
+              <h3 className="font-semibold text-green-900 mb-2">Cadastro de Paciente</h3>
+              <p className="text-sm text-gray-500">
+                Crie seu perfil como paciente para acompanhar suas consultas e
+                recomendações ao longo do tempo.
+              </p>
+              {!paciente && (
+                <button onClick={() => setPacienteAberto(true)} className="mt-4 text-sm text-green-600 hover:text-green-700 font-medium">
+                  Cadastrar agora →
+                </button>
+              )}
+            </div>
+          )}
 
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-teal-100 hover:shadow-md transition-shadow">
             <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mb-4">
