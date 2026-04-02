@@ -26,7 +26,7 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50">
       {/* Navbar */}
       <nav className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center gap-2 shrink-0">
             <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
@@ -35,93 +35,93 @@ export default function Home() {
             <span className="font-bold text-gray-900 text-lg">SaúdeConnect</span>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap justify-end">
-            {/* ─── Área do Paciente ─── */}
-            {!carregandoPaciente && (
-              <div className="flex items-center gap-2 pr-3 border-r border-gray-200">
-                {paciente ? (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setBuscarAberto(true)}
-                      className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
-                    >
-                      Buscar Profissionais
-                    </Button>
-                    <span className="text-sm text-gray-600 hidden sm:inline">
-                      <strong>{paciente.nome.split(" ")[0]}</strong>
-                    </span>
-                    <Button variant="ghost" size="sm" onClick={logoutPaciente} className="text-gray-400 hover:text-red-500 text-xs">
-                      Sair
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button variant="ghost" size="sm" onClick={() => setLoginAberto(true)} className="text-gray-600">
-                      Entrar
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setPacienteAberto(true)}
-                      className="border-blue-200 text-blue-700 hover:bg-blue-50"
-                    >
-                      Sou Paciente
-                    </Button>
-                  </>
-                )}
+          <div className="flex items-center gap-0">
+            {/* ─── Área do Paciente — oculta quando profissional está logado ─── */}
+            {!carregandoPaciente && !profissional && (
+              <div className="flex flex-col items-end pr-4 border-r border-gray-200">
+                <div className="flex items-center gap-2">
+                  {paciente ? (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setBuscarAberto(true)}
+                        className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                      >
+                        Buscar Profissionais
+                      </Button>
+                      <span className="text-sm text-gray-600 hidden sm:inline">
+                        <strong>{paciente.nome.split(" ")[0]}</strong>
+                      </span>
+                      <Button variant="ghost" size="sm" onClick={logoutPaciente} className="text-gray-400 hover:text-red-500 text-xs">
+                        Sair
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button variant="ghost" size="sm" onClick={() => setLoginAberto(true)} className="text-gray-600">
+                        Entrar
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPacienteAberto(true)}
+                        className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                      >
+                        Sou Paciente
+                      </Button>
+                    </>
+                  )}
+                </div>
+                <span className="text-[10px] text-gray-400 mt-0.5">Área do Paciente</span>
               </div>
             )}
 
-            {/* ─── Área do Profissional ─── */}
-            {!carregandoProfissional && (
-              <div className="flex items-center gap-2">
-                {profissional ? (
-                  <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setDashboardAberto(true)}
-                      className="border-violet-200 text-violet-700 hover:bg-violet-50"
-                    >
-                      Meu Perfil
-                    </Button>
-                    <span className="text-sm text-gray-600 hidden sm:inline">
-                      <strong>{profissional.nome.split(" ")[0]}</strong>
-                    </span>
-                    <Button variant="ghost" size="sm" onClick={logoutProfissional} className="text-gray-400 hover:text-red-500 text-xs">
-                      Sair
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setLoginProfAberto(true)}
-                      className="text-violet-600"
-                    >
-                      Entrar
-                    </Button>
-                    <Button
-                      size="sm"
-                      onClick={() => setProfissionalAberto(true)}
-                      className="bg-violet-600 hover:bg-violet-700"
-                    >
-                      Sou Profissional
-                    </Button>
-                  </>
-                )}
+            {/* ─── Área do Profissional — oculta quando paciente está logado ─── */}
+            {!carregandoProfissional && !paciente && (
+              <div className="flex flex-col items-end pl-4">
+                <div className="flex items-center gap-2">
+                  {profissional ? (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setDashboardAberto(true)}
+                        className="border-violet-200 text-violet-700 hover:bg-violet-50"
+                      >
+                        Meu Perfil
+                      </Button>
+                      <span className="text-sm text-gray-600 hidden sm:inline">
+                        <strong>{profissional.nome.split(" ")[0]}</strong>
+                      </span>
+                      <Button variant="ghost" size="sm" onClick={logoutProfissional} className="text-gray-400 hover:text-red-500 text-xs">
+                        Sair
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setLoginProfAberto(true)}
+                        className="text-violet-600"
+                      >
+                        Entrar
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={() => setProfissionalAberto(true)}
+                        className="bg-violet-600 hover:bg-violet-700"
+                      >
+                        Sou Profissional
+                      </Button>
+                    </>
+                  )}
+                </div>
+                <span className="text-[10px] text-gray-400 mt-0.5">Área do Profissional</span>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Labels de área */}
-        <div className="max-w-6xl mx-auto px-6 pb-1 flex justify-end gap-8 text-[10px] text-gray-400">
-          <span>Área do Paciente</span>
-          <span>Área do Profissional</span>
         </div>
       </nav>
 
