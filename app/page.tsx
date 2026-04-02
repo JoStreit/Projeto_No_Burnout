@@ -30,9 +30,9 @@ export default function Home() {
         <Image
           src="/logo.png"
           alt=""
-          width={900}
-          height={900}
-          className="opacity-[0.055] object-contain"
+          width={1200}
+          height={1200}
+          className="opacity-[0.125] object-contain"
         />
       </div>
 
@@ -41,7 +41,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center gap-2.5 shrink-0">
-            <Image src="/logo.png" alt="SaúdeConnect" width={80} height={80} className="object-contain rounded-xl" />
+            <Image src="/logo.png" alt="SaúdeConnect" width={120} height={120} className="object-contain rounded-xl" />
             <span className="font-bold text-green-900 text-lg">SaúdeConnect</span>
           </div>
 
@@ -136,7 +136,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
+      <section className="relative z-[15] max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
         <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           Plataforma de saúde personalizada
@@ -166,7 +166,7 @@ export default function Home() {
       </section>
 
       {/* Cards */}
-      <section className="relative z-10 max-w-6xl mx-auto px-6 pb-24">
+      <section className="relative z-[15] max-w-6xl mx-auto px-6 pb-24">
         <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
             <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
