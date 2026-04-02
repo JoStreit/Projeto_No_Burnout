@@ -107,7 +107,7 @@ export default function LoginModal({ aberto, onFechar, onCadastrar }: Props) {
 
           <Button
             type="submit"
-            className="w-full bg-emerald-600 hover:bg-emerald-700"
+            className="w-full bg-green-600 hover:bg-green-700"
             disabled={carregando}
           >
             {carregando ? "Entrando..." : "Entrar"}
@@ -119,7 +119,7 @@ export default function LoginModal({ aberto, onFechar, onCadastrar }: Props) {
             Não tem conta?{" "}
             <button
               onClick={() => { fechar(); onCadastrar(); }}
-              className="text-emerald-600 hover:text-emerald-700 font-medium"
+              className="text-green-600 hover:text-green-700 font-medium"
             >
               Cadastre-se gratuitamente
             </button>

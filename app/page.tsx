@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import AnaliseGratuitaModal from "@/components/AnaliseGratuitaModal";
 import CadastroPacienteModal from "@/components/CadastroPacienteModal";
@@ -23,22 +24,20 @@ export default function Home() {
   const [dashboardAberto, setDashboardAberto] = useState(false);
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50">
+    <main className="min-h-screen bg-gradient-to-br from-green-50 via-white to-teal-50">
       {/* Navbar */}
-      <nav className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+      <nav className="border-b border-green-100 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between gap-4">
           {/* Logo */}
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center">
-              <span className="text-white font-bold text-sm">S</span>
-            </div>
-            <span className="font-bold text-gray-900 text-lg">SaúdeConnect</span>
+          <div className="flex items-center gap-2.5 shrink-0">
+            <Image src="/logo.png" alt="SaúdeConnect" width={42} height={42} className="rounded-xl" />
+            <span className="font-bold text-green-900 text-lg">SaúdeConnect</span>
           </div>
 
           <div className="flex items-center gap-0">
             {/* ─── Área do Paciente — oculta quando profissional está logado ─── */}
             {!carregandoPaciente && !profissional && (
-              <div className="flex flex-col items-end pr-4 border-r border-gray-200">
+              <div className="flex flex-col items-end pr-4 border-r border-green-100">
                 <div className="flex items-center gap-2">
                   {paciente ? (
                     <>
@@ -46,7 +45,7 @@ export default function Home() {
                         variant="outline"
                         size="sm"
                         onClick={() => setBuscarAberto(true)}
-                        className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                        className="border-green-200 text-green-700 hover:bg-green-50"
                       >
                         Buscar Profissionais
                       </Button>
@@ -66,14 +65,14 @@ export default function Home() {
                         variant="outline"
                         size="sm"
                         onClick={() => setPacienteAberto(true)}
-                        className="border-blue-200 text-blue-700 hover:bg-blue-50"
+                        className="border-green-200 text-green-700 hover:bg-green-50"
                       >
                         Sou Paciente
                       </Button>
                     </>
                   )}
                 </div>
-                <span className="text-[10px] text-gray-400 mt-0.5">Área do Paciente</span>
+                <span className="text-[10px] text-green-400 mt-0.5">Área do Paciente</span>
               </div>
             )}
 
@@ -87,7 +86,7 @@ export default function Home() {
                         variant="outline"
                         size="sm"
                         onClick={() => setDashboardAberto(true)}
-                        className="border-violet-200 text-violet-700 hover:bg-violet-50"
+                        className="border-teal-200 text-teal-700 hover:bg-teal-50"
                       >
                         Meu Perfil
                       </Button>
@@ -104,21 +103,21 @@ export default function Home() {
                         variant="ghost"
                         size="sm"
                         onClick={() => setLoginProfAberto(true)}
-                        className="text-violet-600"
+                        className="text-teal-600"
                       >
                         Entrar
                       </Button>
                       <Button
                         size="sm"
                         onClick={() => setProfissionalAberto(true)}
-                        className="bg-violet-600 hover:bg-violet-700"
+                        className="bg-teal-600 hover:bg-teal-700"
                       >
                         Sou Profissional
                       </Button>
                     </>
                   )}
                 </div>
-                <span className="text-[10px] text-gray-400 mt-0.5">Área do Profissional</span>
+                <span className="text-[10px] text-teal-400 mt-0.5">Área do Profissional</span>
               </div>
             )}
           </div>
@@ -127,14 +126,14 @@ export default function Home() {
 
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 pt-20 pb-16 text-center">
-        <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           Plataforma de saúde personalizada
         </div>
 
-        <h1 className="text-5xl font-bold text-gray-900 leading-tight mb-6 max-w-3xl mx-auto">
+        <h1 className="text-5xl font-bold text-green-950 leading-tight mb-6 max-w-3xl mx-auto">
           Encontre o profissional{" "}
-          <span className="text-emerald-600">certo para você</span>
+          <span className="text-green-600">certo para você</span>
         </h1>
 
         <p className="text-lg text-gray-500 max-w-xl mx-auto mb-10">
@@ -145,7 +144,7 @@ export default function Home() {
         <Button
           size="lg"
           onClick={() => setAnaliseAberta(true)}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-6 text-lg rounded-xl shadow-lg shadow-emerald-200 hover:shadow-emerald-300 transition-all duration-300 hover:-translate-y-0.5"
+          className="bg-green-600 hover:bg-green-700 text-white px-10 py-6 text-lg rounded-xl shadow-lg shadow-green-200 hover:shadow-green-300 transition-all duration-300 hover:-translate-y-0.5"
         >
           Análise Gratuita
         </Button>
@@ -158,44 +157,44 @@ export default function Home() {
       {/* Cards */}
       <section className="max-w-6xl mx-auto px-6 pb-24">
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mb-4">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
               <span className="text-2xl">🩺</span>
             </div>
-            <h3 className="font-semibold text-gray-800 mb-2">Análise Personalizada</h3>
+            <h3 className="font-semibold text-green-900 mb-2">Análise Personalizada</h3>
             <p className="text-sm text-gray-500">
               Nosso algoritmo analisa seu perfil e recomenda o profissional mais
               adequado para suas necessidades.
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
               <span className="text-2xl">👤</span>
             </div>
-            <h3 className="font-semibold text-gray-800 mb-2">Cadastro de Paciente</h3>
+            <h3 className="font-semibold text-green-900 mb-2">Cadastro de Paciente</h3>
             <p className="text-sm text-gray-500">
               Crie seu perfil como paciente para acompanhar suas consultas e
               recomendações ao longo do tempo.
             </p>
             {!paciente && (
-              <button onClick={() => setPacienteAberto(true)} className="mt-4 text-sm text-blue-600 hover:text-blue-700 font-medium">
+              <button onClick={() => setPacienteAberto(true)} className="mt-4 text-sm text-green-600 hover:text-green-700 font-medium">
                 Cadastrar agora →
               </button>
             )}
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center mb-4">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-teal-100 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mb-4">
               <span className="text-2xl">🏥</span>
             </div>
-            <h3 className="font-semibold text-gray-800 mb-2">Para Profissionais</h3>
+            <h3 className="font-semibold text-green-900 mb-2">Para Profissionais</h3>
             <p className="text-sm text-gray-500">
               Cadastre-se como profissional de saúde e seja recomendado para
               pacientes que precisam do seu perfil.
             </p>
             {!profissional && (
-              <button onClick={() => setProfissionalAberto(true)} className="mt-4 text-sm text-violet-600 hover:text-violet-700 font-medium">
+              <button onClick={() => setProfissionalAberto(true)} className="mt-4 text-sm text-teal-600 hover:text-teal-700 font-medium">
                 Quero me cadastrar →
               </button>
             )}

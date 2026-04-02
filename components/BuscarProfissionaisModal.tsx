@@ -35,7 +35,7 @@ interface Props {
 }
 
 const COR_RAMO: Record<string, string> = {
-  Fisioterapeuta: "bg-blue-100 text-blue-700",
+  Fisioterapeuta: "bg-teal-100 text-teal-700",
   Nutricionista: "bg-green-100 text-green-700",
   "Psicólogo": "bg-purple-100 text-purple-700",
   "Personal Trainer": "bg-orange-100 text-orange-700",
@@ -111,7 +111,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
         <Button
           onClick={buscar}
-          className="bg-emerald-600 hover:bg-emerald-700 w-full"
+          className="bg-green-600 hover:bg-green-700 w-full"
           disabled={carregando}
         >
           {carregando ? "Buscando..." : "Buscar"}

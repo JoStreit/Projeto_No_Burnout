@@ -64,7 +64,7 @@ interface Profissional {
 }
 
 const COR_RAMO: Record<string, string> = {
-  Fisioterapeuta: "bg-blue-100 text-blue-700",
+  Fisioterapeuta: "bg-teal-100 text-teal-700",
   Nutricionista: "bg-green-100 text-green-700",
   "Psicólogo": "bg-purple-100 text-purple-700",
   "Personal Trainer": "bg-orange-100 text-orange-700",
@@ -156,7 +156,7 @@ export default function AnaliseGratuitaModal({
     <Dialog open={aberto} onOpenChange={fechar}>
       <DialogContent className="max-w-lg max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-emerald-700">
+          <DialogTitle className="text-xl font-bold text-green-700">
             Análise Gratuita
           </DialogTitle>
         </DialogHeader>
@@ -171,7 +171,7 @@ export default function AnaliseGratuitaModal({
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-emerald-500 h-2 rounded-full transition-all duration-500"
+                  className="bg-green-500 h-2 rounded-full transition-all duration-500"
                   style={{ width: `${progresso}%` }}
                 />
               </div>
@@ -186,7 +186,7 @@ export default function AnaliseGratuitaModal({
                 <button
                   key={opcao}
                   onClick={() => responder(opcao)}
-                  className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all duration-200 text-sm text-gray-700 font-medium"
+                  className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all duration-200 text-sm text-gray-700 font-medium"
                 >
                   {opcao}
                 </button>
@@ -198,12 +198,12 @@ export default function AnaliseGratuitaModal({
             {/* Resultado */}
             <div className="text-center">
               <div className="flex justify-center mb-3">
-                <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
                   <span className="text-3xl">✅</span>
                 </div>
               </div>
               <p className="text-gray-500 text-sm mb-1">Profissional recomendado</p>
-              <p className="text-2xl font-bold text-emerald-700">{ramoRecomendado}</p>
+              <p className="text-2xl font-bold text-green-700">{ramoRecomendado}</p>
               <p className="text-gray-600 mt-1 text-sm">{motivoRecomendado}.</p>
               <p className="text-xs text-gray-400 mt-2">
                 Recomendação inicial. Consulte sempre um profissional de saúde.
@@ -242,25 +242,25 @@ export default function AnaliseGratuitaModal({
                 </div>
               </div>
             ) : (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 text-center">
-                <p className="text-sm font-semibold text-emerald-800 mb-1">
+              <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+                <p className="text-sm font-semibold text-green-800 mb-1">
                   Veja os profissionais disponíveis
                 </p>
-                <p className="text-xs text-emerald-700 mb-3">
+                <p className="text-xs text-green-700 mb-3">
                   Faça login ou cadastre-se gratuitamente para ver a lista completa de profissionais do seu perfil.
                 </p>
                 <div className="flex gap-2 justify-center">
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-emerald-400 text-emerald-700 hover:bg-emerald-100"
+                    className="border-green-400 text-green-700 hover:bg-green-100"
                     onClick={() => { fechar(); onLoginClick(); }}
                   >
                     Entrar
                   </Button>
                   <Button
                     size="sm"
-                    className="bg-emerald-600 hover:bg-emerald-700"
+                    className="bg-green-600 hover:bg-green-700"
                     onClick={() => { fechar(); onCadastrarClick(); }}
                   >
                     Cadastrar-se
@@ -273,7 +273,7 @@ export default function AnaliseGratuitaModal({
               <Button variant="outline" size="sm" onClick={reiniciar} className="flex-1">
                 Refazer análise
               </Button>
-              <Button size="sm" className="flex-1 bg-emerald-600 hover:bg-emerald-700" onClick={fechar}>
+              <Button size="sm" className="flex-1 bg-green-600 hover:bg-green-700" onClick={fechar}>
                 Fechar
               </Button>
             </div>

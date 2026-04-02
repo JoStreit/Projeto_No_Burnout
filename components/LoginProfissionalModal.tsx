@@ -63,7 +63,7 @@ export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }
     <Dialog open={aberto} onOpenChange={fechar}>
       <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-violet-700">
+          <DialogTitle className="text-xl font-bold text-teal-700">
             Área do Profissional
           </DialogTitle>
         </DialogHeader>
@@ -97,7 +97,7 @@ export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }
             </div>
           )}
 
-          <Button type="submit" className="w-full bg-violet-600 hover:bg-violet-700" disabled={carregando}>
+          <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700" disabled={carregando}>
             {carregando ? "Entrando..." : "Entrar"}
           </Button>
         </form>
@@ -107,7 +107,7 @@ export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }
             Ainda não é cadastrado?{" "}
             <button
               onClick={() => { fechar(); onCadastrar(); }}
-              className="text-violet-600 hover:text-violet-700 font-medium"
+              className="text-teal-600 hover:text-teal-700 font-medium"
             >
               Cadastre-se
             </button>

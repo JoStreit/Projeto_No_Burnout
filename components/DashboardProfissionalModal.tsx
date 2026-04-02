@@ -73,7 +73,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
     <Dialog open={aberto} onOpenChange={onFechar}>
       <DialogContent className="max-w-lg max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-violet-700">
+          <DialogTitle className="text-xl font-bold text-teal-700">
             Meu Perfil Profissional
           </DialogTitle>
         </DialogHeader>

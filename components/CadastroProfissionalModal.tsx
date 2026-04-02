@@ -168,7 +168,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
     <Dialog open={aberto} onOpenChange={fechar}>
       <DialogContent className="max-w-md max-h-[92vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-violet-700">
+          <DialogTitle className="text-xl font-bold text-teal-700">
             Cadastro de Profissional
           </DialogTitle>
         </DialogHeader>
@@ -353,7 +353,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-violet-600 hover:bg-violet-700"
+                className="flex-1 bg-teal-600 hover:bg-teal-700"
                 disabled={carregando}
               >
                 {carregando ? "Salvando..." : "Cadastrar"}
@@ -366,7 +366,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
                 <button
                   type="button"
                   onClick={() => { fechar(); onLoginClick(); }}
-                  className="text-violet-600 hover:text-violet-700 font-medium"
+                  className="text-teal-600 hover:text-teal-700 font-medium"
                 >
                   Fazer login
                 </button>
@@ -376,7 +376,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
         ) : (
           <div className="space-y-5 text-center py-4">
             <div className="flex justify-center">
-              <div className="w-16 h-16 rounded-full bg-violet-100 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center">
                 <span className="text-3xl">🎉</span>
               </div>
             </div>
@@ -399,7 +399,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
               >
                 Novo cadastro
               </Button>
-              <Button className="bg-violet-600 hover:bg-violet-700" onClick={fechar}>
+              <Button className="bg-teal-600 hover:bg-teal-700" onClick={fechar}>
                 Fechar
               </Button>
             </div>
