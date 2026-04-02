@@ -99,7 +99,7 @@ export function criarPaciente(dados: {
   if (db.pacientes.some((p) => p.cpf === cpfLimpo)) {
     throw new Error("CPF já cadastrado como paciente");
   }
-  if (db.pacientes.some((p) => p.email.toLowerCase() === dados.email.toLowerCase())) {
+  if (db.pacientes.some((p) => p.email?.toLowerCase() === dados.email.toLowerCase())) {
     throw new Error("E-mail já cadastrado");
   }
 
@@ -134,10 +134,10 @@ export function listarProfissionais(filtros?: {
 }): ProfissionalPublico[] {
   let lista = lerDB().profissionais;
   if (filtros?.ramo) {
-    lista = lista.filter((p) => p.ramo.toLowerCase() === filtros.ramo!.toLowerCase());
+    lista = lista.filter((p) => p.ramo?.toLowerCase() === filtros.ramo!.toLowerCase());
   }
   if (filtros?.cidade) {
-    lista = lista.filter((p) => p.cidade.toLowerCase().includes(filtros.cidade!.toLowerCase()));
+    lista = lista.filter((p) => p.cidade?.toLowerCase().includes(filtros.cidade!.toLowerCase()));
   }
   return lista.map(profissionalToPublico);
 }
@@ -170,7 +170,7 @@ export function criarProfissional(dados: {
   if (db.profissionais.some((p) => p.cpf === cpfLimpo)) {
     throw new Error("CPF já cadastrado como profissional");
   }
-  if (db.profissionais.some((p) => p.email.toLowerCase() === dados.email.toLowerCase())) {
+  if (db.profissionais.some((p) => p.email?.toLowerCase() === dados.email.toLowerCase())) {
     throw new Error("E-mail já cadastrado");
   }
 
