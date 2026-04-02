@@ -50,10 +50,26 @@ export default function Home() {
           <div className="flex items-center gap-0">
             {/* ─── Área do Paciente — oculta quando profissional está logado ─── */}
             {!carregandoPaciente && !profissional && (
-              <div className="flex flex-col items-end pr-4 border-r border-green-100">
-                <div className="flex items-center gap-2">
-                  {paciente ? (
-                    <>
+              <div className="flex items-center gap-3 pr-4 border-r border-green-100">
+                {paciente ? (
+                  <>
+                    {/* Avatar com inicial */}
+                    <div className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center shrink-0 shadow-sm">
+                      <span className="text-white font-bold text-sm">
+                        {paciente.nome.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+
+                    {/* Nome + label empilhados */}
+                    <div className="hidden sm:flex flex-col leading-tight">
+                      <span className="text-sm font-semibold text-green-900">
+                        {paciente.nome.split(" ")[0]}
+                      </span>
+                      <span className="text-xs text-green-800 font-medium">Área do Paciente</span>
+                    </div>
+
+                    {/* Ações */}
+                    <div className="flex items-center gap-1 ml-1">
                       <Button
                         variant="outline"
                         size="sm"
@@ -62,15 +78,19 @@ export default function Home() {
                       >
                         Buscar Profissionais
                       </Button>
-                      <span className="text-sm text-gray-600 hidden sm:inline">
-                        <strong>{paciente.nome.split(" ")[0]}</strong>
-                      </span>
-                      <Button variant="ghost" size="sm" onClick={logoutPaciente} className="text-gray-400 hover:text-red-500 text-xs">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={logoutPaciente}
+                        className="text-gray-400 hover:text-red-500 px-2"
+                      >
                         Sair
                       </Button>
-                    </>
-                  ) : (
-                    <>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-end">
+                    <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm" onClick={() => setLoginAberto(true)} className="text-gray-600">
                         Entrar
                       </Button>
@@ -82,10 +102,10 @@ export default function Home() {
                       >
                         Sou Paciente
                       </Button>
-                    </>
-                  )}
-                </div>
-                <span className="text-[10px] text-green-400 mt-0.5">Área do Paciente</span>
+                    </div>
+                    <span className="text-[10px] text-green-400 mt-0.5">Área do Paciente</span>
+                  </div>
+                )}
               </div>
             )}
 
