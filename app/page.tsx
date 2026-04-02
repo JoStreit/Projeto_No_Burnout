@@ -247,8 +247,7 @@ export default function Home() {
               </div>
               <h3 className="font-semibold text-green-900 mb-2">Cadastro de Paciente</h3>
               <p className="text-sm text-gray-500">
-                Crie seu perfil como paciente para acompanhar suas consultas e
-                recomendações ao longo do tempo.
+                Crie seu perfil gratuitamente para ter as melhores recomendações de profissionais.
               </p>
               <button onClick={() => setPacienteAberto(true)} className="mt-4 text-sm text-green-600 hover:text-green-700 font-medium">
                 Cadastrar agora →
