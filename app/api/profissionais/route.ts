@@ -17,7 +17,8 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const ramo = searchParams.get("ramo") ?? undefined;
   const cidade = searchParams.get("cidade") ?? undefined;
-  const profissionais = listarProfissionais({ ramo, cidade });
+  const estado = searchParams.get("estado") ?? undefined;
+  const profissionais = listarProfissionais({ ramo, cidade, estado });
   return Response.json(profissionais);
 }
 

@@ -16,8 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/components/AuthProvider";
 
 const RAMOS = ["Fisioterapeuta", "Nutricionista", "Psicólogo", "Personal Trainer"];
 
@@ -26,6 +26,7 @@ interface Profissional {
   nome: string;
   ramo: string;
   cidade: string;
+  estado: string;
 }
 
 interface Props {
@@ -42,17 +43,37 @@ const COR_RAMO: Record<string, string> = {
 };
 
 export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial }: Props) {
+  const { paciente } = useAuth();
   const [ramo, setRamo] = useState(ramoInicial ?? "");
-  const [cidade, setCidade] = useState("");
+  const [cidadeManual, setCidadeManual] = useState("");
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [carregando, setCarregando] = useState(false);
+
+  const temPreferencia = !!paciente?.preferenciaBusca;
+
+  function labelAbrangencia(): string {
+    if (!paciente?.preferenciaBusca) return "";
+    if (paciente.preferenciaBusca === "Presencial") return `Buscando em: ${paciente.cidade}`;
+    if (paciente.preferenciaBusca === "RemotoBrasil") return "Buscando em: Todo o Brasil";
+    if (paciente.preferenciaBusca === "RemoToEstado") return `Buscando em: ${paciente.estado}`;
+    return "";
+  }
 
   const buscar = useCallback(async () => {
     setCarregando(true);
     try {
       const params = new URLSearchParams();
       if (ramo) params.set("ramo", ramo);
-      if (cidade.trim()) params.set("cidade", cidade.trim());
+
+      if (paciente?.preferenciaBusca === "Presencial") {
+        params.set("cidade", paciente.cidade);
+      } else if (paciente?.preferenciaBusca === "RemoToEstado") {
+        params.set("estado", paciente.estado);
+      } else if (!paciente?.preferenciaBusca && cidadeManual.trim()) {
+        params.set("cidade", cidadeManual.trim());
+      }
+      // RemotoBrasil: sem filtro geográfico
+
       const res = await fetch(`/api/profissionais?${params.toString()}`);
       const data = await res.json();
       setProfissionais(data);
@@ -61,7 +82,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     } finally {
       setCarregando(false);
     }
-  }, [ramo, cidade]);
+  }, [ramo, cidadeManual, paciente]);
 
   useEffect(() => {
     if (aberto) buscar();
@@ -69,7 +90,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
   function fechar() {
     setRamo(ramoInicial ?? "");
-    setCidade("");
+    setCidadeManual("");
     onFechar();
   }
 
@@ -82,8 +103,19 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
           </DialogTitle>
         </DialogHeader>
 
+        {/* Badge de abrangência */}
+        {temPreferencia && (
+          <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-sm text-green-700">
+            {paciente?.preferenciaBusca === "RemotoBrasil" ? (
+              <span>🌎 {labelAbrangencia()}</span>
+            ) : (
+              <span>📍 {labelAbrangencia()}</span>
+            )}
+          </div>
+        )}
+
         {/* Filtros */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className={`grid gap-3 ${temPreferencia ? "grid-cols-1" : "grid-cols-2"}`}>
           <div className="space-y-1.5">
             <Label>Ramo de atuação</Label>
             <Select value={ramo} onValueChange={(v) => setRamo(v ?? "")}>
@@ -99,14 +131,16 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
             </Select>
           </div>
 
-          <div className="space-y-1.5">
-            <Label>Cidade</Label>
-            <Input
-              value={cidade}
-              onChange={(e) => setCidade(e.target.value)}
-              placeholder="Ex: São Paulo"
-            />
-          </div>
+          {!temPreferencia && (
+            <div className="space-y-1.5">
+              <Label>Cidade</Label>
+              <Input
+                value={cidadeManual}
+                onChange={(e) => setCidadeManual(e.target.value)}
+                placeholder="Ex: São Paulo"
+              />
+            </div>
+          )}
         </div>
 
         <Button

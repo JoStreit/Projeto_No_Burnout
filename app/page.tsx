@@ -10,6 +10,7 @@ import LoginModal from "@/components/LoginModal";
 import LoginProfissionalModal from "@/components/LoginProfissionalModal";
 import BuscarProfissionaisModal from "@/components/BuscarProfissionaisModal";
 import DashboardProfissionalModal from "@/components/DashboardProfissionalModal";
+import EditarPerfilPacienteModal from "@/components/EditarPerfilPacienteModal";
 import { useAuth } from "@/components/AuthProvider";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
   const [loginProfAberto, setLoginProfAberto] = useState(false);
   const [buscarAberto, setBuscarAberto] = useState(false);
   const [dashboardAberto, setDashboardAberto] = useState(false);
+  const [editarPacienteAberto, setEditarPacienteAberto] = useState(false);
 
   return (
     <main className="relative min-h-screen bg-gradient-to-br from-green-50 via-white to-teal-50 overflow-hidden">
@@ -213,6 +215,19 @@ export default function Home() {
                 Abrir perfil →
               </button>
             </div>
+          ) : paciente ? (
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">✏️</span>
+              </div>
+              <h3 className="font-semibold text-green-900 mb-2">Editar Perfil</h3>
+              <p className="text-sm text-gray-500">
+                Atualize suas informações de cadastro, preferência de busca e mantenha seu perfil sempre em dia.
+              </p>
+              <button onClick={() => setEditarPacienteAberto(true)} className="mt-4 text-sm text-green-600 hover:text-green-700 font-medium">
+                ✏️ Editar perfil →
+              </button>
+            </div>
           ) : (
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
@@ -223,30 +238,43 @@ export default function Home() {
                 Crie seu perfil como paciente para acompanhar suas consultas e
                 recomendações ao longo do tempo.
               </p>
-              {!paciente && (
-                <button onClick={() => setPacienteAberto(true)} className="mt-4 text-sm text-green-600 hover:text-green-700 font-medium">
-                  Cadastrar agora →
+              <button onClick={() => setPacienteAberto(true)} className="mt-4 text-sm text-green-600 hover:text-green-700 font-medium">
+                Cadastrar agora →
+              </button>
+            </div>
+          )}
+
+          {paciente && !profissional ? (
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-green-100 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">🔍</span>
+              </div>
+              <h3 className="font-semibold text-green-900 mb-2">Buscar Profissionais</h3>
+              <p className="text-sm text-gray-500">
+                Encontre profissionais de saúde de acordo com sua preferência de busca e necessidades.
+              </p>
+              <button onClick={() => setBuscarAberto(true)} className="mt-4 text-sm text-green-600 hover:text-green-700 font-medium">
+                🔍 Buscar profissionais →
+              </button>
+            </div>
+          ) : (
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-teal-100 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mb-4">
+                <span className="text-2xl">🏥</span>
+              </div>
+              <h3 className="font-semibold text-green-900 mb-2">Para Profissionais</h3>
+              <p className="text-sm text-gray-500">
+                {profissional
+                  ? "Mesmo com perfil profissional você pode cadastrar seu perfil de paciente e encontrar um profissional para você."
+                  : "Cadastre-se como profissional de saúde e seja recomendado para pacientes que precisam do seu perfil."}
+              </p>
+              {!profissional && (
+                <button onClick={() => setProfissionalAberto(true)} className="mt-4 text-sm text-teal-600 hover:text-teal-700 font-medium">
+                  Quero me cadastrar →
                 </button>
               )}
             </div>
           )}
-
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-teal-100 hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mb-4">
-              <span className="text-2xl">🏥</span>
-            </div>
-            <h3 className="font-semibold text-green-900 mb-2">Para Profissionais</h3>
-            <p className="text-sm text-gray-500">
-              {profissional
-                ? "Mesmo com perfil profissional você pode cadastrar seu perfil de paciente e encontrar um profissional para você."
-                : "Cadastre-se como profissional de saúde e seja recomendado para pacientes que precisam do seu perfil."}
-            </p>
-            {!profissional && (
-              <button onClick={() => setProfissionalAberto(true)} className="mt-4 text-sm text-teal-600 hover:text-teal-700 font-medium">
-                Quero me cadastrar →
-              </button>
-            )}
-          </div>
         </div>
       </section>
 
@@ -284,6 +312,10 @@ export default function Home() {
       <DashboardProfissionalModal
         aberto={dashboardAberto}
         onFechar={() => setDashboardAberto(false)}
+      />
+      <EditarPerfilPacienteModal
+        aberto={editarPacienteAberto}
+        onFechar={() => setEditarPacienteAberto(false)}
       />
     </main>
   );

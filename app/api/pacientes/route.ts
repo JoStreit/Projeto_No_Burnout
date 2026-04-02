@@ -4,6 +4,8 @@ import { criarPaciente, listarPacientes } from "@/lib/db";
 import { validarCPF } from "@/lib/cpf";
 import { criarToken } from "@/lib/auth";
 
+const PREFERENCIAS_BUSCA_VALIDAS = ["Presencial", "RemotoBrasil", "RemoToEstado"] as const;
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function GET() {
@@ -13,7 +15,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { nome, cpf, email, estado, cidade, senha } = body;
+  const { nome, cpf, email, estado, cidade, senha, preferenciaBusca } = body;
 
   if (!nome?.trim()) {
     return Response.json({ erro: "Nome é obrigatório" }, { status: 400 });
@@ -42,6 +44,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const preferenciaBuscaValida =
+    preferenciaBusca && PREFERENCIAS_BUSCA_VALIDAS.includes(preferenciaBusca)
+      ? (preferenciaBusca as "Presencial" | "RemotoBrasil" | "RemoToEstado")
+      : undefined;
+
   try {
     const paciente = criarPaciente({
       nome: nome.trim(),
@@ -50,6 +57,7 @@ export async function POST(request: NextRequest) {
       estado: estado.trim(),
       cidade: cidade.trim(),
       senha,
+      ...(preferenciaBuscaValida ? { preferenciaBusca: preferenciaBuscaValida } : {}),
     });
 
     const token = criarToken(paciente.id);

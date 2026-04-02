@@ -13,6 +13,7 @@ export interface Paciente {
   cidade: string;
   senhaHash: string;
   criadoEm: string;
+  preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
 }
 
 export interface PacientePublico {
@@ -23,6 +24,7 @@ export interface PacientePublico {
   estado: string;
   cidade: string;
   criadoEm: string;
+  preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
 }
 
 export interface Profissional {
@@ -91,6 +93,7 @@ export function criarPaciente(dados: {
   estado: string;
   cidade: string;
   senha: string;
+  preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
 }): PacientePublico {
   const db = lerDB();
   const cpfLimpo = dados.cpf.replace(/\D/g, "");
@@ -112,11 +115,46 @@ export function criarPaciente(dados: {
     cidade: dados.cidade,
     senhaHash: bcrypt.hashSync(dados.senha, 10),
     criadoEm: new Date().toISOString(),
+    ...(dados.preferenciaBusca ? { preferenciaBusca: dados.preferenciaBusca } : {}),
   };
 
   db.pacientes.push(paciente);
   salvarDB(db);
   return pacienteToPublico(paciente);
+}
+
+export function atualizarPaciente(
+  id: string,
+  dados: {
+    nome?: string;
+    email?: string;
+    estado?: string;
+    cidade?: string;
+    preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
+  }
+): PacientePublico {
+  const db = lerDB();
+  const idx = db.pacientes.findIndex((p) => p.id === id);
+  if (idx === -1) throw new Error("Paciente não encontrado");
+
+  if (dados.email) {
+    const emailLower = dados.email.toLowerCase();
+    if (db.pacientes.some((p) => p.id !== id && p.email?.toLowerCase() === emailLower)) {
+      throw new Error("E-mail já cadastrado");
+    }
+  }
+
+  db.pacientes[idx] = {
+    ...db.pacientes[idx],
+    ...(dados.nome ? { nome: dados.nome } : {}),
+    ...(dados.email ? { email: dados.email.toLowerCase() } : {}),
+    ...(dados.estado ? { estado: dados.estado } : {}),
+    ...(dados.cidade ? { cidade: dados.cidade } : {}),
+    ...(dados.preferenciaBusca !== undefined ? { preferenciaBusca: dados.preferenciaBusca } : {}),
+  };
+
+  salvarDB(db);
+  return pacienteToPublico(db.pacientes[idx]);
 }
 
 export function verificarSenhaPaciente(cpf: string, senha: string): PacientePublico | null {
@@ -131,6 +169,7 @@ export function verificarSenhaPaciente(cpf: string, senha: string): PacientePubl
 export function listarProfissionais(filtros?: {
   ramo?: string;
   cidade?: string;
+  estado?: string;
 }): ProfissionalPublico[] {
   let lista = lerDB().profissionais;
   if (filtros?.ramo) {
@@ -138,6 +177,9 @@ export function listarProfissionais(filtros?: {
   }
   if (filtros?.cidade) {
     lista = lista.filter((p) => p.cidade?.toLowerCase().includes(filtros.cidade!.toLowerCase()));
+  }
+  if (filtros?.estado) {
+    lista = lista.filter((p) => p.estado?.toLowerCase() === filtros.estado!.toLowerCase());
   }
   return lista.map(profissionalToPublico);
 }

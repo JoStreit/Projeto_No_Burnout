@@ -10,6 +10,7 @@ export interface PacienteSession {
   estado: string;
   cidade: string;
   criadoEm: string;
+  preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
 }
 
 export interface ProfissionalSession {

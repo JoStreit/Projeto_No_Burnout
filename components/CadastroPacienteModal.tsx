@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Combobox } from "@/components/ui/combobox";
+import { Checkbox } from "@/components/ui/checkbox";
 import { validarCPF, formatarCPF } from "@/lib/cpf";
 import { ESTADOS, buscarCidadesPorEstado } from "@/lib/brasil";
 import { useAuth } from "@/components/AuthProvider";
@@ -27,6 +28,7 @@ type Erros = {
   email?: string;
   estado?: string;
   cidade?: string;
+  preferenciaBusca?: string;
   senha?: string;
   confirmarSenha?: string;
   geral?: string;
@@ -46,6 +48,9 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
   const [email, setEmail] = useState("");
   const [estado, setEstado] = useState("");
   const [cidade, setCidade] = useState("");
+  const [presencial, setPresencial] = useState(false);
+  const [remoto, setRemoto] = useState(false);
+  const [abrangenciaRemoto, setAbrangenciaRemoto] = useState<"Brasil" | "Estado" | "">("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
 
@@ -92,6 +97,13 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
 
     if (!estado) novos.estado = "Selecione um estado";
     if (!cidade) novos.cidade = "Selecione uma cidade";
+
+    if (!presencial && !remoto) {
+      novos.preferenciaBusca = "Selecione pelo menos uma preferência de busca";
+    } else if (remoto && !abrangenciaRemoto) {
+      novos.preferenciaBusca = "Selecione a abrangência da busca remota";
+    }
+
     if (senha.length < 6) novos.senha = "Mínimo de 6 caracteres";
     if (senha !== confirmarSenha) novos.confirmarSenha = "Senhas não conferem";
 
@@ -104,11 +116,17 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
     if (!validar()) return;
 
     setCarregando(true);
+
+    let preferenciaBusca: "Presencial" | "RemotoBrasil" | "RemoToEstado" | undefined;
+    if (presencial) preferenciaBusca = "Presencial";
+    else if (remoto && abrangenciaRemoto === "Brasil") preferenciaBusca = "RemotoBrasil";
+    else if (remoto && abrangenciaRemoto === "Estado") preferenciaBusca = "RemoToEstado";
+
     try {
       const res = await fetch("/api/pacientes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, email, estado, cidade, senha }),
+        body: JSON.stringify({ nome, cpf, email, estado, cidade, senha, preferenciaBusca }),
       });
 
       const data = await res.json();
@@ -130,6 +148,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
   function fechar() {
     setNome(""); setCpf(""); setEmail(""); setEstado("");
     setCidade(""); setSenha(""); setConfirmarSenha("");
+    setPresencial(false); setRemoto(false); setAbrangenciaRemoto("");
     setErros({}); setSucesso(false); setOpcoesCidades([]);
     onFechar();
   }
@@ -220,6 +239,69 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
                 emptyText="Nenhuma cidade encontrada."
               />
               {erros.cidade && <p className="text-xs text-red-500">{erros.cidade}</p>}
+            </div>
+
+            {/* Preferência de Busca */}
+            <div className="space-y-2">
+              <Label>Preferência de Busca</Label>
+              <div className="flex gap-6">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="pac-presencial"
+                    checked={presencial}
+                    onCheckedChange={(checked) => {
+                      setPresencial(!!checked);
+                      if (checked) { setRemoto(false); setAbrangenciaRemoto(""); }
+                      limparErro("preferenciaBusca");
+                    }}
+                  />
+                  <label htmlFor="pac-presencial" className="text-sm cursor-pointer">Presencial</label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="pac-remoto"
+                    checked={remoto}
+                    onCheckedChange={(checked) => {
+                      setRemoto(!!checked);
+                      if (checked) { setPresencial(false); }
+                      else { setAbrangenciaRemoto(""); }
+                      limparErro("preferenciaBusca");
+                    }}
+                  />
+                  <label htmlFor="pac-remoto" className="text-sm cursor-pointer">Remoto</label>
+                </div>
+              </div>
+              {remoto && (
+                <div className="ml-4 flex gap-4 mt-1">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="pac-brasil"
+                      checked={abrangenciaRemoto === "Brasil"}
+                      onCheckedChange={(checked) => {
+                        setAbrangenciaRemoto(checked ? "Brasil" : "");
+                        limparErro("preferenciaBusca");
+                      }}
+                    />
+                    <label htmlFor="pac-brasil" className="text-sm cursor-pointer">Brasil (nacional)</label>
+                  </div>
+                  {estado && (
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="pac-estado"
+                        checked={abrangenciaRemoto === "Estado"}
+                        onCheckedChange={(checked) => {
+                          setAbrangenciaRemoto(checked ? "Estado" : "");
+                          limparErro("preferenciaBusca");
+                        }}
+                      />
+                      <label htmlFor="pac-estado" className="text-sm cursor-pointer">{estado} (meu estado)</label>
+                    </div>
+                  )}
+                </div>
+              )}
+              {erros.preferenciaBusca && (
+                <p className="text-xs text-red-500">{erros.preferenciaBusca}</p>
+              )}
             </div>
 
             {/* Senha */}
