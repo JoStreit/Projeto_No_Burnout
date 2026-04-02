@@ -85,7 +85,7 @@ export default function Home() {
                     <Button
                       size="sm"
                       onClick={() => setLoginAberto(true)}
-                      className="bg-green-500 hover:bg-green-600"
+                      className="bg-green-700 hover:bg-green-800 font-bold"
                     >
                       Sou Paciente
                     </Button>
@@ -140,7 +140,7 @@ export default function Home() {
                     <Button
                       size="sm"
                       onClick={() => setLoginProfAberto(true)}
-                      className="bg-teal-600 hover:bg-teal-700"
+                      className="bg-teal-600 hover:bg-teal-700 font-bold"
                     >
                       Sou Profissional
                     </Button>
