@@ -10,13 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Combobox } from "@/components/ui/combobox";
 import { validarCPF, formatarCPF } from "@/lib/cpf";
 import { ESTADOS, buscarCidadesPorEstado } from "@/lib/brasil";
 import { useAuth } from "@/components/AuthProvider";
@@ -38,6 +32,12 @@ type Erros = {
   geral?: string;
 };
 
+const OPCOES_ESTADO = ESTADOS.map((e) => ({
+  value: e.uf,
+  label: e.uf,
+  sublabel: e.nome,
+}));
+
 export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }: Props) {
   const { recarregar } = useAuth();
 
@@ -49,7 +49,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
 
-  const [cidades, setCidades] = useState<string[]>([]);
+  const [opcoesCidades, setOpcoesCidades] = useState<{ value: string; label: string }[]>([]);
   const [carregandoCidades, setCarregandoCidades] = useState(false);
 
   const [erros, setErros] = useState<Erros>({});
@@ -59,14 +59,14 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
 
   useEffect(() => {
     if (!estado) {
-      setCidades([]);
+      setOpcoesCidades([]);
       setCidade("");
       return;
     }
     setCarregandoCidades(true);
     setCidade("");
     buscarCidadesPorEstado(estado)
-      .then(setCidades)
+      .then((lista) => setOpcoesCidades(lista.map((c) => ({ value: c, label: c }))))
       .finally(() => setCarregandoCidades(false));
   }, [estado]);
 
@@ -130,7 +130,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
   function fechar() {
     setNome(""); setCpf(""); setEmail(""); setEstado("");
     setCidade(""); setSenha(""); setConfirmarSenha("");
-    setErros({}); setSucesso(false); setCidades([]);
+    setErros({}); setSucesso(false); setOpcoesCidades([]);
     onFechar();
   }
 
@@ -189,51 +189,36 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
             {/* Estado */}
             <div className="space-y-1.5">
               <Label>Estado</Label>
-              <Select
+              <Combobox
+                options={OPCOES_ESTADO}
                 value={estado}
-                onValueChange={(v) => { setEstado(v ?? ""); limparErro("estado"); }}
-              >
-                <SelectTrigger className={erros.estado ? "border-red-400" : ""}>
-                  <SelectValue placeholder="Selecione o estado" />
-                </SelectTrigger>
-                <SelectContent className="max-h-60">
-                  {ESTADOS.map((e) => (
-                    <SelectItem key={e.uf} value={e.uf}>
-                      {e.nome}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={(v) => { setEstado(v); limparErro("estado"); }}
+                placeholder="Selecione o estado"
+                searchPlaceholder="Buscar por sigla ou nome..."
+                error={!!erros.estado}
+              />
               {erros.estado && <p className="text-xs text-red-500">{erros.estado}</p>}
             </div>
 
             {/* Cidade */}
             <div className="space-y-1.5">
               <Label>Cidade</Label>
-              <Select
+              <Combobox
+                options={opcoesCidades}
                 value={cidade}
-                onValueChange={(v) => { setCidade(v ?? ""); limparErro("cidade"); }}
+                onChange={(v) => { setCidade(v); limparErro("cidade"); }}
+                placeholder={
+                  !estado
+                    ? "Selecione um estado primeiro"
+                    : carregandoCidades
+                    ? "Carregando cidades..."
+                    : "Digite para buscar a cidade"
+                }
+                searchPlaceholder="Digite o nome da cidade..."
                 disabled={!estado || carregandoCidades}
-              >
-                <SelectTrigger className={erros.cidade ? "border-red-400" : ""}>
-                  <SelectValue
-                    placeholder={
-                      !estado
-                        ? "Selecione um estado primeiro"
-                        : carregandoCidades
-                        ? "Carregando cidades..."
-                        : "Selecione a cidade"
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent className="max-h-60">
-                  {cidades.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                error={!!erros.cidade}
+                emptyText="Nenhuma cidade encontrada."
+              />
               {erros.cidade && <p className="text-xs text-red-500">{erros.cidade}</p>}
             </div>
 
