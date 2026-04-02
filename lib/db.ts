@@ -271,3 +271,37 @@ export function atualizarStatusProfissional(
   salvarDB(db);
   return profissionalToPublico(db.profissionais[idx]);
 }
+
+export function atualizarProfissional(
+  id: string,
+  dados: {
+    nome?: string;
+    estado?: string;
+    cidade?: string;
+    atendimento?: string[];
+    email?: string;
+  }
+): ProfissionalPublico {
+  const db = lerDB();
+  const idx = db.profissionais.findIndex((p) => p.id === id);
+  if (idx === -1) throw new Error("Profissional não encontrado");
+
+  if (dados.email) {
+    const emailLower = dados.email.toLowerCase();
+    if (db.profissionais.some((p) => p.id !== id && p.email?.toLowerCase() === emailLower)) {
+      throw new Error("E-mail já cadastrado");
+    }
+  }
+
+  db.profissionais[idx] = {
+    ...db.profissionais[idx],
+    ...(dados.nome ? { nome: dados.nome } : {}),
+    ...(dados.estado ? { estado: dados.estado } : {}),
+    ...(dados.cidade ? { cidade: dados.cidade } : {}),
+    ...(dados.atendimento ? { atendimento: dados.atendimento } : {}),
+    ...(dados.email ? { email: dados.email.toLowerCase() } : {}),
+  };
+
+  salvarDB(db);
+  return profissionalToPublico(db.profissionais[idx]);
+}
