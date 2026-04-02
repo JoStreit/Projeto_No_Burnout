@@ -47,7 +47,7 @@ export default function Home() {
             <span className="font-bold text-green-900 text-lg">SaúdeConnect</span>
           </div>
 
-          <div className="flex items-center gap-0">
+          <div className="flex items-center gap-3">
             {/* ─── Área do Paciente — oculta quando profissional está logado ─── */}
             {!carregandoPaciente && !profissional && (
               <div className="flex items-center gap-3 pr-4 border-r border-green-100">
@@ -65,7 +65,6 @@ export default function Home() {
                       <span className="text-sm font-semibold text-green-900">
                         {paciente.nome.split(" ")[0]}
                       </span>
-                      <span className="text-xs text-green-800 font-medium">Área do Paciente</span>
                     </div>
 
                     {/* Ações */}
@@ -81,16 +80,12 @@ export default function Home() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex flex-col items-end">
-                    <Button
-                      size="sm"
-                      onClick={() => setLoginAberto(true)}
-                      className="bg-green-700 hover:bg-green-800 font-bold"
-                    >
-                      Sou Paciente
-                    </Button>
-                    <span className="text-xs text-green-800 mt-0.5 font-medium">Área do Paciente</span>
-                  </div>
+                  <Button
+                    onClick={() => setLoginAberto(true)}
+                    className="bg-green-700 hover:bg-green-800 font-bold"
+                  >
+                    Sou Paciente
+                  </Button>
                 )}
               </div>
             )}
@@ -112,7 +107,6 @@ export default function Home() {
                       <span className="text-sm font-semibold text-green-900">
                         {profissional.nome.split(" ")[0]}
                       </span>
-                      <span className="text-xs text-green-800 font-medium">Área do Profissional</span>
                     </div>
 
                     {/* Ações */}
@@ -136,16 +130,12 @@ export default function Home() {
                     </div>
                   </>
                 ) : (
-                  <div className="flex flex-col items-end">
-                    <Button
-                      size="sm"
-                      onClick={() => setLoginProfAberto(true)}
-                      className="bg-teal-600 hover:bg-teal-700 font-bold"
-                    >
-                      Sou Profissional
-                    </Button>
-                    <span className="text-xs text-green-800 mt-0.5 font-medium">Área do Profissional</span>
-                  </div>
+                  <Button
+                    onClick={() => setLoginProfAberto(true)}
+                    className="bg-teal-600 hover:bg-teal-700 font-bold"
+                  >
+                    Sou Profissional
+                  </Button>
                 )}
               </div>
             )}
