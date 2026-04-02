@@ -71,14 +71,6 @@ export default function Home() {
                     {/* Ações */}
                     <div className="flex items-center gap-1 ml-1">
                       <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setBuscarAberto(true)}
-                        className="border-green-200 text-green-700 hover:bg-green-50"
-                      >
-                        Buscar Profissionais
-                      </Button>
-                      <Button
                         variant="ghost"
                         size="sm"
                         onClick={logoutPaciente}

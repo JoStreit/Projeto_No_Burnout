@@ -7,7 +7,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -16,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -45,17 +45,28 @@ const COR_RAMO: Record<string, string> = {
 export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial }: Props) {
   const { paciente } = useAuth();
   const [ramo, setRamo] = useState(ramoInicial ?? "");
-  const [cidadeManual, setCidadeManual] = useState("");
+  const [presencial, setPresencial] = useState(false);
+  const [remoto, setRemoto] = useState(false);
+  const [abrangencia, setAbrangencia] = useState<"Brasil" | "Estado" | "">("");
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [carregando, setCarregando] = useState(false);
 
-  const temPreferencia = !!paciente?.preferenciaBusca;
+  // Inicializa filtros a partir da preferência salva do paciente
+  useEffect(() => {
+    if (!aberto || !paciente) return;
+    if (paciente.preferenciaBusca === "Presencial") {
+      setPresencial(true); setRemoto(false); setAbrangencia("");
+    } else if (paciente.preferenciaBusca === "RemotoBrasil") {
+      setPresencial(false); setRemoto(true); setAbrangencia("Brasil");
+    } else if (paciente.preferenciaBusca === "RemoToEstado") {
+      setPresencial(false); setRemoto(true); setAbrangencia("Estado");
+    }
+  }, [aberto, paciente]);
 
   function labelAbrangencia(): string {
-    if (!paciente?.preferenciaBusca) return "";
-    if (paciente.preferenciaBusca === "Presencial") return `Buscando em: ${paciente.cidade}`;
-    if (paciente.preferenciaBusca === "RemotoBrasil") return "Buscando em: Todo o Brasil";
-    if (paciente.preferenciaBusca === "RemoToEstado") return `Buscando em: ${paciente.estado}`;
+    if (presencial) return `📍 Buscando em: ${paciente?.cidade ?? "sua cidade"}`;
+    if (remoto && abrangencia === "Brasil") return "🌎 Buscando em: Todo o Brasil";
+    if (remoto && abrangencia === "Estado") return `📍 Buscando em: ${paciente?.estado ?? "seu estado"}`;
     return "";
   }
 
@@ -65,14 +76,12 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
       const params = new URLSearchParams();
       if (ramo) params.set("ramo", ramo);
 
-      if (paciente?.preferenciaBusca === "Presencial") {
+      if (presencial && paciente?.cidade) {
         params.set("cidade", paciente.cidade);
-      } else if (paciente?.preferenciaBusca === "RemoToEstado") {
+      } else if (remoto && abrangencia === "Estado" && paciente?.estado) {
         params.set("estado", paciente.estado);
-      } else if (!paciente?.preferenciaBusca && cidadeManual.trim()) {
-        params.set("cidade", cidadeManual.trim());
       }
-      // RemotoBrasil: sem filtro geográfico
+      // remoto + Brasil: sem filtro geográfico
 
       const res = await fetch(`/api/profissionais?${params.toString()}`);
       const data = await res.json();
@@ -82,7 +91,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     } finally {
       setCarregando(false);
     }
-  }, [ramo, cidadeManual, paciente]);
+  }, [ramo, presencial, remoto, abrangencia, paciente]);
 
   useEffect(() => {
     if (aberto) buscar();
@@ -90,57 +99,90 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
   function fechar() {
     setRamo(ramoInicial ?? "");
-    setCidadeManual("");
+    setPresencial(false);
+    setRemoto(false);
+    setAbrangencia("");
     onFechar();
   }
+
+  const label = labelAbrangencia();
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
       <DialogContent className="max-w-xl max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-gray-800">
+          <DialogTitle className="text-xl font-bold text-green-700">
             Buscar Profissionais
           </DialogTitle>
         </DialogHeader>
 
-        {/* Badge de abrangência */}
-        {temPreferencia && (
-          <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-sm text-green-700">
-            {paciente?.preferenciaBusca === "RemotoBrasil" ? (
-              <span>🌎 {labelAbrangencia()}</span>
-            ) : (
-              <span>📍 {labelAbrangencia()}</span>
-            )}
-          </div>
-        )}
-
-        {/* Filtros */}
-        <div className={`grid gap-3 ${temPreferencia ? "grid-cols-1" : "grid-cols-2"}`}>
-          <div className="space-y-1.5">
-            <Label>Ramo de atuação</Label>
-            <Select value={ramo} onValueChange={(v) => setRamo(v ?? "")}>
-              <SelectTrigger>
-                <SelectValue placeholder="Todos os ramos" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Todos os ramos</SelectItem>
-                {RAMOS.map((r) => (
-                  <SelectItem key={r} value={r}>{r}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {!temPreferencia && (
-            <div className="space-y-1.5">
-              <Label>Cidade</Label>
-              <Input
-                value={cidadeManual}
-                onChange={(e) => setCidadeManual(e.target.value)}
-                placeholder="Ex: São Paulo"
+        {/* Filtro de modalidade */}
+        <div className="rounded-xl border border-green-100 bg-green-50 p-3 space-y-2">
+          <Label className="text-xs font-semibold text-green-800 uppercase tracking-wide">Modalidade</Label>
+          <div className="flex gap-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={presencial}
+                onCheckedChange={(v) => {
+                  setPresencial(!!v);
+                  if (v) { setRemoto(false); setAbrangencia(""); }
+                }}
               />
+              <span className="text-sm font-medium">Presencial</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <Checkbox
+                checked={remoto}
+                onCheckedChange={(v) => {
+                  setRemoto(!!v);
+                  if (v) { setPresencial(false); }
+                  else { setAbrangencia(""); }
+                }}
+              />
+              <span className="text-sm font-medium">Remoto</span>
+            </label>
+          </div>
+
+          {remoto && (
+            <div className="ml-4 flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={abrangencia === "Brasil"}
+                  onCheckedChange={(v) => setAbrangencia(v ? "Brasil" : "")}
+                />
+                <span className="text-sm">Brasil (nacional)</span>
+              </label>
+              {paciente?.estado && (
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <Checkbox
+                    checked={abrangencia === "Estado"}
+                    onCheckedChange={(v) => setAbrangencia(v ? "Estado" : "")}
+                  />
+                  <span className="text-sm">{paciente.estado} (meu estado)</span>
+                </label>
+              )}
             </div>
           )}
+
+          {label && (
+            <p className="text-xs text-green-700 font-medium pt-1">{label}</p>
+          )}
+        </div>
+
+        {/* Filtro de ramo */}
+        <div className="space-y-1.5">
+          <Label>Ramo de atuação</Label>
+          <Select value={ramo} onValueChange={(v) => setRamo(v ?? "")}>
+            <SelectTrigger>
+              <SelectValue placeholder="Todos os ramos" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">Todos os ramos</SelectItem>
+              {RAMOS.map((r) => (
+                <SelectItem key={r} value={r}>{r}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <Button
@@ -173,9 +215,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                     <p className="font-medium text-gray-800 text-sm">{p.nome}</p>
                     <p className="text-xs text-gray-500 mt-0.5">📍 {p.cidade}</p>
                   </div>
-                  <span
-                    className={`text-xs font-medium px-2.5 py-1 rounded-full ${COR_RAMO[p.ramo] ?? "bg-gray-100 text-gray-600"}`}
-                  >
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${COR_RAMO[p.ramo] ?? "bg-gray-100 text-gray-600"}`}>
                     {p.ramo}
                   </span>
                 </div>
