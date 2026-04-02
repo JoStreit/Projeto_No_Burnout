@@ -90,7 +90,7 @@ export default function Home() {
                     >
                       Sou Paciente
                     </Button>
-                    <span className="text-[10px] text-green-400 mt-0.5">Área do Paciente</span>
+                    <span className="text-xs text-green-800 mt-0.5 font-medium">Área do Paciente</span>
                   </div>
                 )}
               </div>
