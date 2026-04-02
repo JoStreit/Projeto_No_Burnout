@@ -82,19 +82,14 @@ export default function Home() {
                   </>
                 ) : (
                   <div className="flex flex-col items-end">
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm" onClick={() => setLoginAberto(true)} className="text-gray-600">
-                        Entrar
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setPacienteAberto(true)}
-                        className="border-green-200 text-green-700 hover:bg-green-50"
-                      >
-                        Sou Paciente
-                      </Button>
-                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setLoginAberto(true)}
+                      className="border-green-200 text-green-700 hover:bg-green-50"
+                    >
+                      Sou Paciente
+                    </Button>
                     <span className="text-[10px] text-green-400 mt-0.5">Área do Paciente</span>
                   </div>
                 )}
@@ -143,23 +138,13 @@ export default function Home() {
                   </>
                 ) : (
                   <div className="flex flex-col items-end">
-                    <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setLoginProfAberto(true)}
-                        className="text-teal-600"
-                      >
-                        Entrar
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => setProfissionalAberto(true)}
-                        className="bg-teal-600 hover:bg-teal-700"
-                      >
-                        Sou Profissional
-                      </Button>
-                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => setLoginProfAberto(true)}
+                      className="bg-teal-600 hover:bg-teal-700"
+                    >
+                      Sou Profissional
+                    </Button>
                     <span className="text-xs text-green-800 mt-0.5 font-medium">Área do Profissional</span>
                   </div>
                 )}
