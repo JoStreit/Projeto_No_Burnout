@@ -217,8 +217,9 @@ export default function Home() {
             </div>
             <h3 className="font-semibold text-green-900 mb-2">Para Profissionais</h3>
             <p className="text-sm text-gray-500">
-              Cadastre-se como profissional de saúde e seja recomendado para
-              pacientes que precisam do seu perfil.
+              {profissional
+                ? "Mesmo com perfil profissional você pode cadastrar seu perfil de paciente e encontrar um profissional para você."
+                : "Cadastre-se como profissional de saúde e seja recomendado para pacientes que precisam do seu perfil."}
             </p>
             {!profissional && (
               <button onClick={() => setProfissionalAberto(true)} className="mt-4 text-sm text-teal-600 hover:text-teal-700 font-medium">
