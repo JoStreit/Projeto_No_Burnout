@@ -8,6 +8,9 @@ export interface Paciente {
   id: string;
   nome: string;
   cpf: string;
+  email: string;
+  estado: string;
+  cidade: string;
   senhaHash: string;
   criadoEm: string;
 }
@@ -16,6 +19,9 @@ export interface PacientePublico {
   id: string;
   nome: string;
   cpf: string;
+  email: string;
+  estado: string;
+  cidade: string;
   criadoEm: string;
 }
 
@@ -61,23 +67,33 @@ export function buscarPacientePorId(id: string): PacientePublico | null {
   return p ? toPublico(p) : null;
 }
 
-export function criarPaciente(
-  nome: string,
-  cpf: string,
-  senha: string
-): PacientePublico {
+export function criarPaciente(dados: {
+  nome: string;
+  cpf: string;
+  email: string;
+  estado: string;
+  cidade: string;
+  senha: string;
+}): PacientePublico {
   const db = lerDB();
-  const cpfLimpo = cpf.replace(/\D/g, "");
+  const cpfLimpo = dados.cpf.replace(/\D/g, "");
 
   if (db.pacientes.some((p) => p.cpf === cpfLimpo)) {
     throw new Error("CPF já cadastrado");
   }
 
+  if (db.pacientes.some((p) => p.email.toLowerCase() === dados.email.toLowerCase())) {
+    throw new Error("E-mail já cadastrado");
+  }
+
   const paciente: Paciente = {
     id: crypto.randomUUID(),
-    nome,
+    nome: dados.nome,
     cpf: cpfLimpo,
-    senhaHash: bcrypt.hashSync(senha, 10),
+    email: dados.email.toLowerCase(),
+    estado: dados.estado,
+    cidade: dados.cidade,
+    senhaHash: bcrypt.hashSync(dados.senha, 10),
     criadoEm: new Date().toISOString(),
   };
 
@@ -103,8 +119,8 @@ export function listarProfissionais(filtros?: {
 }): Profissional[] {
   let lista = lerDB().profissionais;
   if (filtros?.ramo) {
-    lista = lista.filter((p) =>
-      p.ramo.toLowerCase() === filtros.ramo!.toLowerCase()
+    lista = lista.filter(
+      (p) => p.ramo.toLowerCase() === filtros.ramo!.toLowerCase()
     );
   }
   if (filtros?.cidade) {

@@ -4,6 +4,8 @@ import { criarPaciente, listarPacientes } from "@/lib/db";
 import { validarCPF } from "@/lib/cpf";
 import { criarToken } from "@/lib/auth";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function GET() {
   const pacientes = listarPacientes();
   return Response.json(pacientes);
@@ -11,7 +13,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { nome, cpf, senha } = body;
+  const { nome, cpf, email, estado, cidade, senha } = body;
 
   if (!nome?.trim()) {
     return Response.json({ erro: "Nome é obrigatório" }, { status: 400 });
@@ -19,6 +21,18 @@ export async function POST(request: NextRequest) {
 
   if (!validarCPF(cpf)) {
     return Response.json({ erro: "CPF inválido" }, { status: 400 });
+  }
+
+  if (!email?.trim() || !EMAIL_REGEX.test(email)) {
+    return Response.json({ erro: "E-mail inválido" }, { status: 400 });
+  }
+
+  if (!estado?.trim()) {
+    return Response.json({ erro: "Estado é obrigatório" }, { status: 400 });
+  }
+
+  if (!cidade?.trim()) {
+    return Response.json({ erro: "Cidade é obrigatória" }, { status: 400 });
   }
 
   if (!senha || senha.length < 6) {
@@ -29,9 +43,15 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const paciente = criarPaciente(nome.trim(), cpf, senha);
+    const paciente = criarPaciente({
+      nome: nome.trim(),
+      cpf,
+      email: email.trim(),
+      estado: estado.trim(),
+      cidade: cidade.trim(),
+      senha,
+    });
 
-    // Auto-login após cadastro
     const token = criarToken(paciente.id);
     const cookieStore = await cookies();
     cookieStore.set("session", token, {
