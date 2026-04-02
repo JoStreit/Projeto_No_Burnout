@@ -89,10 +89,26 @@ export default function Home() {
 
             {/* ─── Área do Profissional — oculta quando paciente está logado ─── */}
             {!carregandoProfissional && !paciente && (
-              <div className="flex flex-col items-end pl-4">
-                <div className="flex items-center gap-2">
-                  {profissional ? (
-                    <>
+              <div className="flex items-center gap-3 pl-4">
+                {profissional ? (
+                  <>
+                    {/* Avatar com inicial */}
+                    <div className="w-9 h-9 rounded-full bg-teal-600 flex items-center justify-center shrink-0 shadow-sm">
+                      <span className="text-white font-bold text-sm">
+                        {profissional.nome.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+
+                    {/* Nome + label empilhados */}
+                    <div className="hidden sm:flex flex-col leading-tight">
+                      <span className="text-sm font-semibold text-green-900">
+                        {profissional.nome.split(" ")[0]}
+                      </span>
+                      <span className="text-xs text-green-800 font-medium">Área do Profissional</span>
+                    </div>
+
+                    {/* Ações */}
+                    <div className="flex items-center gap-1 ml-1">
                       <Button
                         variant="outline"
                         size="sm"
@@ -101,15 +117,19 @@ export default function Home() {
                       >
                         Meu Perfil
                       </Button>
-                      <span className="text-sm text-gray-600 hidden sm:inline">
-                        <strong>{profissional.nome.split(" ")[0]}</strong>
-                      </span>
-                      <Button variant="ghost" size="sm" onClick={logoutProfissional} className="text-gray-400 hover:text-red-500 text-xs">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={logoutProfissional}
+                        className="text-gray-400 hover:text-red-500 px-2"
+                      >
                         Sair
                       </Button>
-                    </>
-                  ) : (
-                    <>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-end">
+                    <div className="flex items-center gap-2">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -125,10 +145,10 @@ export default function Home() {
                       >
                         Sou Profissional
                       </Button>
-                    </>
-                  )}
-                </div>
-                <span className="text-xs text-green-800 mt-0.5 font-medium">Área do Profissional</span>
+                    </div>
+                    <span className="text-xs text-green-800 mt-0.5 font-medium">Área do Profissional</span>
+                  </div>
+                )}
               </div>
             )}
           </div>
