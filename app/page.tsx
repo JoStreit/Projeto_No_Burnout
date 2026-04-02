@@ -83,10 +83,9 @@ export default function Home() {
                 ) : (
                   <div className="flex flex-col items-end">
                     <Button
-                      variant="outline"
                       size="sm"
                       onClick={() => setLoginAberto(true)}
-                      className="border-green-200 text-green-700 hover:bg-green-50"
+                      className="bg-green-500 hover:bg-green-600"
                     >
                       Sou Paciente
                     </Button>
