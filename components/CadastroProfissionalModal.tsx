@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Combobox } from "@/components/ui/combobox";
 import {
   Select,
   SelectContent,
@@ -18,61 +20,112 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { validarCPF, formatarCPF } from "@/lib/cpf";
+import { ESTADOS, buscarCidadesPorEstado } from "@/lib/brasil";
 
 const RAMOS = ["Fisioterapeuta", "Nutricionista", "Psicólogo", "Personal Trainer"];
+
+const OPCOES_ESTADO = ESTADOS.map((e) => ({
+  value: e.uf,
+  label: e.uf,
+  sublabel: e.nome,
+}));
 
 interface Props {
   aberto: boolean;
   onFechar: () => void;
 }
 
+type Erros = {
+  nome?: string;
+  cpf?: string;
+  carteirinha?: string;
+  ramo?: string;
+  estado?: string;
+  cidade?: string;
+  email?: string;
+  atendimento?: string;
+  geral?: string;
+};
+
 export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
+  const [carteirinha, setCarteirinha] = useState("");
   const [ramo, setRamo] = useState("");
+  const [estado, setEstado] = useState("");
   const [cidade, setCidade] = useState("");
-  const [erros, setErros] = useState<{
-    nome?: string;
-    cpf?: string;
-    ramo?: string;
-    cidade?: string;
-    geral?: string;
-  }>({});
+  const [email, setEmail] = useState("");
+  const [atendOnline, setAtendOnline] = useState(false);
+  const [atendPresencial, setAtendPresencial] = useState(false);
+
+  const [opcoesCidades, setOpcoesCidades] = useState<{ value: string; label: string }[]>([]);
+  const [carregandoCidades, setCarregandoCidades] = useState(false);
+
+  const [erros, setErros] = useState<Erros>({});
   const [sucesso, setSucesso] = useState(false);
   const [nomeRegistrado, setNomeRegistrado] = useState("");
   const [ramoRegistrado, setRamoRegistrado] = useState("");
   const [carregando, setCarregando] = useState(false);
 
+  useEffect(() => {
+    if (!estado) {
+      setOpcoesCidades([]);
+      setCidade("");
+      return;
+    }
+    setCarregandoCidades(true);
+    setCidade("");
+    buscarCidadesPorEstado(estado)
+      .then((lista) => setOpcoesCidades(lista.map((c) => ({ value: c, label: c }))))
+      .finally(() => setCarregandoCidades(false));
+  }, [estado]);
+
+  function limparErro(campo: keyof Erros) {
+    setErros((prev) => ({ ...prev, [campo]: undefined }));
+  }
+
   function handleCpf(e: React.ChangeEvent<HTMLInputElement>) {
     setCpf(formatarCPF(e.target.value));
-    if (erros.cpf) setErros((prev) => ({ ...prev, cpf: undefined }));
+    limparErro("cpf");
   }
 
   function validar(): boolean {
-    const novosErros: typeof erros = {};
-    if (!nome.trim()) novosErros.nome = "Nome é obrigatório";
+    const novos: Erros = {};
+    if (!nome.trim()) novos.nome = "Nome é obrigatório";
+
     const cpfLimpo = cpf.replace(/\D/g, "");
-    if (cpfLimpo.length !== 11) {
-      novosErros.cpf = "CPF deve ter 11 dígitos";
-    } else if (!validarCPF(cpf)) {
-      novosErros.cpf = "CPF inválido";
-    }
-    if (!ramo) novosErros.ramo = "Selecione um ramo";
-    if (!cidade.trim()) novosErros.cidade = "Cidade é obrigatória";
-    setErros(novosErros);
-    return Object.keys(novosErros).length === 0;
+    if (cpfLimpo.length !== 11) novos.cpf = "CPF deve ter 11 dígitos";
+    else if (!validarCPF(cpf)) novos.cpf = "CPF inválido";
+
+    if (!carteirinha.trim()) novos.carteirinha = "Número da carteirinha é obrigatório";
+    if (!ramo) novos.ramo = "Selecione um ramo";
+    if (!estado) novos.estado = "Selecione um estado";
+    if (!cidade) novos.cidade = "Selecione uma cidade";
+
+    if (!email.trim()) novos.email = "E-mail é obrigatório";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) novos.email = "E-mail inválido";
+
+    if (!atendOnline && !atendPresencial)
+      novos.atendimento = "Selecione ao menos uma modalidade";
+
+    setErros(novos);
+    return Object.keys(novos).length === 0;
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validar()) return;
 
+    const atendimento: string[] = [];
+    if (atendOnline) atendimento.push("Online");
+    if (atendPresencial) atendimento.push("Presencial");
+
     setCarregando(true);
     try {
       const res = await fetch("/api/profissionais", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, ramo, cidade }),
+        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento }),
       });
 
       const data = await res.json();
@@ -92,18 +145,16 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
   }
 
   function fechar() {
-    setNome("");
-    setCpf("");
-    setRamo("");
-    setCidade("");
-    setErros({});
-    setSucesso(false);
+    setNome(""); setCpf(""); setCarteirinha(""); setRamo("");
+    setEstado(""); setCidade(""); setEmail("");
+    setAtendOnline(false); setAtendPresencial(false);
+    setErros({}); setSucesso(false); setOpcoesCidades([]);
     onFechar();
   }
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-md max-h-[92vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-violet-700">
             Cadastro de Profissional
@@ -111,26 +162,26 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
         </DialogHeader>
 
         {!sucesso ? (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto pr-1">
+
+            {/* Nome */}
             <div className="space-y-1.5">
-              <Label htmlFor="nome-prof">Nome completo</Label>
+              <Label htmlFor="prof-nome">Nome completo</Label>
               <Input
-                id="nome-prof"
+                id="prof-nome"
                 value={nome}
-                onChange={(e) => {
-                  setNome(e.target.value);
-                  if (erros.nome) setErros((prev) => ({ ...prev, nome: undefined }));
-                }}
+                onChange={(e) => { setNome(e.target.value); limparErro("nome"); }}
                 placeholder="Ex: Dr. João Oliveira"
                 className={erros.nome ? "border-red-400" : ""}
               />
               {erros.nome && <p className="text-xs text-red-500">{erros.nome}</p>}
             </div>
 
+            {/* CPF */}
             <div className="space-y-1.5">
-              <Label htmlFor="cpf-prof">CPF</Label>
+              <Label htmlFor="prof-cpf">CPF</Label>
               <Input
-                id="cpf-prof"
+                id="prof-cpf"
                 value={cpf}
                 onChange={handleCpf}
                 placeholder="000.000.000-00"
@@ -140,42 +191,114 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
               {erros.cpf && <p className="text-xs text-red-500">{erros.cpf}</p>}
             </div>
 
+            {/* Carteirinha */}
+            <div className="space-y-1.5">
+              <Label htmlFor="prof-carteirinha">Número da Carteirinha</Label>
+              <Input
+                id="prof-carteirinha"
+                value={carteirinha}
+                onChange={(e) => { setCarteirinha(e.target.value); limparErro("carteirinha"); }}
+                placeholder="Ex: CREFITO-2/123456-F"
+                className={erros.carteirinha ? "border-red-400" : ""}
+              />
+              {erros.carteirinha && <p className="text-xs text-red-500">{erros.carteirinha}</p>}
+            </div>
+
+            {/* Ramo */}
             <div className="space-y-1.5">
               <Label>Ramo de atuação</Label>
               <Select
                 value={ramo}
-                onValueChange={(val) => {
-                  setRamo(val ?? "");
-                  if (erros.ramo) setErros((prev) => ({ ...prev, ramo: undefined }));
-                }}
+                onValueChange={(val) => { setRamo(val ?? ""); limparErro("ramo"); }}
               >
                 <SelectTrigger className={erros.ramo ? "border-red-400" : ""}>
                   <SelectValue placeholder="Selecione o ramo" />
                 </SelectTrigger>
                 <SelectContent>
                   {RAMOS.map((r) => (
-                    <SelectItem key={r} value={r}>
-                      {r}
-                    </SelectItem>
+                    <SelectItem key={r} value={r}>{r}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               {erros.ramo && <p className="text-xs text-red-500">{erros.ramo}</p>}
             </div>
 
+            {/* Estado */}
             <div className="space-y-1.5">
-              <Label htmlFor="cidade-prof">Cidade</Label>
-              <Input
-                id="cidade-prof"
+              <Label>Estado</Label>
+              <Combobox
+                options={OPCOES_ESTADO}
+                value={estado}
+                onChange={(v) => { setEstado(v); limparErro("estado"); }}
+                placeholder="Selecione o estado"
+                searchPlaceholder="Buscar por sigla ou nome..."
+                error={!!erros.estado}
+              />
+              {erros.estado && <p className="text-xs text-red-500">{erros.estado}</p>}
+            </div>
+
+            {/* Cidade */}
+            <div className="space-y-1.5">
+              <Label>Cidade</Label>
+              <Combobox
+                options={opcoesCidades}
                 value={cidade}
-                onChange={(e) => {
-                  setCidade(e.target.value);
-                  if (erros.cidade) setErros((prev) => ({ ...prev, cidade: undefined }));
-                }}
-                placeholder="Ex: São Paulo"
-                className={erros.cidade ? "border-red-400" : ""}
+                onChange={(v) => { setCidade(v); limparErro("cidade"); }}
+                placeholder={
+                  !estado ? "Selecione um estado primeiro"
+                  : carregandoCidades ? "Carregando cidades..."
+                  : "Digite para buscar a cidade"
+                }
+                searchPlaceholder="Digite o nome da cidade..."
+                disabled={!estado || carregandoCidades}
+                error={!!erros.cidade}
+                emptyText="Nenhuma cidade encontrada."
               />
               {erros.cidade && <p className="text-xs text-red-500">{erros.cidade}</p>}
+            </div>
+
+            {/* E-mail */}
+            <div className="space-y-1.5">
+              <Label htmlFor="prof-email">E-mail</Label>
+              <Input
+                id="prof-email"
+                type="email"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value); limparErro("email"); }}
+                placeholder="Ex: joao@clinica.com"
+                className={erros.email ? "border-red-400" : ""}
+              />
+              {erros.email && <p className="text-xs text-red-500">{erros.email}</p>}
+            </div>
+
+            {/* Atendimento */}
+            <div className="space-y-2">
+              <Label>Modalidade de Atendimento</Label>
+              <div className="flex gap-6">
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <Checkbox
+                    checked={atendOnline}
+                    onCheckedChange={(v) => {
+                      setAtendOnline(v === true);
+                      limparErro("atendimento");
+                    }}
+                  />
+                  <span className="text-sm font-medium">Online</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <Checkbox
+                    checked={atendPresencial}
+                    onCheckedChange={(v) => {
+                      setAtendPresencial(v === true);
+                      limparErro("atendimento");
+                    }}
+                  />
+                  <span className="text-sm font-medium">Presencial</span>
+                </label>
+              </div>
+              {erros.atendimento && (
+                <p className="text-xs text-red-500">{erros.atendimento}</p>
+              )}
             </div>
 
             {erros.geral && (
@@ -205,9 +328,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
               </div>
             </div>
             <div>
-              <p className="text-lg font-semibold text-gray-800">
-                Profissional cadastrado!
-              </p>
+              <p className="text-lg font-semibold text-gray-800">Profissional cadastrado!</p>
               <p className="text-sm text-gray-500 mt-1">
                 <strong>{nomeRegistrado}</strong> ({ramoRegistrado}) foi cadastrado com sucesso.
               </p>
@@ -215,7 +336,13 @@ export default function CadastroProfissionalModal({ aberto, onFechar }: Props) {
             <div className="flex gap-3 justify-center">
               <Button
                 variant="outline"
-                onClick={() => { setSucesso(false); setNome(""); setCpf(""); setRamo(""); setCidade(""); }}
+                onClick={() => {
+                  setSucesso(false);
+                  setNome(""); setCpf(""); setCarteirinha(""); setRamo("");
+                  setEstado(""); setCidade(""); setEmail("");
+                  setAtendOnline(false); setAtendPresencial(false);
+                  setOpcoesCidades([]);
+                }}
               >
                 Novo cadastro
               </Button>

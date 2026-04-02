@@ -9,6 +9,8 @@ const RAMOS_VALIDOS = [
   "Personal Trainer",
 ];
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const ramo = searchParams.get("ramo") ?? undefined;
@@ -19,26 +21,43 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  const { nome, cpf, ramo, cidade } = body;
+  const { nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento } = body;
 
-  if (!nome?.trim()) {
+  if (!nome?.trim())
     return Response.json({ erro: "Nome é obrigatório" }, { status: 400 });
-  }
 
-  if (!validarCPF(cpf)) {
+  if (!validarCPF(cpf))
     return Response.json({ erro: "CPF inválido" }, { status: 400 });
-  }
 
-  if (!RAMOS_VALIDOS.includes(ramo)) {
+  if (!carteirinha?.trim())
+    return Response.json({ erro: "Número da carteirinha é obrigatório" }, { status: 400 });
+
+  if (!RAMOS_VALIDOS.includes(ramo))
     return Response.json({ erro: "Ramo inválido" }, { status: 400 });
-  }
 
-  if (!cidade?.trim()) {
+  if (!estado?.trim())
+    return Response.json({ erro: "Estado é obrigatório" }, { status: 400 });
+
+  if (!cidade?.trim())
     return Response.json({ erro: "Cidade é obrigatória" }, { status: 400 });
-  }
+
+  if (!email?.trim() || !EMAIL_REGEX.test(email))
+    return Response.json({ erro: "E-mail inválido" }, { status: 400 });
+
+  if (!Array.isArray(atendimento) || atendimento.length === 0)
+    return Response.json({ erro: "Selecione ao menos uma modalidade de atendimento" }, { status: 400 });
 
   try {
-    const profissional = criarProfissional(nome.trim(), cpf, ramo, cidade.trim());
+    const profissional = criarProfissional({
+      nome: nome.trim(),
+      cpf,
+      carteirinha: carteirinha.trim(),
+      ramo,
+      estado: estado.trim(),
+      cidade: cidade.trim(),
+      email: email.trim(),
+      atendimento,
+    });
     return Response.json(profissional, { status: 201 });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Erro ao cadastrar";

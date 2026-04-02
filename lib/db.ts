@@ -29,8 +29,12 @@ export interface Profissional {
   id: string;
   nome: string;
   cpf: string;
+  carteirinha: string;
   ramo: string;
+  estado: string;
   cidade: string;
+  email: string;
+  atendimento: string[];
   criadoEm: string;
 }
 
@@ -82,7 +86,11 @@ export function criarPaciente(dados: {
     throw new Error("CPF já cadastrado");
   }
 
-  if (db.pacientes.some((p) => p.email.toLowerCase() === dados.email.toLowerCase())) {
+  if (
+    db.pacientes.some(
+      (p) => p.email.toLowerCase() === dados.email.toLowerCase()
+    )
+  ) {
     throw new Error("E-mail já cadastrado");
   }
 
@@ -131,25 +139,41 @@ export function listarProfissionais(filtros?: {
   return lista;
 }
 
-export function criarProfissional(
-  nome: string,
-  cpf: string,
-  ramo: string,
-  cidade: string
-): Profissional {
+export function criarProfissional(dados: {
+  nome: string;
+  cpf: string;
+  carteirinha: string;
+  ramo: string;
+  estado: string;
+  cidade: string;
+  email: string;
+  atendimento: string[];
+}): Profissional {
   const db = lerDB();
-  const cpfLimpo = cpf.replace(/\D/g, "");
+  const cpfLimpo = dados.cpf.replace(/\D/g, "");
 
   if (db.profissionais.some((p) => p.cpf === cpfLimpo)) {
     throw new Error("CPF já cadastrado");
   }
 
+  if (
+    db.profissionais.some(
+      (p) => p.email.toLowerCase() === dados.email.toLowerCase()
+    )
+  ) {
+    throw new Error("E-mail já cadastrado");
+  }
+
   const profissional: Profissional = {
     id: crypto.randomUUID(),
-    nome,
+    nome: dados.nome,
     cpf: cpfLimpo,
-    ramo,
-    cidade,
+    carteirinha: dados.carteirinha,
+    ramo: dados.ramo,
+    estado: dados.estado,
+    cidade: dados.cidade,
+    email: dados.email.toLowerCase(),
+    atendimento: dados.atendimento,
     criadoEm: new Date().toISOString(),
   };
 
