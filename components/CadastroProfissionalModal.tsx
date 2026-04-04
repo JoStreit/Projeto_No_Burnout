@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -51,6 +51,25 @@ type Erros = {
   geral?: string;
 };
 
+function redimensionarImagem(file: File, maxSize = 400): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      let w = img.width;
+      let h = img.height;
+      if (w > h) { if (w > maxSize) { h = Math.round(h * maxSize / w); w = maxSize; } }
+      else { if (h > maxSize) { w = Math.round(w * maxSize / h); h = maxSize; } }
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", 0.82));
+    };
+    img.src = url;
+  });
+}
+
 export default function CadastroProfissionalModal({ aberto, onFechar, onLoginClick }: Props) {
   const { recarregarProfissional } = useAuth();
   const [nome, setNome] = useState("");
@@ -60,6 +79,8 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
   const [estado, setEstado] = useState("");
   const [cidade, setCidade] = useState("");
   const [email, setEmail] = useState("");
+  const [foto, setFoto] = useState<string | null>(null);
+  const inputFotoRef = useRef<HTMLInputElement>(null);
   const [atendOnline, setAtendOnline] = useState(false);
   const [atendPresencial, setAtendPresencial] = useState(false);
   const [senha, setSenha] = useState("");
@@ -86,6 +107,14 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
       .then((lista) => setOpcoesCidades(lista.map((c) => ({ value: c, label: c }))))
       .finally(() => setCarregandoCidades(false));
   }, [estado]);
+
+  async function handleFoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const base64 = await redimensionarImagem(file);
+    setFoto(base64);
+    e.target.value = "";
+  }
 
   function limparErro(campo: keyof Erros) {
     setErros((prev) => ({ ...prev, [campo]: undefined }));
@@ -135,7 +164,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
       const res = await fetch("/api/profissionais", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento, senha }),
+        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento, foto: foto ?? undefined, senha }),
       });
 
       const data = await res.json();
@@ -157,7 +186,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
 
   function fechar() {
     setNome(""); setCpf(""); setCarteirinha(""); setRamo("");
-    setEstado(""); setCidade(""); setEmail("");
+    setEstado(""); setCidade(""); setEmail(""); setFoto(null);
     setAtendOnline(false); setAtendPresencial(false);
     setSenha(""); setConfirmarSenha("");
     setErros({}); setSucesso(false); setOpcoesCidades([]);
@@ -175,6 +204,34 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
 
         {!sucesso ? (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto pr-1">
+
+            {/* Foto */}
+            <div className="space-y-1.5">
+              <Label>Foto de perfil</Label>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => inputFotoRef.current?.click()}
+                  className="w-20 h-20 rounded-full border-2 border-dashed border-teal-300 flex items-center justify-center overflow-hidden bg-teal-50 hover:bg-teal-100 transition-colors cursor-pointer shrink-0"
+                >
+                  {foto ? (
+                    <img src={foto} alt="Foto" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl">📷</span>
+                  )}
+                </button>
+                <div className="text-sm text-gray-500">
+                  <p>Clique para {foto ? "trocar" : "adicionar"} foto</p>
+                  <p className="text-xs text-gray-400">JPG, PNG ou WEBP</p>
+                  {foto && (
+                    <button type="button" onClick={() => setFoto(null)} className="text-xs text-red-500 hover:text-red-700 mt-1">
+                      Remover foto
+                    </button>
+                  )}
+                </div>
+              </div>
+              <input ref={inputFotoRef} type="file" accept="image/*" className="hidden" onChange={handleFoto} />
+            </div>
 
             {/* Nome */}
             <div className="space-y-1.5">

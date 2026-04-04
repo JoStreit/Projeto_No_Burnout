@@ -13,7 +13,7 @@ export interface Paciente {
   cidade: string;
   senhaHash: string;
   criadoEm: string;
-  preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
+  preferenciaBusca?: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[];
 }
 
 export interface PacientePublico {
@@ -24,7 +24,7 @@ export interface PacientePublico {
   estado: string;
   cidade: string;
   criadoEm: string;
-  preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
+  preferenciaBusca?: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[];
 }
 
 export interface Profissional {
@@ -37,6 +37,7 @@ export interface Profissional {
   cidade: string;
   email: string;
   atendimento: string[];
+  foto?: string;
   senhaHash: string;
   vigenciaInicio: string;
   vigenciaFim: string;
@@ -46,9 +47,17 @@ export interface Profissional {
 
 export type ProfissionalPublico = Omit<Profissional, "senhaHash">;
 
+export interface Visita {
+  id: string;
+  timestamp: string;
+  tipo: "anonimo" | "paciente" | "profissional";
+}
+
 interface DB {
   pacientes: Paciente[];
   profissionais: Profissional[];
+  visitas?: Visita[];
+  questionarios?: { id: string; timestamp: string }[];
 }
 
 function lerDB(): DB {
@@ -60,8 +69,19 @@ function salvarDB(db: DB): void {
   fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
 }
 
+function normalizarPreferenciaBusca(
+  pref: unknown
+): ("Presencial" | "RemotoBrasil" | "RemoToEstado")[] | undefined {
+  if (!pref) return undefined;
+  if (Array.isArray(pref)) return pref as ("Presencial" | "RemotoBrasil" | "RemoToEstado")[];
+  if (typeof pref === "string") return [pref as "Presencial" | "RemotoBrasil" | "RemoToEstado"];
+  return undefined;
+}
+
 function pacienteToPublico(p: Paciente): PacientePublico {
   const { senhaHash: _, ...pub } = p;
+  const pref = normalizarPreferenciaBusca(pub.preferenciaBusca);
+  if (pref !== undefined) pub.preferenciaBusca = pref;
   return pub;
 }
 
@@ -93,7 +113,7 @@ export function criarPaciente(dados: {
   estado: string;
   cidade: string;
   senha: string;
-  preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
+  preferenciaBusca?: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[];
 }): PacientePublico {
   const db = lerDB();
   const cpfLimpo = dados.cpf.replace(/\D/g, "");
@@ -130,7 +150,7 @@ export function atualizarPaciente(
     email?: string;
     estado?: string;
     cidade?: string;
-    preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
+    preferenciaBusca?: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[];
   }
 ): PacientePublico {
   const db = lerDB();
@@ -203,6 +223,7 @@ export function criarProfissional(dados: {
   cidade: string;
   email: string;
   atendimento: string[];
+  foto?: string;
   senha: string;
 }): ProfissionalPublico {
   const db = lerDB();
@@ -230,6 +251,7 @@ export function criarProfissional(dados: {
     cidade: dados.cidade,
     email: dados.email.toLowerCase(),
     atendimento: dados.atendimento,
+    ...(dados.foto ? { foto: dados.foto } : {}),
     senhaHash: bcrypt.hashSync(dados.senha, 10),
     vigenciaInicio: agora.toISOString(),
     vigenciaFim: vigenciaFim.toISOString(),
@@ -280,6 +302,7 @@ export function atualizarProfissional(
     cidade?: string;
     atendimento?: string[];
     email?: string;
+    foto?: string;
   }
 ): ProfissionalPublico {
   const db = lerDB();
@@ -300,8 +323,119 @@ export function atualizarProfissional(
     ...(dados.cidade ? { cidade: dados.cidade } : {}),
     ...(dados.atendimento ? { atendimento: dados.atendimento } : {}),
     ...(dados.email ? { email: dados.email.toLowerCase() } : {}),
+    ...(dados.foto !== undefined ? { foto: dados.foto } : {}),
   };
 
   salvarDB(db);
   return profissionalToPublico(db.profissionais[idx]);
+}
+
+export function atualizarProfissionalAdmin(
+  id: string,
+  dados: {
+    nome?: string;
+    email?: string;
+    estado?: string;
+    cidade?: string;
+    ramo?: string;
+    carteirinha?: string;
+    atendimento?: string[];
+    vigenciaFim?: string;
+    status?: "Ativo" | "Inativo";
+  }
+): ProfissionalPublico {
+  const db = lerDB();
+  const idx = db.profissionais.findIndex((p) => p.id === id);
+  if (idx === -1) throw new Error("Profissional não encontrado");
+
+  if (dados.email) {
+    const emailLower = dados.email.toLowerCase();
+    if (db.profissionais.some((p) => p.id !== id && p.email?.toLowerCase() === emailLower)) {
+      throw new Error("E-mail já cadastrado");
+    }
+  }
+
+  db.profissionais[idx] = {
+    ...db.profissionais[idx],
+    ...(dados.nome ? { nome: dados.nome } : {}),
+    ...(dados.email ? { email: dados.email.toLowerCase() } : {}),
+    ...(dados.estado ? { estado: dados.estado } : {}),
+    ...(dados.cidade ? { cidade: dados.cidade } : {}),
+    ...(dados.ramo ? { ramo: dados.ramo } : {}),
+    ...(dados.carteirinha ? { carteirinha: dados.carteirinha } : {}),
+    ...(dados.atendimento ? { atendimento: dados.atendimento } : {}),
+    ...(dados.vigenciaFim ? { vigenciaFim: dados.vigenciaFim } : {}),
+    ...(dados.status ? { status: dados.status } : {}),
+  };
+
+  salvarDB(db);
+  return profissionalToPublico(db.profissionais[idx]);
+}
+
+export function atualizarPacienteAdmin(
+  id: string,
+  dados: {
+    nome?: string;
+    email?: string;
+    estado?: string;
+    cidade?: string;
+    preferenciaBusca?: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[];
+  }
+): PacientePublico {
+  const db = lerDB();
+  const idx = db.pacientes.findIndex((p) => p.id === id);
+  if (idx === -1) throw new Error("Paciente não encontrado");
+
+  if (dados.email) {
+    const emailLower = dados.email.toLowerCase();
+    if (db.pacientes.some((p) => p.id !== id && p.email?.toLowerCase() === emailLower)) {
+      throw new Error("E-mail já cadastrado");
+    }
+  }
+
+  db.pacientes[idx] = {
+    ...db.pacientes[idx],
+    ...(dados.nome ? { nome: dados.nome } : {}),
+    ...(dados.email ? { email: dados.email.toLowerCase() } : {}),
+    ...(dados.estado ? { estado: dados.estado } : {}),
+    ...(dados.cidade ? { cidade: dados.cidade } : {}),
+    ...(dados.preferenciaBusca !== undefined ? { preferenciaBusca: dados.preferenciaBusca } : {}),
+  };
+
+  salvarDB(db);
+  return pacienteToPublico(db.pacientes[idx]);
+}
+
+// ─── Visitas ──────────────────────────────────────────────────────────────────
+
+export function registrarVisita(tipo: "anonimo" | "paciente" | "profissional"): void {
+  const db = lerDB();
+  if (!db.visitas) db.visitas = [];
+  db.visitas.push({ id: crypto.randomUUID(), timestamp: new Date().toISOString(), tipo });
+  salvarDB(db);
+}
+
+export function listarVisitas(filtros?: { inicio?: string; fim?: string }): Visita[] {
+  const db = lerDB();
+  let lista: Visita[] = db.visitas ?? [];
+  if (filtros?.inicio) lista = lista.filter((v) => v.timestamp >= filtros.inicio!);
+  if (filtros?.fim) lista = lista.filter((v) => v.timestamp <= filtros.fim! + "T23:59:59.999Z");
+  return lista;
+}
+
+// ─── Questionários ────────────────────────────────────────────────────────────
+
+export function registrarQuestionario(): void {
+  const db = lerDB();
+  if (!db.questionarios) db.questionarios = [];
+  db.questionarios.push({ id: crypto.randomUUID(), timestamp: new Date().toISOString() });
+  salvarDB(db);
+}
+
+export function contarQuestionarios(filtros?: { inicio?: string; fim?: string }): number {
+  const db = lerDB();
+  let lista = db.questionarios ?? [];
+  if (filtros?.inicio) lista = lista.filter((q) => q.timestamp >= filtros.inicio!);
+  if (filtros?.fim) lista = lista.filter((q) => q.timestamp <= filtros.fim! + "T23:59:59.999Z");
+  return lista.length;
 }

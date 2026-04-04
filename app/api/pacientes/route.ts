@@ -44,9 +44,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const preferenciaBuscaValida =
-    preferenciaBusca && PREFERENCIAS_BUSCA_VALIDAS.includes(preferenciaBusca)
-      ? (preferenciaBusca as "Presencial" | "RemotoBrasil" | "RemoToEstado")
+  const preferenciaBuscaValida: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[] | undefined =
+    Array.isArray(preferenciaBusca)
+      ? preferenciaBusca.filter((v: string) =>
+          (PREFERENCIAS_BUSCA_VALIDAS as readonly string[]).includes(v)
+        ) as ("Presencial" | "RemotoBrasil" | "RemoToEstado")[]
       : undefined;
 
   try {

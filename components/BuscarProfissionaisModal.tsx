@@ -27,6 +27,7 @@ interface Profissional {
   ramo: string;
   cidade: string;
   estado: string;
+  foto?: string;
 }
 
 interface Props {
@@ -54,16 +55,16 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
   // Inicializa filtros a partir da preferência salva do paciente
   useEffect(() => {
     if (!aberto || !paciente) return;
-    if (paciente.preferenciaBusca === "Presencial") {
-      setPresencial(true); setRemoto(false); setAbrangencia("");
-    } else if (paciente.preferenciaBusca === "RemotoBrasil") {
-      setPresencial(false); setRemoto(true); setAbrangencia("Brasil");
-    } else if (paciente.preferenciaBusca === "RemoToEstado") {
-      setPresencial(false); setRemoto(true); setAbrangencia("Estado");
-    }
+    const pref = paciente.preferenciaBusca ?? [];
+    setPresencial(pref.includes("Presencial"));
+    setRemoto(pref.includes("RemotoBrasil") || pref.includes("RemoToEstado"));
+    if (pref.includes("RemotoBrasil")) setAbrangencia("Brasil");
+    else if (pref.includes("RemoToEstado")) setAbrangencia("Estado");
+    else setAbrangencia("");
   }, [aberto, paciente]);
 
   function labelAbrangencia(): string {
+    if (presencial && remoto) return "🌎 Buscando em: Todo o Brasil (presencial + remoto)";
     if (presencial) return `📍 Buscando em: ${paciente?.cidade ?? "sua cidade"}`;
     if (remoto && abrangencia === "Brasil") return "🌎 Buscando em: Todo o Brasil";
     if (remoto && abrangencia === "Estado") return `📍 Buscando em: ${paciente?.estado ?? "seu estado"}`;
@@ -76,12 +77,12 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
       const params = new URLSearchParams();
       if (ramo) params.set("ramo", ramo);
 
-      if (presencial && paciente?.cidade) {
+      // Se ambos marcados: sem filtro geográfico (mostra todos)
+      if (presencial && !remoto && paciente?.cidade) {
         params.set("cidade", paciente.cidade);
-      } else if (remoto && abrangencia === "Estado" && paciente?.estado) {
+      } else if (remoto && !presencial && abrangencia === "Estado" && paciente?.estado) {
         params.set("estado", paciente.estado);
       }
-      // remoto + Brasil: sem filtro geográfico
 
       const res = await fetch(`/api/profissionais?${params.toString()}`);
       const data = await res.json();
@@ -209,13 +210,23 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
               {profissionais.map((p) => (
                 <div
                   key={p.id}
-                  className="flex items-center justify-between bg-white border border-gray-100 rounded-xl px-4 py-3 shadow-sm"
+                  className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3 shadow-sm"
                 >
-                  <div>
-                    <p className="font-medium text-gray-800 text-sm">{p.nome}</p>
+                  {/* Avatar */}
+                  <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-teal-100 flex items-center justify-center">
+                    {p.foto ? (
+                      <img src={p.foto} alt={p.nome} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-lg text-teal-500 font-bold leading-none">
+                        {p.nome.charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-800 text-sm truncate">{p.nome}</p>
                     <p className="text-xs text-gray-500 mt-0.5">📍 {p.cidade}</p>
                   </div>
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${COR_RAMO[p.ramo] ?? "bg-gray-100 text-gray-600"}`}>
+                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full shrink-0 ${COR_RAMO[p.ramo] ?? "bg-gray-100 text-gray-600"}`}>
                     {p.ramo}
                   </span>
                 </div>

@@ -10,7 +10,7 @@ export interface PacienteSession {
   estado: string;
   cidade: string;
   criadoEm: string;
-  preferenciaBusca?: "Presencial" | "RemotoBrasil" | "RemoToEstado";
+  preferenciaBusca?: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[];
 }
 
 export interface ProfissionalSession {
@@ -23,6 +23,7 @@ export interface ProfissionalSession {
   cidade: string;
   email: string;
   atendimento: string[];
+  foto?: string;
   vigenciaInicio: string;
   vigenciaFim: string;
   status: "Ativo" | "Inativo";

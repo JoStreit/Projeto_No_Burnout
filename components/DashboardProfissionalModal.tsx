@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -50,6 +50,8 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
   const [estado, setEstado] = useState("");
   const [cidade, setCidade] = useState("");
   const [email, setEmail] = useState("");
+  const [foto, setFoto] = useState<string | null>(null);
+  const inputFotoRef = useRef<HTMLInputElement>(null);
   const [atendOnline, setAtendOnline] = useState(false);
   const [atendPresencial, setAtendPresencial] = useState(false);
   const [opcoesCidades, setOpcoesCidades] = useState<{ value: string; label: string }[]>([]);
@@ -72,11 +74,32 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
       setEstado(profissional.estado);
       setCidade(profissional.cidade);
       setEmail(profissional.email);
+      setFoto(profissional.foto ?? null);
       setAtendOnline(profissional.atendimento.includes("Online"));
       setAtendPresencial(profissional.atendimento.includes("Presencial"));
       setErroEdicao("");
     }
   }, [editando, profissional]);
+
+  async function handleFoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const maxSize = 400;
+      let w = img.width; let h = img.height;
+      if (w > h) { if (w > maxSize) { h = Math.round(h * maxSize / w); w = maxSize; } }
+      else { if (h > maxSize) { w = Math.round(w * maxSize / h); h = maxSize; } }
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      setFoto(canvas.toDataURL("image/jpeg", 0.82));
+    };
+    img.src = url;
+    e.target.value = "";
+  }
 
   // Carregar cidades ao mudar estado
   useEffect(() => {
@@ -126,7 +149,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
       const res = await fetch(`/api/profissionais/${profissional.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: nome.trim(), estado, cidade, atendimento, email: email.trim() }),
+        body: JSON.stringify({ nome: nome.trim(), estado, cidade, atendimento, email: email.trim(), foto: foto ?? undefined }),
       });
       const data = await res.json();
       if (!res.ok) setErroEdicao(data.erro);
@@ -169,6 +192,34 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
 
         {editando ? (
           <form onSubmit={salvarEdicao} className="flex flex-col gap-4 overflow-y-auto pr-1">
+            {/* Foto */}
+            <div className="space-y-1.5">
+              <Label>Foto de perfil</Label>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => inputFotoRef.current?.click()}
+                  className="w-20 h-20 rounded-full border-2 border-dashed border-teal-300 flex items-center justify-center overflow-hidden bg-teal-50 hover:bg-teal-100 transition-colors cursor-pointer shrink-0"
+                >
+                  {foto ? (
+                    <img src={foto} alt="Foto" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl">📷</span>
+                  )}
+                </button>
+                <div className="text-sm text-gray-500">
+                  <p>Clique para {foto ? "trocar" : "adicionar"} foto</p>
+                  <p className="text-xs text-gray-400">JPG, PNG ou WEBP</p>
+                  {foto && (
+                    <button type="button" onClick={() => setFoto(null)} className="text-xs text-red-500 hover:text-red-700 mt-1">
+                      Remover foto
+                    </button>
+                  )}
+                </div>
+              </div>
+              <input ref={inputFotoRef} type="file" accept="image/*" className="hidden" onChange={handleFoto} />
+            </div>
+
             <div className="space-y-1.5">
               <Label htmlFor="dp-nome">Nome completo</Label>
               <Input
@@ -255,6 +306,17 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
           </form>
         ) : (
           <div className="flex flex-col gap-4 overflow-y-auto pr-1">
+            {/* Foto do perfil */}
+            {profissional.foto && (
+              <div className="flex justify-center">
+                <img
+                  src={profissional.foto}
+                  alt={profissional.nome}
+                  className="w-24 h-24 rounded-full object-cover border-4 border-teal-100 shadow"
+                />
+              </div>
+            )}
+
             {/* Status + Vigência */}
             <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 space-y-3">
               <div className="flex items-center justify-between">

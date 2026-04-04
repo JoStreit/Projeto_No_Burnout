@@ -50,9 +50,9 @@ export async function PATCH(
   }
 
   // Atualização de perfil
-  const { nome, estado, cidade, atendimento, email } = body;
+  const { nome, estado, cidade, atendimento, email, foto } = body;
   try {
-    const profissional = atualizarProfissional(id, { nome, estado, cidade, atendimento, email });
+    const profissional = atualizarProfissional(id, { nome, estado, cidade, atendimento, email, foto });
     return Response.json(profissional);
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Erro ao atualizar";

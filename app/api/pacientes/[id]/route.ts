@@ -33,9 +33,11 @@ export async function PATCH(
   const { nome, email, estado, cidade, preferenciaBusca } = body;
 
   const PREFERENCIAS_VALIDAS = ["Presencial", "RemotoBrasil", "RemoToEstado"] as const;
-  const preferenciaBuscaValida =
-    preferenciaBusca && PREFERENCIAS_VALIDAS.includes(preferenciaBusca)
-      ? (preferenciaBusca as "Presencial" | "RemotoBrasil" | "RemoToEstado")
+  const preferenciaBuscaValida: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[] | undefined =
+    Array.isArray(preferenciaBusca)
+      ? preferenciaBusca.filter((v: string) =>
+          (PREFERENCIAS_VALIDAS as readonly string[]).includes(v)
+        ) as ("Presencial" | "RemotoBrasil" | "RemoToEstado")[]
       : undefined;
 
   try {

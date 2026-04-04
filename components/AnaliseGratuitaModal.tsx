@@ -64,10 +64,10 @@ interface Profissional {
 }
 
 const COR_RAMO: Record<string, string> = {
-  Fisioterapeuta: "bg-teal-100 text-teal-700",
-  Nutricionista: "bg-green-100 text-green-700",
-  "Psicólogo": "bg-purple-100 text-purple-700",
-  "Personal Trainer": "bg-orange-100 text-orange-700",
+  Fisioterapeuta: "bg-[#eaf2e7] text-[#4a6741]",
+  Nutricionista: "bg-[#eaf2e7] text-[#4a6741]",
+  "Psicólogo": "bg-[#ede0d4] text-[#7a3d18]",
+  "Personal Trainer": "bg-[#ede0d4] text-[#7a3d18]",
 };
 
 interface Props {
@@ -137,6 +137,7 @@ export default function AnaliseGratuitaModal({
 
     setRamoRecomendado(ramo);
     setMotivoRecomendado(motivo);
+    fetch("/api/questionarios", { method: "POST" }).catch(() => {});
   }
 
   function reiniciar() {
@@ -154,9 +155,9 @@ export default function AnaliseGratuitaModal({
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-lg max-h-[90vh] flex flex-col">
+      <DialogContent className="max-w-lg max-h-[90vh] flex flex-col bg-[#faf7f4] border border-[#4a6741]/20">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-green-700">
+          <DialogTitle className="text-xl font-bold text-[#3c2010]">
             Análise Gratuita
           </DialogTitle>
         </DialogHeader>
@@ -165,19 +166,19 @@ export default function AnaliseGratuitaModal({
           <div className="space-y-6">
             {/* Barra de progresso */}
             <div>
-              <div className="flex justify-between text-sm text-gray-500 mb-1">
+              <div className="flex justify-between text-sm text-stone-400 mb-1">
                 <span>Pergunta {etapa + 1} de {totalPerguntas}</span>
                 <span>{Math.round(progresso)}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-[#ede0d4] rounded-full h-2">
                 <div
-                  className="bg-green-500 h-2 rounded-full transition-all duration-500"
+                  className="bg-[#4a6741] h-2 rounded-full transition-all duration-500"
                   style={{ width: `${progresso}%` }}
                 />
               </div>
             </div>
 
-            <p className="text-base font-medium text-gray-800">
+            <p className="text-base font-semibold text-[#3c2010]">
               {perguntaAtual.texto}
             </p>
 
@@ -186,7 +187,7 @@ export default function AnaliseGratuitaModal({
                 <button
                   key={opcao}
                   onClick={() => responder(opcao)}
-                  className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all duration-200 text-sm text-gray-700 font-medium"
+                  className="w-full text-left px-4 py-3 rounded-lg border border-[#4a6741]/20 bg-white hover:border-[#4a6741] hover:bg-[#eaf2e7] transition-all duration-200 text-sm text-[#3c2010] font-medium"
                 >
                   {opcao}
                 </button>
@@ -198,14 +199,14 @@ export default function AnaliseGratuitaModal({
             {/* Resultado */}
             <div className="text-center">
               <div className="flex justify-center mb-3">
-                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-[#eaf2e7] border border-[#4a6741]/20 flex items-center justify-center">
                   <span className="text-3xl">✅</span>
                 </div>
               </div>
-              <p className="text-gray-500 text-sm mb-1">Profissional recomendado</p>
-              <p className="text-2xl font-bold text-green-700">{ramoRecomendado}</p>
-              <p className="text-gray-600 mt-1 text-sm">{motivoRecomendado}.</p>
-              <p className="text-xs text-gray-400 mt-2">
+              <p className="text-stone-400 text-sm mb-1">Profissional recomendado</p>
+              <p className="text-2xl font-bold text-[#4a6741]">{ramoRecomendado}</p>
+              <p className="text-stone-500 mt-1 text-sm">{motivoRecomendado}.</p>
+              <p className="text-xs text-stone-400 mt-2">
                 Recomendação inicial. Consulte sempre um profissional de saúde.
               </p>
             </div>
@@ -213,27 +214,27 @@ export default function AnaliseGratuitaModal({
             {/* Profissionais disponíveis (logado) ou CTA (não logado) */}
             {paciente ? (
               <div className="flex flex-col gap-3 overflow-hidden">
-                <p className="text-sm font-semibold text-gray-700">
+                <p className="text-sm font-semibold text-[#3c2010]">
                   Profissionais disponíveis
                 </p>
                 <div className="overflow-y-auto max-h-52 space-y-2 pr-1">
                   {carregandoProfs ? (
-                    <p className="text-sm text-gray-400 text-center py-4">Buscando...</p>
+                    <p className="text-sm text-stone-400 text-center py-4">Buscando...</p>
                   ) : profissionais.length === 0 ? (
-                    <p className="text-sm text-gray-400 text-center py-4">
+                    <p className="text-sm text-stone-400 text-center py-4">
                       Nenhum profissional cadastrado neste ramo ainda.
                     </p>
                   ) : (
                     profissionais.map((p) => (
                       <div
                         key={p.id}
-                        className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2.5 border border-gray-100"
+                        className="flex items-center justify-between bg-white rounded-lg px-3 py-2.5 border border-[#4a6741]/15"
                       >
                         <div>
-                          <p className="text-sm font-medium text-gray-800">{p.nome}</p>
-                          <p className="text-xs text-gray-500">📍 {p.cidade}</p>
+                          <p className="text-sm font-medium text-[#3c2010]">{p.nome}</p>
+                          <p className="text-xs text-stone-400">📍 {p.cidade}</p>
                         </div>
-                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${COR_RAMO[p.ramo] ?? "bg-gray-100 text-gray-600"}`}>
+                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${COR_RAMO[p.ramo] ?? "bg-stone-100 text-stone-600"}`}>
                           {p.ramo}
                         </span>
                       </div>
@@ -242,25 +243,25 @@ export default function AnaliseGratuitaModal({
                 </div>
               </div>
             ) : (
-              <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
-                <p className="text-sm font-semibold text-green-800 mb-1">
+              <div className="bg-[#eaf2e7] border border-[#4a6741]/25 rounded-xl p-4 text-center">
+                <p className="text-sm font-semibold text-[#3c2010] mb-1">
                   Veja os profissionais disponíveis
                 </p>
-                <p className="text-xs text-green-700 mb-3">
+                <p className="text-xs text-stone-500 mb-3">
                   Faça login ou cadastre-se gratuitamente para ver a lista completa de profissionais do seu perfil.
                 </p>
                 <div className="flex gap-2 justify-center">
                   <Button
                     size="sm"
                     variant="outline"
-                    className="border-green-400 text-green-700 hover:bg-green-100"
+                    className="border-[#4a6741]/40 text-[#4a6741] hover:bg-[#4a6741]/10"
                     onClick={() => { fechar(); onLoginClick(); }}
                   >
                     Entrar
                   </Button>
                   <Button
                     size="sm"
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-[#4a6741] hover:bg-[#3a5331] text-white"
                     onClick={() => { fechar(); onCadastrarClick(); }}
                   >
                     Cadastrar-se
@@ -270,10 +271,19 @@ export default function AnaliseGratuitaModal({
             )}
 
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={reiniciar} className="flex-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={reiniciar}
+                className="flex-1 border-[#4a6741]/30 text-[#4a6741] hover:bg-[#eaf2e7]"
+              >
                 Refazer análise
               </Button>
-              <Button size="sm" className="flex-1 bg-green-600 hover:bg-green-700" onClick={fechar}>
+              <Button
+                size="sm"
+                className="flex-1 bg-[#4a6741] hover:bg-[#3a5331] text-white"
+                onClick={fechar}
+              >
                 Fechar
               </Button>
             </div>

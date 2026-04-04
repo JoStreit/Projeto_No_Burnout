@@ -117,10 +117,10 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
 
     setCarregando(true);
 
-    let preferenciaBusca: "Presencial" | "RemotoBrasil" | "RemoToEstado" | undefined;
-    if (presencial) preferenciaBusca = "Presencial";
-    else if (remoto && abrangenciaRemoto === "Brasil") preferenciaBusca = "RemotoBrasil";
-    else if (remoto && abrangenciaRemoto === "Estado") preferenciaBusca = "RemoToEstado";
+    const preferenciaBusca: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[] = [];
+    if (presencial) preferenciaBusca.push("Presencial");
+    if (remoto && abrangenciaRemoto === "Brasil") preferenciaBusca.push("RemotoBrasil");
+    if (remoto && abrangenciaRemoto === "Estado") preferenciaBusca.push("RemoToEstado");
 
     try {
       const res = await fetch("/api/pacientes", {
@@ -251,7 +251,6 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
                     checked={presencial}
                     onCheckedChange={(checked) => {
                       setPresencial(!!checked);
-                      if (checked) { setRemoto(false); setAbrangenciaRemoto(""); }
                       limparErro("preferenciaBusca");
                     }}
                   />
@@ -263,8 +262,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
                     checked={remoto}
                     onCheckedChange={(checked) => {
                       setRemoto(!!checked);
-                      if (checked) { setPresencial(false); }
-                      else { setAbrangenciaRemoto(""); }
+                      if (!checked) setAbrangenciaRemoto("");
                       limparErro("preferenciaBusca");
                     }}
                   />
