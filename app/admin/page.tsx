@@ -461,6 +461,50 @@ function ModalEditarProfissional({
   );
 }
 
+// ─── Picker de ícones ────────────────────────────────────────────────────────
+
+const ICONES_SAUDE = [
+  "💧","🚶","☀️","👥","🌬️","🌙","🍎","🪑","📵","🙏","🧘","🥗",
+  "🎵","📞","🪜","🌿","🍵","😄","🛏️","🩺","🧠","🌊","💪","🏃",
+  "🥦","❤️","🌱","🌸","🍃","🏋️","🚴","🤸","🏊","🎯","📚","✍️",
+  "🎨","🌅","🌺","🦋","🌻","🍇","🥑","🥕","🫐","🍓","🥝","💊",
+  "🩹","🧬","💡","⭐","🌟","✨","🎁","🎉","🏆","🫀","🧪","🔬",
+];
+
+function IconePicker({ valor, onChange }: { valor: string; onChange: (v: string) => void }) {
+  const [aberto, setAberto] = useState(false);
+
+  return (
+    <div className="relative">
+      <Label>Ícone</Label>
+      <button
+        type="button"
+        onClick={() => setAberto((p) => !p)}
+        className="mt-1 w-16 h-10 rounded-md border border-input bg-background text-2xl flex items-center justify-center hover:bg-accent transition-colors"
+      >
+        {valor}
+      </button>
+      {aberto && (
+        <div className="absolute top-full left-0 mt-1 z-50 bg-white border border-gray-200 rounded-xl shadow-xl p-2 w-72">
+          <p className="text-xs text-gray-400 px-1 pb-1.5">Selecione um ícone</p>
+          <div className="grid grid-cols-10 gap-0.5 max-h-48 overflow-y-auto">
+            {ICONES_SAUDE.map((ic) => (
+              <button
+                key={ic}
+                type="button"
+                onClick={() => { onChange(ic); setAberto(false); }}
+                className={`text-xl p-1.5 rounded-lg hover:bg-[#eaf2e7] transition-colors ${valor === ic ? "bg-[#eaf2e7] ring-1 ring-[#4a6741]" : ""}`}
+              >
+                {ic}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Modal Mensagem ───────────────────────────────────────────────────────────
 
 function ModalMensagem({
@@ -514,11 +558,8 @@ function ModalMensagem({
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3 overflow-y-auto pr-1">
-          <div className="flex gap-3">
-            <div className="space-y-1 w-24">
-              <Label>Ícone</Label>
-              <Input value={icone} onChange={(e) => setIcone(e.target.value)} className="text-center text-lg" />
-            </div>
+          <div className="flex gap-3 items-end">
+            <IconePicker valor={icone} onChange={setIcone} />
             <div className="space-y-1 flex-1">
               <Label>Título</Label>
               <Input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Hidratação" />
