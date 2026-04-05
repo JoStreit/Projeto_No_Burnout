@@ -53,11 +53,21 @@ export interface Visita {
   tipo: "anonimo" | "paciente" | "profissional";
 }
 
+export interface MensagemDica {
+  id: string;
+  icone: string;
+  titulo: string;
+  texto: string;
+  ativa: boolean;
+  criadoEm: string;
+}
+
 interface DB {
   pacientes: Paciente[];
   profissionais: Profissional[];
   visitas?: Visita[];
   questionarios?: { id: string; timestamp: string }[];
+  mensagens?: MensagemDica[];
 }
 
 function lerDB(): DB {
@@ -429,6 +439,55 @@ export function registrarQuestionario(): void {
   const db = lerDB();
   if (!db.questionarios) db.questionarios = [];
   db.questionarios.push({ id: crypto.randomUUID(), timestamp: new Date().toISOString() });
+  salvarDB(db);
+}
+
+// ─── Mensagens Dica ───────────────────────────────────────────────────────────
+
+export function listarMensagens(apenasAtivas = false): MensagemDica[] {
+  const db = lerDB();
+  const lista = db.mensagens ?? [];
+  return apenasAtivas ? lista.filter((m) => m.ativa) : lista;
+}
+
+export function criarMensagem(dados: {
+  icone: string;
+  titulo: string;
+  texto: string;
+  ativa: boolean;
+}): MensagemDica {
+  const db = lerDB();
+  const nova: MensagemDica = {
+    id: crypto.randomUUID(),
+    icone: dados.icone,
+    titulo: dados.titulo,
+    texto: dados.texto,
+    ativa: dados.ativa,
+    criadoEm: new Date().toISOString(),
+  };
+  if (!db.mensagens) db.mensagens = [];
+  db.mensagens.push(nova);
+  salvarDB(db);
+  return nova;
+}
+
+export function atualizarMensagem(
+  id: string,
+  dados: { icone?: string; titulo?: string; texto?: string; ativa?: boolean }
+): MensagemDica {
+  const db = lerDB();
+  if (!db.mensagens) db.mensagens = [];
+  const idx = db.mensagens.findIndex((m) => m.id === id);
+  if (idx === -1) throw new Error("Mensagem não encontrada");
+  db.mensagens[idx] = { ...db.mensagens[idx], ...dados };
+  salvarDB(db);
+  return db.mensagens[idx];
+}
+
+export function excluirMensagem(id: string): void {
+  const db = lerDB();
+  if (!db.mensagens) return;
+  db.mensagens = db.mensagens.filter((m) => m.id !== id);
   salvarDB(db);
 }
 

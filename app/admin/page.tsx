@@ -27,7 +27,16 @@ const ADMIN_CPF = "01581020023";
 const RAMOS = ["Fisioterapeuta", "Nutricionista", "Psicólogo", "Personal Trainer"];
 const OPCOES_ESTADO = ESTADOS.map((e) => ({ value: e.uf, label: e.uf, sublabel: e.nome }));
 
-type Aba = "visitas" | "pacientes" | "profissionais";
+type Aba = "visitas" | "pacientes" | "profissionais" | "mensagens";
+
+interface MensagemDica {
+  id: string;
+  icone: string;
+  titulo: string;
+  texto: string;
+  ativa: boolean;
+  criadoEm: string;
+}
 
 interface Stats {
   total: number;
@@ -452,6 +461,96 @@ function ModalEditarProfissional({
   );
 }
 
+// ─── Modal Mensagem ───────────────────────────────────────────────────────────
+
+function ModalMensagem({
+  mensagem,
+  onFechar,
+  onSalvo,
+}: {
+  mensagem: MensagemDica | null; // null = nova
+  onFechar: () => void;
+  onSalvo: (m: MensagemDica) => void;
+}) {
+  const [icone, setIcone] = useState(mensagem?.icone ?? "💡");
+  const [titulo, setTitulo] = useState(mensagem?.titulo ?? "");
+  const [texto, setTexto] = useState(mensagem?.texto ?? "");
+  const [ativa, setAtiva] = useState(mensagem?.ativa ?? true);
+  const [erro, setErro] = useState("");
+  const [salvando, setSalvando] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!icone.trim()) { setErro("Ícone é obrigatório"); return; }
+    if (!titulo.trim()) { setErro("Título é obrigatório"); return; }
+    if (!texto.trim()) { setErro("Texto é obrigatório"); return; }
+
+    setSalvando(true);
+    setErro("");
+    try {
+      const url = mensagem ? `/api/admin/mensagens/${mensagem.id}` : "/api/admin/mensagens";
+      const method = mensagem ? "PATCH" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ icone: icone.trim(), titulo: titulo.trim(), texto: texto.trim(), ativa }),
+      });
+      const data = await res.json();
+      if (!res.ok) setErro(data.erro);
+      else onSalvo(data);
+    } catch {
+      setErro("Erro ao conectar com o servidor");
+    } finally {
+      setSalvando(false);
+    }
+  }
+
+  return (
+    <Dialog open onOpenChange={onFechar}>
+      <DialogContent className="max-w-md max-h-[90vh] flex flex-col">
+        <DialogHeader>
+          <DialogTitle className="text-[#4a6741]">
+            {mensagem ? "Editar Mensagem" : "Nova Mensagem"}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 overflow-y-auto pr-1">
+          <div className="flex gap-3">
+            <div className="space-y-1 w-24">
+              <Label>Ícone</Label>
+              <Input value={icone} onChange={(e) => setIcone(e.target.value)} className="text-center text-lg" />
+            </div>
+            <div className="space-y-1 flex-1">
+              <Label>Título</Label>
+              <Input value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Ex: Hidratação" />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <Label>Texto da mensagem</Label>
+            <textarea
+              value={texto}
+              onChange={(e) => setTexto(e.target.value)}
+              rows={4}
+              placeholder="Escreva a dica ou mensagem motivadora..."
+              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
+          <label className="flex items-center gap-2 cursor-pointer text-sm">
+            <Checkbox checked={ativa} onCheckedChange={(v) => setAtiva(!!v)} />
+            Mensagem ativa (aparece no sorteio)
+          </label>
+          {erro && <p className="text-sm text-red-600">{erro}</p>}
+          <div className="flex gap-3 pt-1">
+            <Button type="button" variant="outline" className="flex-1" onClick={onFechar}>Cancelar</Button>
+            <Button type="submit" className="flex-1 bg-[#4a6741] hover:bg-[#3a5331]" disabled={salvando}>
+              {salvando ? "Salvando..." : "Salvar"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
 function Dashboard({ onLogout }: { onLogout: () => void }) {
@@ -474,6 +573,13 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [buscaProf, setBuscaProf] = useState("");
   const [carregandoProf, setCarregandoProf] = useState(false);
   const [editandoProf, setEditandoProf] = useState<Profissional | null>(null);
+
+  // Mensagens
+  const [mensagens, setMensagens] = useState<MensagemDica[]>([]);
+  const [buscaMsg, setBuscaMsg] = useState("");
+  const [carregandoMsg, setCarregandoMsg] = useState(false);
+  const [editandoMsg, setEditandoMsg] = useState<MensagemDica | null | "nova">(null);
+  const [excluindoMsg, setExcluindoMsg] = useState<string | null>(null);
 
   const carregarStats = useCallback(async () => {
     setCarregandoStats(true);
@@ -508,9 +614,42 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     }
   }, []);
 
+  const carregarMensagens = useCallback(async () => {
+    setCarregandoMsg(true);
+    try {
+      const res = await fetch("/api/admin/mensagens");
+      setMensagens(await res.json());
+    } finally {
+      setCarregandoMsg(false);
+    }
+  }, []);
+
+  async function excluirMensagem(id: string) {
+    setExcluindoMsg(id);
+    try {
+      await fetch(`/api/admin/mensagens/${id}`, { method: "DELETE" });
+      setMensagens((prev) => prev.filter((m) => m.id !== id));
+    } finally {
+      setExcluindoMsg(null);
+    }
+  }
+
+  async function toggleAtiva(m: MensagemDica) {
+    const res = await fetch(`/api/admin/mensagens/${m.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ativa: !m.ativa }),
+    });
+    if (res.ok) {
+      const atualizada = await res.json();
+      setMensagens((prev) => prev.map((x) => x.id === atualizada.id ? atualizada : x));
+    }
+  }
+
   useEffect(() => { carregarStats(); }, [carregarStats]);
   useEffect(() => { carregarPacientes(); }, [carregarPacientes]);
   useEffect(() => { carregarProfissionais(); }, [carregarProfissionais]);
+  useEffect(() => { carregarMensagens(); }, [carregarMensagens]);
 
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -541,10 +680,19 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     );
   });
 
+  const mensagensFiltradas = mensagens.filter((m) => {
+    const q = buscaMsg.toLowerCase();
+    return (
+      m.titulo.toLowerCase().includes(q) ||
+      m.texto.toLowerCase().includes(q)
+    );
+  });
+
   const abas: { id: Aba; label: string }[] = [
     { id: "visitas", label: "Visitas & Stats" },
     { id: "pacientes", label: `Pacientes (${pacientes.length})` },
     { id: "profissionais", label: `Profissionais (${profissionais.length})` },
+    { id: "mensagens", label: `Mensagens (${mensagens.length})` },
   ];
 
   return (
@@ -828,6 +976,100 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
             </div>
           </div>
         )}
+        {/* ─── Aba Mensagens ──────────────────────────────────────────────── */}
+        {aba === "mensagens" && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Input
+                value={buscaMsg}
+                onChange={(e) => setBuscaMsg(e.target.value)}
+                placeholder="Buscar por título ou texto..."
+                className="max-w-sm"
+              />
+              <Button variant="outline" size="sm" onClick={carregarMensagens} disabled={carregandoMsg}>
+                {carregandoMsg ? "Atualizando..." : "Atualizar"}
+              </Button>
+              <Button
+                size="sm"
+                className="bg-[#4a6741] hover:bg-[#3a5331] text-white"
+                onClick={() => setEditandoMsg("nova")}
+              >
+                + Nova Mensagem
+              </Button>
+              <span className="text-sm text-gray-500">
+                {mensagensFiltradas.length} de {mensagens.length} mensagem{mensagens.length !== 1 ? "ns" : ""}
+                {" · "}{mensagens.filter((m) => m.ativa).length} ativa{mensagens.filter((m) => m.ativa).length !== 1 ? "s" : ""}
+              </span>
+            </div>
+
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      {["", "Título", "Texto", "Status", "Cadastrada em", ""].map((h, i) => (
+                        <th key={i} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {carregandoMsg ? (
+                      <tr><td colSpan={6} className="text-center py-8 text-gray-400">Carregando...</td></tr>
+                    ) : mensagensFiltradas.length === 0 ? (
+                      <tr><td colSpan={6} className="text-center py-8 text-gray-400">Nenhuma mensagem encontrada</td></tr>
+                    ) : (
+                      mensagensFiltradas.map((m) => (
+                        <tr key={m.id} className="hover:bg-gray-50 transition-colors">
+                          <td className="px-4 py-3 text-2xl">{m.icone}</td>
+                          <td className="px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{m.titulo}</td>
+                          <td className="px-4 py-3 text-gray-500 max-w-sm">
+                            <p className="line-clamp-2 text-xs leading-relaxed">{m.texto}</p>
+                          </td>
+                          <td className="px-4 py-3">
+                            <button
+                              onClick={() => toggleAtiva(m)}
+                              className={`text-xs font-medium px-2.5 py-1 rounded-full transition-colors ${
+                                m.ativa
+                                  ? "bg-[#eaf2e7] text-[#4a6741] hover:bg-[#d4e8d0]"
+                                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                              }`}
+                            >
+                              {m.ativa ? "Ativa" : "Inativa"}
+                            </button>
+                          </td>
+                          <td className="px-4 py-3 text-gray-400 text-xs whitespace-nowrap">{fmt(m.criadoEm)}</td>
+                          <td className="px-4 py-3">
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setEditandoMsg(m)}
+                                className="border-[#4a6741]/30 text-[#4a6741] hover:bg-[#eaf2e7] whitespace-nowrap"
+                              >
+                                Editar
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => excluirMensagem(m.id)}
+                                disabled={excluindoMsg === m.id}
+                                className="border-red-200 text-red-500 hover:bg-red-50 whitespace-nowrap"
+                              >
+                                {excluindoMsg === m.id ? "..." : "Excluir"}
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modais de edição */}
@@ -848,6 +1090,21 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           onSalvo={(atualizado) => {
             setProfissionais((prev) => prev.map((p) => p.id === atualizado.id ? atualizado : p));
             setEditandoProf(null);
+          }}
+        />
+      )}
+      {editandoMsg !== null && (
+        <ModalMensagem
+          mensagem={editandoMsg === "nova" ? null : editandoMsg}
+          onFechar={() => setEditandoMsg(null)}
+          onSalvo={(salva) => {
+            setMensagens((prev) => {
+              const existe = prev.find((m) => m.id === salva.id);
+              return existe
+                ? prev.map((m) => m.id === salva.id ? salva : m)
+                : [salva, ...prev];
+            });
+            setEditandoMsg(null);
           }}
         />
       )}
