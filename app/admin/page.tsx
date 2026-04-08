@@ -26,7 +26,15 @@ import { formatarCPF } from "@/lib/cpf";
 const RAMOS = ["Fisioterapeuta", "Nutricionista", "Psicólogo", "Personal Trainer"];
 const OPCOES_ESTADO = ESTADOS.map((e) => ({ value: e.uf, label: e.uf, sublabel: e.nome }));
 
-type Aba = "visitas" | "pacientes" | "profissionais" | "mensagens";
+type Aba = "visitas" | "pacientes" | "profissionais" | "mensagens" | "logs";
+
+interface LogEntry {
+  ts: string;
+  evento: "login_falhou" | "acesso_negado" | "rate_limit" | "csrf_bloqueado";
+  ip?: string;
+  rota?: string;
+  info?: string;
+}
 
 interface MensagemDica {
   id: string;
@@ -621,6 +629,11 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
   const [editandoMsg, setEditandoMsg] = useState<MensagemDica | null | "nova">(null);
   const [excluindoMsg, setExcluindoMsg] = useState<string | null>(null);
 
+  // Logs
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [carregandoLogs, setCarregandoLogs] = useState(false);
+  const [filtroEvento, setFiltroEvento] = useState<string>("todos");
+
   const carregarStats = useCallback(async () => {
     setCarregandoStats(true);
     const params = new URLSearchParams();
@@ -664,6 +677,16 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
     }
   }, []);
 
+  const carregarLogs = useCallback(async () => {
+    setCarregandoLogs(true);
+    try {
+      const res = await fetch("/api/admin/logs");
+      setLogs(await res.json());
+    } finally {
+      setCarregandoLogs(false);
+    }
+  }, []);
+
   async function excluirMensagem(id: string) {
     setExcluindoMsg(id);
     try {
@@ -690,6 +713,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
   useEffect(() => { carregarPacientes(); }, [carregarPacientes]);
   useEffect(() => { carregarProfissionais(); }, [carregarProfissionais]);
   useEffect(() => { carregarMensagens(); }, [carregarMensagens]);
+  useEffect(() => { if (aba === "logs") carregarLogs(); }, [aba, carregarLogs]);
 
   async function handleLogout() {
     await fetch("/api/admin/logout", { method: "POST" });
@@ -728,11 +752,16 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
     );
   });
 
+  const logsFiltrados = filtroEvento === "todos"
+    ? logs
+    : logs.filter((l) => l.evento === filtroEvento);
+
   const abas: { id: Aba; label: string }[] = [
     { id: "visitas", label: "Visitas & Stats" },
     { id: "pacientes", label: `Pacientes (${pacientes.length})` },
     { id: "profissionais", label: `Profissionais (${profissionais.length})` },
     { id: "mensagens", label: `Mensagens (${mensagens.length})` },
+    { id: "logs", label: `Logs (${logs.length})` },
   ];
 
   return (
@@ -1108,6 +1137,77 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                 </table>
               </div>
             </div>
+          </div>
+        )}
+        {/* ─── Aba Logs ────────────────────────────────────────────────────── */}
+        {aba === "logs" && (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <select
+                  value={filtroEvento}
+                  onChange={(e) => setFiltroEvento(e.target.value)}
+                  className="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-300"
+                >
+                  <option value="todos">Todos os eventos</option>
+                  <option value="login_falhou">Login falhou</option>
+                  <option value="acesso_negado">Acesso negado</option>
+                  <option value="rate_limit">Rate limit</option>
+                  <option value="csrf_bloqueado">CSRF bloqueado</option>
+                </select>
+                <span className="text-sm text-gray-400">{logsFiltrados.length} registro{logsFiltrados.length !== 1 ? "s" : ""}</span>
+              </div>
+              <Button variant="outline" size="sm" onClick={carregarLogs} disabled={carregandoLogs}>
+                {carregandoLogs ? "Atualizando..." : "Atualizar"}
+              </Button>
+            </div>
+
+            {carregandoLogs ? (
+              <div className="text-center py-10 text-gray-400 text-sm">Carregando logs...</div>
+            ) : logsFiltrados.length === 0 ? (
+              <div className="text-center py-16 text-gray-400 text-sm bg-white border border-gray-200 rounded-xl">
+                Nenhum evento de segurança registrado.
+              </div>
+            ) : (
+              <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200 text-left text-xs text-gray-500 uppercase tracking-wide">
+                      <th className="px-4 py-3 font-medium">Data / Hora</th>
+                      <th className="px-4 py-3 font-medium">Evento</th>
+                      <th className="px-4 py-3 font-medium">IP</th>
+                      <th className="px-4 py-3 font-medium">Rota</th>
+                      <th className="px-4 py-3 font-medium">Detalhe</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {logsFiltrados.map((log, i) => (
+                      <tr key={i} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-3 text-gray-500 whitespace-nowrap font-mono text-xs">
+                          {new Date(log.ts).toLocaleString("pt-BR")}
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                            log.evento === "login_falhou"   ? "bg-yellow-100 text-yellow-800" :
+                            log.evento === "acesso_negado" ? "bg-red-100 text-red-800" :
+                            log.evento === "rate_limit"    ? "bg-orange-100 text-orange-800" :
+                            "bg-purple-100 text-purple-800"
+                          }`}>
+                            {log.evento === "login_falhou"   ? "Login falhou" :
+                             log.evento === "acesso_negado"  ? "Acesso negado" :
+                             log.evento === "rate_limit"     ? "Rate limit" :
+                             "CSRF bloqueado"}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-gray-600 font-mono text-xs">{log.ip ?? "—"}</td>
+                        <td className="px-4 py-3 text-gray-500 text-xs">{log.rota ?? "—"}</td>
+                        <td className="px-4 py-3 text-gray-400 text-xs">{log.info ?? "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
       </div>
