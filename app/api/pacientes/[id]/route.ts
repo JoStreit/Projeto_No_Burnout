@@ -8,6 +8,18 @@ export async function GET(
   ctx: { params: Promise<{ id: string }> }
 ) {
   const { id } = await ctx.params;
+
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get("session")?.value;
+  const adminToken = cookieStore.get("session_admin")?.value;
+
+  const isOwner = sessionToken && verificarToken(sessionToken) === id;
+  const isAdmin = adminToken && verificarToken(adminToken) === process.env.ADMIN_CPF;
+
+  if (!isOwner && !isAdmin) {
+    return Response.json({ erro: "Não autorizado" }, { status: 403 });
+  }
+
   const paciente = buscarPacientePorId(id);
   if (!paciente) {
     return Response.json({ erro: "Paciente não encontrado" }, { status: 404 });

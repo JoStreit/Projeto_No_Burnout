@@ -7,7 +7,7 @@ async function verificarAdmin() {
   const cookieStore = await cookies();
   const token = cookieStore.get("session_admin")?.value;
   if (!token) return false;
-  return !!verificarToken(token);
+  return verificarToken(token) === process.env.ADMIN_CPF;
 }
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {

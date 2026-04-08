@@ -23,7 +23,6 @@ import { Combobox } from "@/components/ui/combobox";
 import { ESTADOS, buscarCidadesPorEstado } from "@/lib/brasil";
 import { formatarCPF } from "@/lib/cpf";
 
-const ADMIN_CPF = "01581020023";
 const RAMOS = ["Fisioterapeuta", "Nutricionista", "Psicólogo", "Personal Trainer"];
 const OPCOES_ESTADO = ESTADOS.map((e) => ({ value: e.uf, label: e.uf, sublabel: e.nome }));
 
@@ -594,7 +593,7 @@ function ModalMensagem({
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
-function Dashboard({ onLogout }: { onLogout: () => void }) {
+function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: string }) {
   const [aba, setAba] = useState<Aba>("visitas");
 
   // Stats
@@ -744,7 +743,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <div className="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center font-bold text-lg">A</div>
           <div>
             <h1 className="font-bold text-lg leading-tight">Painel Administrativo</h1>
-            <p className="text-xs text-gray-400">SaúdeConnect · CPF {fmtCPF(ADMIN_CPF)}</p>
+            <p className="text-xs text-gray-400">SaúdeConnect · CPF {fmtCPF(adminCpf)}</p>
           </div>
         </div>
         <Button
@@ -1157,13 +1156,19 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 
 export default function AdminPage() {
   const [autenticado, setAutenticado] = useState<boolean | null>(null);
+  const [adminCpf, setAdminCpf] = useState("");
 
-  useEffect(() => {
+  function carregarAdmin() {
     fetch("/api/admin/me")
       .then((r) => r.json())
-      .then((data) => setAutenticado(!!data?.cpf))
+      .then((data) => {
+        setAutenticado(!!data?.cpf);
+        if (data?.cpf) setAdminCpf(data.cpf);
+      })
       .catch(() => setAutenticado(false));
-  }, []);
+  }
+
+  useEffect(() => { carregarAdmin(); }, []);
 
   if (autenticado === null) {
     return (
@@ -1174,8 +1179,8 @@ export default function AdminPage() {
   }
 
   if (!autenticado) {
-    return <TelaLogin onLogado={() => setAutenticado(true)} />;
+    return <TelaLogin onLogado={carregarAdmin} />;
   }
 
-  return <Dashboard onLogout={() => setAutenticado(false)} />;
+  return <Dashboard adminCpf={adminCpf} onLogout={() => { setAutenticado(false); setAdminCpf(""); }} />;
 }

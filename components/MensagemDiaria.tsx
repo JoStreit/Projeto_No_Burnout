@@ -117,11 +117,10 @@ function CardFlip({
           className="absolute inset-0 rounded-2xl bg-[#eaf2e7] border border-[#4a6741]/20 flex flex-col items-center justify-center gap-2 hover:border-[#4a6741]/50 hover:bg-[#dceeda] transition-colors"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <span className="text-3xl select-none">🌱</span>
           <p className="text-xs font-semibold text-[#4a6741] uppercase tracking-widest select-none">
-            Dica para você
+            Dica do dia para você
           </p>
-          <p className="text-[11px] text-[#4a6741]/60 select-none">clique para revelar</p>
+          <p className="text-sm text-[#4a6741]/60 select-none">clique para revelar</p>
         </div>
 
         {/* ── Verso (mensagem) ── */}
@@ -184,9 +183,8 @@ export default function MensagemDiaria() {
     <section className="bg-[#faf7f4] py-10">
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-[#4a6741] text-lg">🌱</span>
           <h2 className="text-sm font-semibold text-[#4a6741] uppercase tracking-widest">
-            Dica para você
+            Dica do dia para você
           </h2>
         </div>
         <div className="grid sm:grid-cols-2 gap-3">
