@@ -13,5 +13,5 @@ export async function GET() {
   if (!(await autenticarAdmin())) {
     return Response.json({ erro: "Não autorizado" }, { status: 403 });
   }
-  return Response.json(listarProfissionais());
+  return Response.json(listarProfissionais({ limit: 1000 }).data);
 }

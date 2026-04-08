@@ -202,7 +202,9 @@ export function listarProfissionais(filtros?: {
   ramo?: string;
   cidade?: string;
   estado?: string;
-}): ProfissionalPublico[] {
+  limit?: number;
+  offset?: number;
+}): { data: ProfissionalPublico[]; total: number } {
   let lista = lerDB().profissionais;
   if (filtros?.ramo) {
     lista = lista.filter((p) => p.ramo?.toLowerCase() === filtros.ramo!.toLowerCase());
@@ -213,7 +215,11 @@ export function listarProfissionais(filtros?: {
   if (filtros?.estado) {
     lista = lista.filter((p) => p.estado?.toLowerCase() === filtros.estado!.toLowerCase());
   }
-  return lista.map(profissionalToPublico);
+  const total = lista.length;
+  const offset = filtros?.offset ?? 0;
+  const limit = Math.min(filtros?.limit ?? 20, 100);
+  const data = lista.slice(offset, offset + limit).map(profissionalToPublico);
+  return { data, total };
 }
 
 export function buscarProfissionalPorId(id: string): ProfissionalPublico | null {

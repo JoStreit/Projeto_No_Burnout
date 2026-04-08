@@ -50,6 +50,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
   const [remoto, setRemoto] = useState(false);
   const [abrangencia, setAbrangencia] = useState<"Brasil" | "Estado" | "">("");
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
+  const [totalProfissionais, setTotalProfissionais] = useState(0);
   const [carregando, setCarregando] = useState(false);
 
   // Inicializa filtros a partir da preferência salva do paciente
@@ -85,10 +86,12 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
       }
 
       const res = await fetch(`/api/profissionais?${params.toString()}`);
-      const data = await res.json();
-      setProfissionais(data);
+      const json = await res.json();
+      setProfissionais(json.data ?? []);
+      setTotalProfissionais(json.total ?? 0);
     } catch {
       setProfissionais([]);
+      setTotalProfissionais(0);
     } finally {
       setCarregando(false);
     }
@@ -205,7 +208,9 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
           ) : (
             <>
               <p className="text-xs text-gray-500 mb-2">
-                {profissionais.length} profissional{profissionais.length !== 1 ? "is" : ""} encontrado{profissionais.length !== 1 ? "s" : ""}
+                {totalProfissionais > profissionais.length
+                  ? `Exibindo ${profissionais.length} de ${totalProfissionais} profissionais encontrados`
+                  : `${profissionais.length} profissional${profissionais.length !== 1 ? "is" : ""} encontrado${profissionais.length !== 1 ? "s" : ""}`}
               </p>
               {profissionais.map((p) => (
                 <div

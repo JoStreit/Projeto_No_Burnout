@@ -18,8 +18,12 @@ export async function GET(request: NextRequest) {
   const ramo = searchParams.get("ramo") ?? undefined;
   const cidade = searchParams.get("cidade") ?? undefined;
   const estado = searchParams.get("estado") ?? undefined;
-  const profissionais = listarProfissionais({ ramo, cidade, estado });
-  return Response.json(profissionais);
+  const limit = Math.min(Number(searchParams.get("limit") ?? 20), 100);
+  const page = Math.max(Number(searchParams.get("page") ?? 1), 1);
+  const offset = (page - 1) * limit;
+
+  const { data, total } = listarProfissionais({ ramo, cidade, estado, limit, offset });
+  return Response.json({ data, total, page, limit });
 }
 
 export async function POST(request: NextRequest) {

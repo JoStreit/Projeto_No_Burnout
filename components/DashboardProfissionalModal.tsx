@@ -374,7 +374,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
             {/* Dados do perfil */}
             <div className="space-y-3">
               <Campo label="Nome" valor={profissional.nome} />
-              <Campo label="CPF" valor={profissional.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")} />
+              <Campo label="CPF" valor={profissional.cpf} />
               <Campo label="Carteirinha" valor={profissional.carteirinha} />
               <Campo label="Ramo" valor={profissional.ramo} />
               <Campo label="Estado" valor={profissional.estado} />
