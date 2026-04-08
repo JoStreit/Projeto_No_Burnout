@@ -62,12 +62,20 @@ export interface MensagemDica {
   criadoEm: string;
 }
 
+export interface ResetToken {
+  token: string;
+  userId: string;
+  tipo: "paciente" | "profissional";
+  expiraEm: string;
+}
+
 interface DB {
   pacientes: Paciente[];
   profissionais: Profissional[];
   visitas?: Visita[];
   questionarios?: { id: string; timestamp: string }[];
   mensagens?: MensagemDica[];
+  resetTokens?: ResetToken[];
 }
 
 function lerDB(): DB {
@@ -505,4 +513,52 @@ export function contarQuestionarios(filtros?: { inicio?: string; fim?: string })
   if (filtros?.inicio) lista = lista.filter((q) => q.timestamp >= filtros.inicio!);
   if (filtros?.fim) lista = lista.filter((q) => q.timestamp <= filtros.fim! + "T23:59:59.999Z");
   return lista.length;
+}
+
+// ─── Reset de Senha ───────────────────────────────────────────────────────────
+
+export function criarResetToken(userId: string, tipo: "paciente" | "profissional"): string {
+  const db = lerDB();
+  if (!db.resetTokens) db.resetTokens = [];
+
+  // Remove tokens anteriores do mesmo usuário
+  db.resetTokens = db.resetTokens.filter((t) => t.userId !== userId);
+
+  const token = crypto.randomUUID();
+  const expiraEm = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1 hora
+  db.resetTokens.push({ token, userId, tipo, expiraEm });
+  salvarDB(db);
+  return token;
+}
+
+export function consumirResetToken(token: string): ResetToken | null {
+  const db = lerDB();
+  if (!db.resetTokens) return null;
+  const entry = db.resetTokens.find((t) => t.token === token);
+  if (!entry) return null;
+  if (new Date(entry.expiraEm) < new Date()) {
+    db.resetTokens = db.resetTokens.filter((t) => t.token !== token);
+    salvarDB(db);
+    return null;
+  }
+  // Consome o token (uso único)
+  db.resetTokens = db.resetTokens.filter((t) => t.token !== token);
+  salvarDB(db);
+  return entry;
+}
+
+export function atualizarSenhaPaciente(id: string, novaSenha: string): void {
+  const db = lerDB();
+  const idx = db.pacientes.findIndex((p) => p.id === id);
+  if (idx === -1) throw new Error("Paciente não encontrado");
+  db.pacientes[idx].senhaHash = bcrypt.hashSync(novaSenha, 10);
+  salvarDB(db);
+}
+
+export function atualizarSenhaProfissional(id: string, novaSenha: string): void {
+  const db = lerDB();
+  const idx = db.profissionais.findIndex((p) => p.id === id);
+  if (idx === -1) throw new Error("Profissional não encontrado");
+  db.profissionais[idx].senhaHash = bcrypt.hashSync(novaSenha, 10);
+  salvarDB(db);
 }
