@@ -182,11 +182,6 @@ export default function MensagemDiaria() {
   return (
     <section className="bg-[#faf7f4] py-10">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex items-center gap-2 mb-4">
-          <h2 className="text-sm font-semibold text-[#4a6741] uppercase tracking-widest">
-            Dica do dia para você
-          </h2>
-        </div>
         <div className="grid sm:grid-cols-2 gap-3">
           {mensagensHoje.map((m) => (
             <CardFlip
