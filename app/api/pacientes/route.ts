@@ -2,18 +2,34 @@ import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { criarPaciente, listarPacientes } from "@/lib/db";
 import { validarCPF } from "@/lib/cpf";
-import { criarToken } from "@/lib/auth";
+import { criarToken, verificarToken } from "@/lib/auth";
+import { checkRateLimit } from "@/lib/rate-limit";
+
+const SENHA_REGEX = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
 const PREFERENCIAS_BUSCA_VALIDAS = ["Presencial", "RemotoBrasil", "RemoToEstado"] as const;
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function GET() {
-  const pacientes = listarPacientes();
-  return Response.json(pacientes);
+  const cookieStore = await cookies();
+  const token = cookieStore.get("session_admin")?.value;
+  if (!token || verificarToken(token) !== process.env.ADMIN_CPF) {
+    return Response.json({ erro: "Não autorizado" }, { status: 403 });
+  }
+  return Response.json(listarPacientes());
 }
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+  const { allowed, retryAfter } = checkRateLimit(`cadastro-pac:${ip}`);
+  if (!allowed) {
+    return Response.json(
+      { erro: "Muitas tentativas. Tente novamente em alguns minutos." },
+      { status: 429, headers: { "Retry-After": String(retryAfter) } }
+    );
+  }
+
   const body = await request.json();
   const { nome, cpf, email, estado, cidade, senha, preferenciaBusca } = body;
 
@@ -37,9 +53,9 @@ export async function POST(request: NextRequest) {
     return Response.json({ erro: "Cidade é obrigatória" }, { status: 400 });
   }
 
-  if (!senha || senha.length < 6) {
+  if (!senha || !SENHA_REGEX.test(senha)) {
     return Response.json(
-      { erro: "Senha deve ter pelo menos 6 caracteres" },
+      { erro: "Senha deve ter no mínimo 8 caracteres, uma letra maiúscula e um número" },
       { status: 400 }
     );
   }

@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { criarProfissional, listarProfissionais } from "@/lib/db";
 import { validarCPF } from "@/lib/cpf";
 import { criarToken } from "@/lib/auth";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const RAMOS_VALIDOS = [
   "Fisioterapeuta",
@@ -12,6 +13,8 @@ const RAMOS_VALIDOS = [
 ];
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SENHA_REGEX = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+const FOTO_MAX_BYTES = 2 * 1024 * 1024; // 2 MB em base64
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -27,6 +30,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+  const { allowed, retryAfter } = checkRateLimit(`cadastro-prof:${ip}`);
+  if (!allowed) {
+    return Response.json(
+      { erro: "Muitas tentativas. Tente novamente em alguns minutos." },
+      { status: 429, headers: { "Retry-After": String(retryAfter) } }
+    );
+  }
+
   const body = await request.json();
   const { nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento, foto, senha } = body;
 
@@ -54,8 +66,14 @@ export async function POST(request: NextRequest) {
   if (!Array.isArray(atendimento) || atendimento.length === 0)
     return Response.json({ erro: "Selecione ao menos uma modalidade de atendimento" }, { status: 400 });
 
-  if (!senha || senha.length < 6)
-    return Response.json({ erro: "Senha deve ter pelo menos 6 caracteres" }, { status: 400 });
+  if (!senha || !SENHA_REGEX.test(senha))
+    return Response.json(
+      { erro: "Senha deve ter no mínimo 8 caracteres, uma letra maiúscula e um número" },
+      { status: 400 }
+    );
+
+  if (foto && foto.length > FOTO_MAX_BYTES)
+    return Response.json({ erro: "Foto muito grande. Tamanho máximo: 2 MB" }, { status: 400 });
 
   try {
     const profissional = criarProfissional({

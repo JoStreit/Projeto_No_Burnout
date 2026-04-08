@@ -2,6 +2,13 @@ import crypto from "crypto";
 
 const SECRET = process.env.AUTH_SECRET ?? "dev-secret-saude-connect";
 
+// Tokens revogados explicitamente (logout antes do vencimento)
+const tokensRevogados = new Set<string>();
+
+export function revogarToken(token: string): void {
+  tokensRevogados.add(token);
+}
+
 export function criarToken(pacienteId: string): string {
   const payload = Buffer.from(
     JSON.stringify({ id: pacienteId, ts: Date.now() })
@@ -16,6 +23,7 @@ export function criarToken(pacienteId: string): string {
 const TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 dias
 
 export function verificarToken(token: string): string | null {
+  if (tokensRevogados.has(token)) return null;
   const parts = token.split(".");
   if (parts.length !== 2) return null;
   const [payload, sig] = parts;

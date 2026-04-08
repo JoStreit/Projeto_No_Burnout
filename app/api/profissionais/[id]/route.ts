@@ -1,11 +1,19 @@
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { verificarToken } from "@/lib/auth";
+
+const FOTO_MAX_BYTES = 2 * 1024 * 1024;
 import {
   buscarProfissionalPorId,
   atualizarStatusProfissional,
   atualizarProfissional,
 } from "@/lib/db";
+
+function mascaraCPF(cpf: string): string {
+  const d = cpf.replace(/\D/g, "");
+  if (d.length !== 11) return cpf;
+  return `${d.slice(0, 3)}.***.***-${d.slice(9)}`;
+}
 
 export async function GET(
   _req: NextRequest,
@@ -16,7 +24,9 @@ export async function GET(
   if (!profissional) {
     return Response.json({ erro: "Profissional não encontrado" }, { status: 404 });
   }
-  return Response.json(profissional);
+  // Retorno público: remove email e mascara CPF
+  const { email: _, ...publico } = profissional;
+  return Response.json({ ...publico, cpf: mascaraCPF(profissional.cpf) });
 }
 
 export async function PATCH(
@@ -51,6 +61,8 @@ export async function PATCH(
 
   // Atualização de perfil
   const { nome, estado, cidade, atendimento, email, foto } = body;
+  if (foto && foto.length > FOTO_MAX_BYTES)
+    return Response.json({ erro: "Foto muito grande. Tamanho máximo: 2 MB" }, { status: 400 });
   try {
     const profissional = atualizarProfissional(id, { nome, estado, cidade, atendimento, email, foto });
     return Response.json(profissional);

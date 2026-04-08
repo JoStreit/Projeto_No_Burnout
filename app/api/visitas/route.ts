@@ -2,8 +2,13 @@ import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { verificarToken } from "@/lib/auth";
 import { registrarVisita } from "@/lib/db";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function POST(_req: NextRequest) {
+  const ip = _req.headers.get("x-forwarded-for") ?? "unknown";
+  const { allowed } = checkRateLimit(`visita:${ip}`);
+  if (!allowed) return Response.json({ ok: true }); // silencia sem bloquear UX
+
   const cookieStore = await cookies();
 
   let tipo: "anonimo" | "paciente" | "profissional" = "anonimo";
