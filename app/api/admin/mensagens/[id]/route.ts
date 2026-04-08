@@ -3,6 +3,10 @@ import { cookies } from "next/headers";
 import { verificarToken } from "@/lib/auth";
 import { atualizarMensagem, excluirMensagem } from "@/lib/db";
 
+function stripHtml(str: string): string {
+  return str.replace(/<[^>]*>/g, "").trim();
+}
+
 async function verificarAdmin() {
   const cookieStore = await cookies();
   const token = cookieStore.get("session_admin")?.value;
@@ -20,9 +24,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
   try {
     const atualizada = atualizarMensagem(id, {
-      ...(icone !== undefined ? { icone: icone.trim() } : {}),
-      ...(titulo !== undefined ? { titulo: titulo.trim() } : {}),
-      ...(texto !== undefined ? { texto: texto.trim() } : {}),
+      ...(icone !== undefined ? { icone: stripHtml(icone) } : {}),
+      ...(titulo !== undefined ? { titulo: stripHtml(titulo) } : {}),
+      ...(texto !== undefined ? { texto: stripHtml(texto) } : {}),
       ...(ativa !== undefined ? { ativa: !!ativa } : {}),
     });
     return NextResponse.json(atualizada);

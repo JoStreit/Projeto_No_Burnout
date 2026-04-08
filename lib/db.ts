@@ -76,7 +76,9 @@ function lerDB(): DB {
 }
 
 function salvarDB(db: DB): void {
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf-8");
+  const tmp = DB_PATH + ".tmp";
+  fs.writeFileSync(tmp, JSON.stringify(db, null, 2), "utf-8");
+  fs.renameSync(tmp, DB_PATH);
 }
 
 function normalizarPreferenciaBusca(

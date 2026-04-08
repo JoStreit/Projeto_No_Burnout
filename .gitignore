@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local database (dados sensíveis)
 /data/db.json
+
+# logs de segurança
+/logs/
