@@ -226,7 +226,7 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
           {/* Preferência de Busca */}
           <div className="space-y-2">
             <Label className="text-sm font-medium text-[#3c2010]">Preferência de Busca</Label>
-            <div className="flex gap-6">
+            <div className="flex flex-col sm:flex-row sm:gap-6 gap-3">
               <div className="flex items-center gap-2">
                 <Checkbox
                   id="edit-pac-presencial"
@@ -254,7 +254,7 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
               </div>
             </div>
             {remoto && (
-              <div className="ml-4 flex gap-4 mt-1">
+              <div className="ml-4 flex flex-col sm:flex-row sm:gap-4 gap-3 mt-1">
                 <div className="flex items-center gap-2">
                   <Checkbox
                     id="edit-pac-brasil"

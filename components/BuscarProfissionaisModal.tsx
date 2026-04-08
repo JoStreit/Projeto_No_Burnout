@@ -123,7 +123,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
         {/* Filtro de modalidade */}
         <div className="rounded-xl border border-green-100 bg-green-50 p-3 space-y-2">
           <Label className="text-xs font-semibold text-green-800 uppercase tracking-wide">Modalidade</Label>
-          <div className="flex gap-6">
+          <div className="flex flex-col sm:flex-row sm:gap-6 gap-3">
             <label className="flex items-center gap-2 cursor-pointer">
               <Checkbox
                 checked={presencial}
@@ -148,7 +148,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
           </div>
 
           {remoto && (
-            <div className="ml-4 flex gap-4">
+            <div className="ml-4 flex flex-col sm:flex-row sm:gap-4 gap-3">
               <label className="flex items-center gap-2 cursor-pointer">
                 <Checkbox
                   checked={abrangencia === "Brasil"}

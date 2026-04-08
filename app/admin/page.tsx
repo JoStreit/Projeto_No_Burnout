@@ -787,12 +787,12 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
 
       <div className="max-w-7xl mx-auto px-4 py-6 space-y-6">
         {/* Tabs */}
-        <div className="flex gap-1 bg-white border border-gray-200 rounded-xl p-1 w-fit shadow-sm">
+        <div className="flex flex-wrap gap-1 bg-white border border-gray-200 rounded-xl p-1 w-full sm:w-fit shadow-sm">
           {abas.map((a) => (
             <button
               key={a.id}
               onClick={() => setAba(a.id)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                 aba === a.id
                   ? "bg-gray-900 text-white"
                   : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"
@@ -879,19 +879,21 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
         {/* ─── Aba Pacientes ───────────────────────────────────────────────── */}
         {aba === "pacientes" && (
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
               <Input
                 value={buscaPac}
                 onChange={(e) => setBuscaPac(e.target.value)}
                 placeholder="Buscar por nome, CPF, e-mail, cidade..."
-                className="max-w-sm"
+                className="w-full sm:max-w-sm"
               />
-              <Button variant="outline" size="sm" onClick={carregarPacientes} disabled={carregandoPac}>
-                {carregandoPac ? "Atualizando..." : "Atualizar"}
-              </Button>
-              <span className="text-sm text-gray-500">
-                {pacientesFiltrados.length} de {pacientes.length} paciente{pacientes.length !== 1 ? "s" : ""}
-              </span>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={carregarPacientes} disabled={carregandoPac}>
+                  {carregandoPac ? "Atualizando..." : "Atualizar"}
+                </Button>
+                <span className="text-sm text-gray-500">
+                  {pacientesFiltrados.length} de {pacientes.length} paciente{pacientes.length !== 1 ? "s" : ""}
+                </span>
+              </div>
             </div>
 
             <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
@@ -914,11 +916,11 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                     ) : (
                       pacientesFiltrados.map((p) => (
                         <tr key={p.id} className="hover:bg-gray-50 transition-colors">
-                          <td className="px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{p.nome}</td>
-                          <td className="px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">{fmtCPF(p.cpf)}</td>
-                          <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{p.email}</td>
-                          <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{p.cidade} / {p.estado}</td>
-                          <td className="px-4 py-3">
+                          <td className="px-2 sm:px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{p.nome}</td>
+                          <td className="px-2 sm:px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap hidden sm:table-cell">{fmtCPF(p.cpf)}</td>
+                          <td className="px-2 sm:px-4 py-3 text-gray-600 whitespace-nowrap hidden md:table-cell">{p.email}</td>
+                          <td className="px-2 sm:px-4 py-3 text-gray-600 whitespace-nowrap hidden lg:table-cell">{p.cidade} / {p.estado}</td>
+                          <td className="px-2 sm:px-4 py-3 hidden xl:table-cell">
                             <div className="flex flex-wrap gap-1">
                               {(p.preferenciaBusca ?? []).map((pref) => (
                                 <span key={pref} className="text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">
@@ -927,8 +929,8 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                               ))}
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-gray-400 text-xs whitespace-nowrap">{fmt(p.criadoEm)}</td>
-                          <td className="px-4 py-3">
+                          <td className="px-2 sm:px-4 py-3 text-gray-400 text-xs whitespace-nowrap hidden lg:table-cell">{fmt(p.criadoEm)}</td>
+                          <td className="px-2 sm:px-4 py-3">
                             <Button
                               size="sm"
                               variant="outline"
@@ -951,19 +953,21 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
         {/* ─── Aba Profissionais ───────────────────────────────────────────── */}
         {aba === "profissionais" && (
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
               <Input
                 value={buscaProf}
                 onChange={(e) => setBuscaProf(e.target.value)}
                 placeholder="Buscar por nome, CPF, ramo, cidade..."
-                className="max-w-sm"
+                className="w-full sm:max-w-sm"
               />
-              <Button variant="outline" size="sm" onClick={carregarProfissionais} disabled={carregandoProf}>
-                {carregandoProf ? "Atualizando..." : "Atualizar"}
-              </Button>
-              <span className="text-sm text-gray-500">
-                {profissionaisFiltrados.length} de {profissionais.length} profissional{profissionais.length !== 1 ? "is" : ""}
-              </span>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={carregarProfissionais} disabled={carregandoProf}>
+                  {carregandoProf ? "Atualizando..." : "Atualizar"}
+                </Button>
+                <span className="text-sm text-gray-500">
+                  {profissionaisFiltrados.length} de {profissionais.length} profissional{profissionais.length !== 1 ? "is" : ""}
+                </span>
+              </div>
             </div>
 
             <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
@@ -989,8 +993,8 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                         const dentro = p.vigenciaFim ? vigenciaAtiva(p.vigenciaFim) : false;
                         return (
                           <tr key={p.id} className="hover:bg-gray-50 transition-colors">
-                            <td className="px-4 py-3">
-                              <div className="w-9 h-9 rounded-full overflow-hidden bg-teal-100 flex items-center justify-center shrink-0">
+                            <td className="px-2 sm:px-4 py-3">
+                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden bg-teal-100 flex items-center justify-center shrink-0">
                                 {p.foto ? (
                                   <img src={p.foto} alt={p.nome} className="w-full h-full object-cover" />
                                 ) : (
@@ -998,13 +1002,13 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                                 )}
                               </div>
                             </td>
-                            <td className="px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{p.nome ?? "—"}</td>
-                            <td className="px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap">{p.cpf ? fmtCPF(p.cpf) : "—"}</td>
-                            <td className="px-4 py-3 whitespace-nowrap">
+                            <td className="px-2 sm:px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{p.nome ?? "—"}</td>
+                            <td className="px-2 sm:px-4 py-3 text-gray-500 font-mono text-xs whitespace-nowrap hidden sm:table-cell">{p.cpf ? fmtCPF(p.cpf) : "—"}</td>
+                            <td className="px-2 sm:px-4 py-3 whitespace-nowrap hidden sm:table-cell">
                               <span className="text-xs bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full font-medium">{p.ramo ?? "—"}</span>
                             </td>
-                            <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{p.cidade ?? "—"} / {p.estado ?? "—"}</td>
-                            <td className="px-4 py-3">
+                            <td className="px-2 sm:px-4 py-3 text-gray-600 whitespace-nowrap hidden lg:table-cell">{p.cidade ?? "—"} / {p.estado ?? "—"}</td>
+                            <td className="px-2 sm:px-4 py-3">
                               <Badge className={ativo
                                 ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
                                 : "bg-gray-200 text-gray-600 hover:bg-gray-200"
@@ -1012,7 +1016,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                                 {p.status ?? "Inativo"}
                               </Badge>
                             </td>
-                            <td className="px-4 py-3 text-xs whitespace-nowrap">
+                            <td className="px-2 sm:px-4 py-3 text-xs whitespace-nowrap hidden md:table-cell">
                               {p.vigenciaFim ? (
                                 <span className={dentro ? "text-emerald-700 font-medium" : "text-red-500 font-medium"}>
                                   até {fmt(p.vigenciaFim)}
@@ -1022,10 +1026,10 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                                 <span className="text-gray-400">—</span>
                               )}
                             </td>
-                            <td className="px-4 py-3 text-gray-500 text-xs whitespace-nowrap">
+                            <td className="px-2 sm:px-4 py-3 text-gray-500 text-xs whitespace-nowrap hidden xl:table-cell">
                               {(p.atendimento ?? []).join(" · ") || "—"}
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-2 sm:px-4 py-3">
                               <Button
                                 size="sm"
                                 variant="outline"
@@ -1093,7 +1097,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                         <tr key={m.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-4 py-3 text-2xl">{m.icone}</td>
                           <td className="px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{m.titulo}</td>
-                          <td className="px-4 py-3 text-gray-500 max-w-sm">
+                          <td className="px-2 sm:px-4 py-3 text-gray-500 w-full">
                             <p className="line-clamp-2 text-xs leading-relaxed">{m.texto}</p>
                           </td>
                           <td className="px-4 py-3">
@@ -1142,8 +1146,8 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
         {/* ─── Aba Logs ────────────────────────────────────────────────────── */}
         {aba === "logs" && (
           <div className="space-y-4">
-            <div className="flex items-center justify-between gap-3 flex-wrap">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2 flex-wrap">
                 <select
                   value={filtroEvento}
                   onChange={(e) => setFiltroEvento(e.target.value)}
@@ -1173,20 +1177,20 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200 text-left text-xs text-gray-500 uppercase tracking-wide">
-                      <th className="px-4 py-3 font-medium">Data / Hora</th>
-                      <th className="px-4 py-3 font-medium">Evento</th>
-                      <th className="px-4 py-3 font-medium">IP</th>
-                      <th className="px-4 py-3 font-medium">Rota</th>
-                      <th className="px-4 py-3 font-medium">Detalhe</th>
+                      <th className="px-2 sm:px-4 py-3 font-medium whitespace-nowrap">Data / Hora</th>
+                      <th className="px-2 sm:px-4 py-3 font-medium">Evento</th>
+                      <th className="px-2 sm:px-4 py-3 font-medium hidden sm:table-cell">IP</th>
+                      <th className="px-2 sm:px-4 py-3 font-medium hidden md:table-cell">Rota</th>
+                      <th className="px-2 sm:px-4 py-3 font-medium hidden lg:table-cell">Detalhe</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {logsFiltrados.map((log, i) => (
                       <tr key={i} className="hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-3 text-gray-500 whitespace-nowrap font-mono text-xs">
+                        <td className="px-2 sm:px-4 py-3 text-gray-500 whitespace-nowrap font-mono text-xs">
                           {new Date(log.ts).toLocaleString("pt-BR")}
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-2 sm:px-4 py-3">
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                             log.evento === "login_falhou"   ? "bg-yellow-100 text-yellow-800" :
                             log.evento === "acesso_negado" ? "bg-red-100 text-red-800" :
@@ -1199,9 +1203,9 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                              "CSRF bloqueado"}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-gray-600 font-mono text-xs">{log.ip ?? "—"}</td>
-                        <td className="px-4 py-3 text-gray-500 text-xs">{log.rota ?? "—"}</td>
-                        <td className="px-4 py-3 text-gray-400 text-xs">{log.info ?? "—"}</td>
+                        <td className="px-2 sm:px-4 py-3 text-gray-600 font-mono text-xs hidden sm:table-cell">{log.ip ?? "—"}</td>
+                        <td className="px-2 sm:px-4 py-3 text-gray-500 text-xs hidden md:table-cell">{log.rota ?? "—"}</td>
+                        <td className="px-2 sm:px-4 py-3 text-gray-400 text-xs hidden lg:table-cell">{log.info ?? "—"}</td>
                       </tr>
                     ))}
                   </tbody>

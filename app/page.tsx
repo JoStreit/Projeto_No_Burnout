@@ -216,7 +216,7 @@ export default function Home() {
 
       {/* ─── Hero ────────────────────────────────────────────────────────── */}
       <section className="bg-[#ede0d4]">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 flex flex-col md:flex-row items-center gap-12">
+        <div className="max-w-6xl mx-auto px-6 py-12 md:py-32 flex flex-col md:flex-row items-center gap-8 md:gap-12">
 
           {/* Texto */}
           <div className="flex-1 text-center md:text-left">
@@ -238,7 +238,7 @@ export default function Home() {
               <Button
                 size="lg"
                 onClick={() => setAnaliseAberta(true)}
-                className="bg-[#4a6741] hover:bg-[#3d5836] text-white px-14 py-8 text-xl rounded-2xl font-bold shadow-lg shadow-[#4a6741]/25 hover:shadow-xl hover:shadow-[#4a6741]/30 transition-all duration-200 hover:-translate-y-1 w-full sm:w-auto"
+                className="bg-[#4a6741] hover:bg-[#3d5836] text-white px-8 py-5 sm:px-14 sm:py-8 text-lg sm:text-xl rounded-2xl font-bold shadow-lg shadow-[#4a6741]/25 hover:shadow-xl hover:shadow-[#4a6741]/30 transition-all duration-200 hover:-translate-y-1 w-full sm:w-auto"
               >
                 Fazer Análise Gratuita
               </Button>
@@ -273,7 +273,7 @@ export default function Home() {
           </div>
 
           {/* Logo decorativa */}
-          <div className="shrink-0 flex flex-col items-center gap-4">
+          <div className="shrink-0 hidden sm:flex flex-col items-center gap-4">
             <div className="relative w-72 h-72 md:w-96 md:h-96">
               <div className="absolute inset-0 rounded-full bg-[#4a6741]/8" />
               <div className="absolute inset-4 rounded-full bg-[#4a6741]/6" />
@@ -311,7 +311,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
             {/* Card 1 — Análise */}
             <div className="group p-8 rounded-2xl border border-stone-100 hover:border-[#4a6741]/30 hover:shadow-lg hover:shadow-[#4a6741]/5 transition-all duration-300">

@@ -244,7 +244,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
             {/* Preferência de Busca */}
             <div className="space-y-2">
               <Label>Preferência de Busca</Label>
-              <div className="flex gap-6">
+              <div className="flex flex-col sm:flex-row sm:gap-6 gap-3">
                 <div className="flex items-center gap-2">
                   <Checkbox
                     id="pac-presencial"
@@ -270,7 +270,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
                 </div>
               </div>
               {remoto && (
-                <div className="ml-4 flex gap-4 mt-1">
+                <div className="ml-4 flex flex-col sm:flex-row sm:gap-4 gap-3 mt-1">
                   <div className="flex items-center gap-2">
                     <Checkbox
                       id="pac-brasil"

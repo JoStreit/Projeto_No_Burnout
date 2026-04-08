@@ -271,7 +271,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
 
             <div className="space-y-2">
               <Label>Modalidade de Atendimento</Label>
-              <div className="flex gap-6">
+              <div className="flex flex-col sm:flex-row sm:gap-6 gap-3">
                 <label className="flex items-center gap-2 cursor-pointer select-none">
                   <Checkbox
                     checked={atendOnline}

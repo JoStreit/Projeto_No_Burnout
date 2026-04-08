@@ -182,7 +182,7 @@ export default function MensagemDiaria() {
   return (
     <section className="bg-[#faf7f4] py-10">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {mensagensHoje.map((m) => (
             <CardFlip
               key={m.id}
