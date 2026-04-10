@@ -100,7 +100,7 @@ export default function AnaliseGratuitaModal({
       setCarregandoProfs(true);
       fetch(`/api/profissionais?ramo=${encodeURIComponent(ramoRecomendado)}`)
         .then((r) => r.json())
-        .then((data) => setProfissionais(data))
+        .then((data) => setProfissionais(Array.isArray(data) ? data : (data.data ?? [])))
         .catch(() => setProfissionais([]))
         .finally(() => setCarregandoProfs(false));
     }
