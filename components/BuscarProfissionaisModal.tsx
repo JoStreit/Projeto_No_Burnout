@@ -113,9 +113,9 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-3xl max-h-[96vh] flex flex-col">
+      <DialogContent className="max-w-3xl max-h-[96vh] flex flex-col bg-[#faf9f7]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[#4a6741]">
+          <DialogTitle className="text-2xl font-bold text-[#3b4f38]">
             Buscar Profissionais
           </DialogTitle>
         </DialogHeader>
@@ -124,15 +124,12 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
           {/* Modalidade */}
-          <div className="rounded-xl border border-[#4a6741]/15 bg-[#eaf2e7] p-3 space-y-2">
-            <Label className="text-xs font-semibold text-[#4a6741] uppercase tracking-wide">Modalidade</Label>
+          <div className="rounded-lg border border-[#4a6741]/30 bg-[#eaf2e7] px-4 py-3 space-y-2">
+            <p className="text-xs font-bold text-[#4a6741] uppercase tracking-widest">Modalidade</p>
             <div className="flex flex-col gap-2">
               <label className="flex items-center gap-2 cursor-pointer">
-                <Checkbox
-                  checked={presencial}
-                  onCheckedChange={(v) => setPresencial(!!v)}
-                />
-                <span className="text-sm font-medium">Presencial</span>
+                <Checkbox checked={presencial} onCheckedChange={(v) => setPresencial(!!v)} />
+                <span className="text-sm">Presencial</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <Checkbox
@@ -142,32 +139,36 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                     if (!v) setAbrangencia("");
                   }}
                 />
-                <span className="text-sm font-medium">Remoto</span>
+                <span className="text-sm">Remoto</span>
               </label>
               {remoto && (
-                <div className="ml-5 flex flex-col gap-1.5">
+                <div className="ml-6 flex flex-col gap-1.5">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <Checkbox checked={abrangencia === "Brasil"} onCheckedChange={(v) => setAbrangencia(v ? "Brasil" : "")} />
-                    <span className="text-xs">Brasil (nacional)</span>
+                    <span className="text-xs text-stone-600">Brasil (nacional)</span>
                   </label>
                   {paciente?.estado && (
                     <label className="flex items-center gap-2 cursor-pointer">
                       <Checkbox checked={abrangencia === "Estado"} onCheckedChange={(v) => setAbrangencia(v ? "Estado" : "")} />
-                      <span className="text-xs">{paciente.estado} (meu estado)</span>
+                      <span className="text-xs text-stone-600">{paciente.estado} (meu estado)</span>
                     </label>
                   )}
                 </div>
               )}
-              {label && <p className="text-xs text-[#4a6741] font-medium pt-0.5">{label}</p>}
+              {label && (
+                <p className="text-xs text-[#4a6741] font-semibold pt-1">
+                  {label}
+                </p>
+              )}
             </div>
           </div>
 
           {/* Ramo + Buscar */}
           <div className="flex flex-col gap-3">
             <div className="space-y-1.5">
-              <Label>Ramo de atuação</Label>
+              <Label className="text-sm text-stone-700">Ramo de atuação</Label>
               <Select value={ramo} onValueChange={(v) => setRamo(v ?? "")}>
-                <SelectTrigger>
+                <SelectTrigger className="bg-white">
                   <SelectValue placeholder="Todos os ramos" />
                 </SelectTrigger>
                 <SelectContent>
@@ -180,7 +181,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
             </div>
             <Button
               onClick={buscar}
-              className="bg-[#4a6741] hover:bg-[#3d5836] w-full mt-auto"
+              className="bg-[#4a6741] hover:bg-[#3d5836] w-full mt-auto rounded-lg font-semibold"
               disabled={carregando}
             >
               {carregando ? "Buscando..." : "Buscar"}
@@ -198,7 +199,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
             </div>
           ) : (
             <>
-              <p className="text-xs text-stone-400 mb-2">
+              <p className="text-xs text-stone-400 mb-1">
                 {totalProfissionais > profissionais.length
                   ? `Exibindo ${profissionais.length} de ${totalProfissionais} profissionais`
                   : `${profissionais.length} profissional${profissionais.length !== 1 ? "is" : ""} encontrado${profissionais.length !== 1 ? "s" : ""}`}
@@ -206,14 +207,14 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
               {profissionais.map((p) => (
                 <div
                   key={p.id}
-                  className="flex items-start gap-4 bg-white border border-stone-100 rounded-xl px-4 py-4 shadow-sm hover:border-[#4a6741]/20 hover:shadow-md transition-all"
+                  className="flex items-start gap-3 bg-white border border-stone-200 rounded-lg px-4 py-3 shadow-sm hover:shadow-md transition-shadow"
                 >
                   {/* Avatar */}
-                  <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 bg-[#eaf2e7] flex items-center justify-center border border-[#4a6741]/10">
+                  <div className="w-13 h-13 rounded-full overflow-hidden shrink-0 bg-[#eaf2e7] flex items-center justify-center border border-[#4a6741]/15" style={{ width: 52, height: 52 }}>
                     {p.foto ? (
                       <img src={p.foto} alt={p.nome} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-2xl font-bold text-[#4a6741]">
+                      <span className="text-xl font-bold text-[#4a6741]">
                         {p.nome.charAt(0).toUpperCase()}
                       </span>
                     )}
@@ -221,31 +222,25 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
                   {/* Dados */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 flex-wrap">
-                      <p className="font-semibold text-[#3c2010] text-base leading-tight">{p.nome}</p>
-                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full shrink-0 ${COR_RAMO[p.ramo] ?? "bg-stone-100 text-stone-600"}`}>
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <p className="font-bold text-stone-800 text-sm leading-snug">{p.nome}</p>
+                      <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full shrink-0 ${COR_RAMO[p.ramo] ?? "bg-stone-100 text-stone-600"}`}>
                         {p.ramo}
                       </span>
                     </div>
 
-                    <div className="mt-2 flex flex-col gap-1">
-                      <p className="text-sm text-stone-500 flex items-center gap-1.5">
-                        <span className="text-base">📍</span>
+                    <div className="mt-1.5 flex flex-col gap-0.5">
+                      <p className="text-xs text-stone-500 flex items-center gap-1">
+                        <span>📍</span>
                         {p.cidade} — {p.estado}
                       </p>
-                      <a
-                        href={`mailto:${p.email}`}
-                        className="text-sm text-[#4a6741] hover:underline flex items-center gap-1.5"
-                      >
-                        <span className="text-base">✉️</span>
+                      <a href={`mailto:${p.email}`} className="text-xs text-stone-600 hover:text-[#4a6741] hover:underline flex items-center gap-1">
+                        <span>✉️</span>
                         {p.email}
                       </a>
                       {p.telefone && (
-                        <a
-                          href={`tel:${p.telefone.replace(/\D/g, "")}`}
-                          className="text-sm text-[#4a6741] hover:underline flex items-center gap-1.5"
-                        >
-                          <span className="text-base">📞</span>
+                        <a href={`tel:${p.telefone.replace(/\D/g, "")}`} className="text-xs text-stone-600 hover:text-[#4a6741] hover:underline flex items-center gap-1">
+                          <span>📞</span>
                           {p.telefone}
                         </a>
                       )}
@@ -254,7 +249,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                     {p.atendimento?.length > 0 && (
                       <div className="mt-2 flex gap-1.5 flex-wrap">
                         {p.atendimento.map((a) => (
-                          <span key={a} className="text-xs bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full">
+                          <span key={a} className="text-xs border border-stone-200 text-stone-500 bg-white px-2 py-0.5 rounded-full">
                             {a}
                           </span>
                         ))}
