@@ -67,7 +67,9 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
   }, [aberto, paciente]);
 
   function labelAbrangencia(): string {
-    if (presencial && remoto) return "🌎 Buscando em: Todo o Brasil (presencial + remoto)";
+    if (presencial && remoto && abrangencia === "Brasil") return "🌎 Presencial (sua cidade) + Remoto (Brasil)";
+    if (presencial && remoto && abrangencia === "Estado") return `📍 Presencial + Remoto em ${paciente?.estado ?? "seu estado"}`;
+    if (presencial && remoto) return "📍 Presencial (sua cidade) + Remoto";
     if (presencial) return `📍 Buscando em: ${paciente?.cidade ?? "sua cidade"}`;
     if (remoto && abrangencia === "Brasil") return "🌎 Buscando em: Todo o Brasil";
     if (remoto && abrangencia === "Estado") return `📍 Buscando em: ${paciente?.estado ?? "seu estado"}`;
@@ -79,6 +81,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     try {
       const params = new URLSearchParams();
       if (ramo) params.set("ramo", ramo);
+      // Quando ambos marcados, ou remoto Brasil: sem filtro de localização
       if (presencial && !remoto && paciente?.cidade) params.set("cidade", paciente.cidade);
       else if (remoto && !presencial && abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
 
@@ -110,7 +113,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-2xl max-h-[92vh] flex flex-col">
+      <DialogContent className="max-w-3xl max-h-[96vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-[#4a6741]">
             Buscar Profissionais
@@ -127,10 +130,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
               <label className="flex items-center gap-2 cursor-pointer">
                 <Checkbox
                   checked={presencial}
-                  onCheckedChange={(v) => {
-                    setPresencial(!!v);
-                    if (v) { setRemoto(false); setAbrangencia(""); }
-                  }}
+                  onCheckedChange={(v) => setPresencial(!!v)}
                 />
                 <span className="text-sm font-medium">Presencial</span>
               </label>
@@ -140,7 +140,6 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                   onCheckedChange={(v) => {
                     setRemoto(!!v);
                     if (!v) setAbrangencia("");
-                    else setPresencial(false);
                   }}
                 />
                 <span className="text-sm font-medium">Remoto</span>
