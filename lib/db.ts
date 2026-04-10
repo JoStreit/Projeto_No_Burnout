@@ -36,6 +36,7 @@ export interface Profissional {
   estado: string;
   cidade: string;
   email: string;
+  telefone?: string;
   atendimento: string[];
   foto?: string;
   senhaHash: string;
@@ -254,6 +255,7 @@ export function criarProfissional(dados: {
   estado: string;
   cidade: string;
   email: string;
+  telefone?: string;
   atendimento: string[];
   foto?: string;
   senha: string;
@@ -282,6 +284,7 @@ export function criarProfissional(dados: {
     estado: dados.estado,
     cidade: dados.cidade,
     email: dados.email.toLowerCase(),
+    ...(dados.telefone ? { telefone: dados.telefone } : {}),
     atendimento: dados.atendimento,
     ...(dados.foto ? { foto: dados.foto } : {}),
     senhaHash: bcrypt.hashSync(dados.senha, 10),
@@ -336,6 +339,7 @@ export function atualizarProfissional(
     cidade?: string;
     atendimento?: string[];
     email?: string;
+    telefone?: string;
     foto?: string;
   }
 ): ProfissionalPublico {
@@ -357,6 +361,7 @@ export function atualizarProfissional(
     ...(dados.cidade ? { cidade: dados.cidade } : {}),
     ...(dados.atendimento ? { atendimento: dados.atendimento } : {}),
     ...(dados.email ? { email: dados.email.toLowerCase() } : {}),
+    ...(dados.telefone !== undefined ? { telefone: dados.telefone || undefined } : {}),
     ...(dados.foto !== undefined ? { foto: dados.foto } : {}),
   };
 
@@ -369,6 +374,7 @@ export function atualizarProfissionalAdmin(
   dados: {
     nome?: string;
     email?: string;
+    telefone?: string;
     estado?: string;
     cidade?: string;
     ramo?: string;
@@ -393,6 +399,7 @@ export function atualizarProfissionalAdmin(
     ...db.profissionais[idx],
     ...(dados.nome ? { nome: dados.nome } : {}),
     ...(dados.email ? { email: dados.email.toLowerCase() } : {}),
+    ...(dados.telefone !== undefined ? { telefone: dados.telefone || undefined } : {}),
     ...(dados.estado ? { estado: dados.estado } : {}),
     ...(dados.cidade ? { cidade: dados.cidade } : {}),
     ...(dados.ramo ? { ramo: dados.ramo } : {}),

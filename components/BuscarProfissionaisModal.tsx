@@ -28,6 +28,7 @@ interface Profissional {
   cidade: string;
   estado: string;
   email: string;
+  telefone?: string;
   atendimento: string[];
   foto?: string;
 }
@@ -240,6 +241,15 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                         <span className="text-base">✉️</span>
                         {p.email}
                       </a>
+                      {p.telefone && (
+                        <a
+                          href={`tel:${p.telefone.replace(/\D/g, "")}`}
+                          className="text-sm text-[#4a6741] hover:underline flex items-center gap-1.5"
+                        >
+                          <span className="text-base">📞</span>
+                          {p.telefone}
+                        </a>
+                      )}
                     </div>
 
                     {p.atendimento?.length > 0 && (

@@ -50,6 +50,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
   const [estado, setEstado] = useState("");
   const [cidade, setCidade] = useState("");
   const [email, setEmail] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [foto, setFoto] = useState<string | null>(null);
   const inputFotoRef = useRef<HTMLInputElement>(null);
   const [atendOnline, setAtendOnline] = useState(false);
@@ -74,6 +75,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
       setEstado(profissional.estado);
       setCidade(profissional.cidade);
       setEmail(profissional.email);
+      setTelefone(profissional.telefone ?? "");
       setFoto(profissional.foto ?? null);
       setAtendOnline(profissional.atendimento.includes("Online"));
       setAtendPresencial(profissional.atendimento.includes("Presencial"));
@@ -149,7 +151,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
       const res = await fetch(`/api/profissionais/${profissional.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: nome.trim(), estado, cidade, atendimento, email: email.trim(), foto: foto ?? undefined }),
+        body: JSON.stringify({ nome: nome.trim(), estado, cidade, atendimento, email: email.trim(), telefone: telefone.trim() || undefined, foto: foto ?? undefined }),
       });
       const data = await res.json();
       if (!res.ok) setErroEdicao(data.erro);
@@ -238,6 +240,24 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setErroEdicao(""); }}
                 placeholder="email@exemplo.com"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="dp-telefone">Telefone <span className="text-stone-400 font-normal">(opcional)</span></Label>
+              <Input
+                id="dp-telefone"
+                value={telefone}
+                onChange={(e) => {
+                  const d = e.target.value.replace(/\D/g, "").slice(0, 11);
+                  const fmt = d.length <= 10
+                    ? d.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3").replace(/-$/, "")
+                    : d.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3").replace(/-$/, "");
+                  setTelefone(fmt);
+                  setErroEdicao("");
+                }}
+                placeholder="(00) 00000-0000"
+                maxLength={15}
               />
             </div>
 
@@ -380,6 +400,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
               <Campo label="Estado" valor={profissional.estado} />
               <Campo label="Cidade" valor={profissional.cidade} />
               <Campo label="E-mail" valor={profissional.email} />
+              {profissional.telefone && <Campo label="Telefone" valor={profissional.telefone} />}
               <Campo label="Atendimento" valor={profissional.atendimento.join(" · ")} />
               <Campo label="Cadastrado em" valor={formatarData(profissional.criadoEm)} />
             </div>

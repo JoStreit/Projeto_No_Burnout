@@ -82,6 +82,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
   const [nome, setNome] = useState("");
   const [cpf, setCpf] = useState("");
   const [carteirinha, setCarteirinha] = useState("");
+  const [telefone, setTelefone] = useState("");
   const [ramo, setRamo] = useState("");
   const [estado, setEstado] = useState("");
   const [cidade, setCidade] = useState("");
@@ -121,6 +122,12 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
     const base64 = await redimensionarImagem(file);
     setFoto(base64);
     e.target.value = "";
+  }
+
+  function formatarTelefone(v: string): string {
+    const d = v.replace(/\D/g, "").slice(0, 11);
+    if (d.length <= 10) return d.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3").replace(/-$/, "");
+    return d.replace(/(\d{2})(\d{5})(\d{0,4})/, "($1) $2-$3").replace(/-$/, "");
   }
 
   function limparErro(campo: keyof Erros) {
@@ -171,7 +178,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
       const res = await fetch("/api/profissionais", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento, foto: foto ?? undefined, senha }),
+        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, telefone: telefone || undefined, atendimento, foto: foto ?? undefined, senha }),
       });
 
       const data = await res.json();
@@ -192,7 +199,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
   }
 
   function fechar() {
-    setNome(""); setCpf(""); setCarteirinha(""); setRamo("");
+    setNome(""); setCpf(""); setCarteirinha(""); setTelefone(""); setRamo("");
     setEstado(""); setCidade(""); setEmail(""); setFoto(null);
     setAtendOnline(false); setAtendPresencial(false);
     setSenha(""); setConfirmarSenha("");
@@ -352,6 +359,18 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
                 className={erros.email ? "border-red-400" : ""}
               />
               {erros.email && <p className="text-xs text-red-500">{erros.email}</p>}
+            </div>
+
+            {/* Telefone */}
+            <div className="space-y-1.5">
+              <Label htmlFor="prof-telefone">Telefone <span className="text-stone-400 font-normal">(opcional)</span></Label>
+              <Input
+                id="prof-telefone"
+                value={telefone}
+                onChange={(e) => setTelefone(formatarTelefone(e.target.value))}
+                placeholder="(00) 00000-0000"
+                maxLength={15}
+              />
             </div>
 
             {/* Atendimento */}

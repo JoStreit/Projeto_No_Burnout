@@ -20,11 +20,11 @@ export async function PATCH(
 
   const { id } = await ctx.params;
   const body = await request.json();
-  const { nome, email, estado, cidade, ramo, carteirinha, atendimento, vigenciaFim, status } = body;
+  const { nome, email, telefone, estado, cidade, ramo, carteirinha, atendimento, vigenciaFim, status } = body;
 
   try {
     const profissional = atualizarProfissionalAdmin(id, {
-      nome, email, estado, cidade, ramo, carteirinha, atendimento, vigenciaFim, status,
+      nome, email, telefone, estado, cidade, ramo, carteirinha, atendimento, vigenciaFim, status,
     });
     return Response.json(profissional);
   } catch (err: unknown) {

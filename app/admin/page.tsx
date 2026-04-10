@@ -73,6 +73,7 @@ interface Profissional {
   estado: string;
   cidade: string;
   email: string;
+  telefone?: string;
   atendimento: string[];
   foto?: string;
   vigenciaInicio: string;
@@ -313,6 +314,7 @@ function ModalEditarProfissional({
 }) {
   const [nome, setNome] = useState(profissional.nome);
   const [email, setEmail] = useState(profissional.email);
+  const [telefone, setTelefone] = useState(profissional.telefone ?? "");
   const [estado, setEstado] = useState(profissional.estado);
   const [cidade, setCidade] = useState(profissional.cidade);
   const [ramo, setRamo] = useState(profissional.ramo);
@@ -353,6 +355,7 @@ function ModalEditarProfissional({
         body: JSON.stringify({
           nome: nome.trim(),
           email: email.trim(),
+          telefone: telefone.trim() || undefined,
           estado,
           cidade,
           ramo,
@@ -386,6 +389,10 @@ function ModalEditarProfissional({
           <div className="space-y-1">
             <Label>E-mail</Label>
             <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label>Telefone <span className="text-gray-400 text-xs">(opcional)</span></Label>
+            <Input value={telefone} onChange={(e) => setTelefone(e.target.value)} placeholder="(XX) XXXXX-XXXX" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">

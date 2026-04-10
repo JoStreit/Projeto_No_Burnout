@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { nome, cpf, carteirinha, ramo, estado, cidade, email, atendimento, foto, senha } = body;
+  const { nome, cpf, carteirinha, ramo, estado, cidade, email, telefone, atendimento, foto, senha } = body;
 
   if (!nome?.trim())
     return Response.json({ erro: "Nome é obrigatório" }, { status: 400 });
@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
       estado: estado.trim(),
       cidade: cidade.trim(),
       email: email.trim(),
+      ...(telefone?.trim() ? { telefone: telefone.trim() } : {}),
       atendimento,
       ...(foto ? { foto } : {}),
       senha,

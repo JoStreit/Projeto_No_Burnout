@@ -22,6 +22,7 @@ export interface ProfissionalSession {
   estado: string;
   cidade: string;
   email: string;
+  telefone?: string;
   atendimento: string[];
   foto?: string;
   vigenciaInicio: string;
