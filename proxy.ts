@@ -3,7 +3,7 @@ import { logSeguranca } from "@/lib/security-log";
 
 const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   if (!MUTATING_METHODS.has(request.method)) return NextResponse.next();
 
   const origin = request.headers.get("origin");
