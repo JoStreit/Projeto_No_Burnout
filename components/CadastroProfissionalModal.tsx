@@ -25,6 +25,13 @@ import { useAuth } from "@/components/AuthProvider";
 
 const RAMOS = ["Fisioterapeuta", "Nutricionista", "Psicólogo", "Personal Trainer"];
 
+const CONSELHO: Record<string, string> = {
+  Nutricionista: "CRN",
+  "Psicólogo": "CRP",
+  "Personal Trainer": "CREF",
+  Fisioterapeuta: "CREFITO",
+};
+
 const OPCOES_ESTADO = ESTADOS.map((e) => ({
   value: e.uf,
   label: e.uf,
@@ -260,25 +267,12 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
               {erros.cpf && <p className="text-xs text-red-500">{erros.cpf}</p>}
             </div>
 
-            {/* Carteirinha */}
-            <div className="space-y-1.5">
-              <Label htmlFor="prof-carteirinha">Número da Carteirinha</Label>
-              <Input
-                id="prof-carteirinha"
-                value={carteirinha}
-                onChange={(e) => { setCarteirinha(e.target.value); limparErro("carteirinha"); }}
-                placeholder="Ex: CREFITO-2/123456-F"
-                className={erros.carteirinha ? "border-red-400" : ""}
-              />
-              {erros.carteirinha && <p className="text-xs text-red-500">{erros.carteirinha}</p>}
-            </div>
-
             {/* Ramo */}
             <div className="space-y-1.5">
               <Label>Ramo de atuação</Label>
               <Select
                 value={ramo}
-                onValueChange={(val) => { setRamo(val ?? ""); limparErro("ramo"); }}
+                onValueChange={(val) => { setRamo(val ?? ""); setCarteirinha(""); limparErro("ramo"); limparErro("carteirinha"); }}
               >
                 <SelectTrigger className={erros.ramo ? "border-red-400" : ""}>
                   <SelectValue placeholder="Selecione o ramo" />
@@ -290,6 +284,26 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
                 </SelectContent>
               </Select>
               {erros.ramo && <p className="text-xs text-red-500">{erros.ramo}</p>}
+            </div>
+
+            {/* Registro no Conselho */}
+            <div className="space-y-1.5">
+              <Label htmlFor="prof-carteirinha">
+                {ramo ? `Número do ${CONSELHO[ramo]}` : "Número de registro no conselho"}
+              </Label>
+              <Input
+                id="prof-carteirinha"
+                value={carteirinha}
+                onChange={(e) => { setCarteirinha(e.target.value); limparErro("carteirinha"); }}
+                placeholder={
+                  ramo
+                    ? `Ex: ${CONSELHO[ramo]}-${ramo === "Fisioterapeuta" ? "2/123456-F" : ramo === "Personal Trainer" ? "033289-G/SP" : ramo === "Psicólogo" ? "06/123456" : "3 12345"}`
+                    : "Selecione o ramo primeiro"
+                }
+                disabled={!ramo}
+                className={erros.carteirinha ? "border-red-400" : ""}
+              />
+              {erros.carteirinha && <p className="text-xs text-red-500">{erros.carteirinha}</p>}
             </div>
 
             {/* Estado */}

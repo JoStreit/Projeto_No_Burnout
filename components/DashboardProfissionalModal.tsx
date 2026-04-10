@@ -375,7 +375,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
             <div className="space-y-3">
               <Campo label="Nome" valor={profissional.nome} />
               <Campo label="CPF" valor={profissional.cpf} />
-              <Campo label="Carteirinha" valor={profissional.carteirinha} />
+              <Campo label={({ Nutricionista: "CRN", "Psicólogo": "CRP", "Personal Trainer": "CREF", Fisioterapeuta: "CREFITO" } as Record<string, string>)[profissional.ramo] ?? "Carteirinha"} valor={profissional.carteirinha} />
               <Campo label="Ramo" valor={profissional.ramo} />
               <Campo label="Estado" valor={profissional.estado} />
               <Campo label="Cidade" valor={profissional.cidade} />

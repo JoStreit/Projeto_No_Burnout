@@ -398,7 +398,7 @@ function ModalEditarProfissional({
               </Select>
             </div>
             <div className="space-y-1">
-              <Label>Carteirinha</Label>
+              <Label>{({ Nutricionista: "CRN", "Psicólogo": "CRP", "Personal Trainer": "CREF", Fisioterapeuta: "CREFITO" } as Record<string, string>)[ramo] ?? "Carteirinha"}</Label>
               <Input value={carteirinha} onChange={(e) => setCarteirinha(e.target.value)} />
             </div>
           </div>
