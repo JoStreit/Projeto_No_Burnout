@@ -27,6 +27,8 @@ interface Profissional {
   ramo: string;
   cidade: string;
   estado: string;
+  email: string;
+  atendimento: string[];
   foto?: string;
 }
 
@@ -53,7 +55,6 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
   const [totalProfissionais, setTotalProfissionais] = useState(0);
   const [carregando, setCarregando] = useState(false);
 
-  // Inicializa filtros a partir da preferência salva do paciente
   useEffect(() => {
     if (!aberto || !paciente) return;
     const pref = paciente.preferenciaBusca ?? [];
@@ -77,13 +78,8 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     try {
       const params = new URLSearchParams();
       if (ramo) params.set("ramo", ramo);
-
-      // Se ambos marcados: sem filtro geográfico (mostra todos)
-      if (presencial && !remoto && paciente?.cidade) {
-        params.set("cidade", paciente.cidade);
-      } else if (remoto && !presencial && abrangencia === "Estado" && paciente?.estado) {
-        params.set("estado", paciente.estado);
-      }
+      if (presencial && !remoto && paciente?.cidade) params.set("cidade", paciente.cidade);
+      else if (remoto && !presencial && abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
 
       const res = await fetch(`/api/profissionais?${params.toString()}`);
       const json = await res.json();
@@ -113,127 +109,149 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-xl max-h-[90vh] flex flex-col">
+      <DialogContent className="max-w-2xl max-h-[92vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-green-700">
+          <DialogTitle className="text-xl font-bold text-[#4a6741]">
             Buscar Profissionais
           </DialogTitle>
         </DialogHeader>
 
-        {/* Filtro de modalidade */}
-        <div className="rounded-xl border border-green-100 bg-green-50 p-3 space-y-2">
-          <Label className="text-xs font-semibold text-green-800 uppercase tracking-wide">Modalidade</Label>
-          <div className="flex flex-col sm:flex-row sm:gap-6 gap-3">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <Checkbox
-                checked={presencial}
-                onCheckedChange={(v) => {
-                  setPresencial(!!v);
-                  if (v) { setRemoto(false); setAbrangencia(""); }
-                }}
-              />
-              <span className="text-sm font-medium">Presencial</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <Checkbox
-                checked={remoto}
-                onCheckedChange={(v) => {
-                  setRemoto(!!v);
-                  if (v) { setPresencial(false); }
-                  else { setAbrangencia(""); }
-                }}
-              />
-              <span className="text-sm font-medium">Remoto</span>
-            </label>
-          </div>
+        {/* Filtros */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
-          {remoto && (
-            <div className="ml-4 flex flex-col sm:flex-row sm:gap-4 gap-3">
+          {/* Modalidade */}
+          <div className="rounded-xl border border-[#4a6741]/15 bg-[#eaf2e7] p-3 space-y-2">
+            <Label className="text-xs font-semibold text-[#4a6741] uppercase tracking-wide">Modalidade</Label>
+            <div className="flex flex-col gap-2">
               <label className="flex items-center gap-2 cursor-pointer">
                 <Checkbox
-                  checked={abrangencia === "Brasil"}
-                  onCheckedChange={(v) => setAbrangencia(v ? "Brasil" : "")}
+                  checked={presencial}
+                  onCheckedChange={(v) => {
+                    setPresencial(!!v);
+                    if (v) { setRemoto(false); setAbrangencia(""); }
+                  }}
                 />
-                <span className="text-sm">Brasil (nacional)</span>
+                <span className="text-sm font-medium">Presencial</span>
               </label>
-              {paciente?.estado && (
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <Checkbox
-                    checked={abrangencia === "Estado"}
-                    onCheckedChange={(v) => setAbrangencia(v ? "Estado" : "")}
-                  />
-                  <span className="text-sm">{paciente.estado} (meu estado)</span>
-                </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <Checkbox
+                  checked={remoto}
+                  onCheckedChange={(v) => {
+                    setRemoto(!!v);
+                    if (!v) setAbrangencia("");
+                    else setPresencial(false);
+                  }}
+                />
+                <span className="text-sm font-medium">Remoto</span>
+              </label>
+              {remoto && (
+                <div className="ml-5 flex flex-col gap-1.5">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <Checkbox checked={abrangencia === "Brasil"} onCheckedChange={(v) => setAbrangencia(v ? "Brasil" : "")} />
+                    <span className="text-xs">Brasil (nacional)</span>
+                  </label>
+                  {paciente?.estado && (
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <Checkbox checked={abrangencia === "Estado"} onCheckedChange={(v) => setAbrangencia(v ? "Estado" : "")} />
+                      <span className="text-xs">{paciente.estado} (meu estado)</span>
+                    </label>
+                  )}
+                </div>
               )}
+              {label && <p className="text-xs text-[#4a6741] font-medium pt-0.5">{label}</p>}
             </div>
-          )}
+          </div>
 
-          {label && (
-            <p className="text-xs text-green-700 font-medium pt-1">{label}</p>
-          )}
+          {/* Ramo + Buscar */}
+          <div className="flex flex-col gap-3">
+            <div className="space-y-1.5">
+              <Label>Ramo de atuação</Label>
+              <Select value={ramo} onValueChange={(v) => setRamo(v ?? "")}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todos os ramos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">Todos os ramos</SelectItem>
+                  {RAMOS.map((r) => (
+                    <SelectItem key={r} value={r}>{r}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button
+              onClick={buscar}
+              className="bg-[#4a6741] hover:bg-[#3d5836] w-full mt-auto"
+              disabled={carregando}
+            >
+              {carregando ? "Buscando..." : "Buscar"}
+            </Button>
+          </div>
         </div>
-
-        {/* Filtro de ramo */}
-        <div className="space-y-1.5">
-          <Label>Ramo de atuação</Label>
-          <Select value={ramo} onValueChange={(v) => setRamo(v ?? "")}>
-            <SelectTrigger>
-              <SelectValue placeholder="Todos os ramos" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">Todos os ramos</SelectItem>
-              {RAMOS.map((r) => (
-                <SelectItem key={r} value={r}>{r}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Button
-          onClick={buscar}
-          className="bg-green-600 hover:bg-green-700 w-full"
-          disabled={carregando}
-        >
-          {carregando ? "Buscando..." : "Buscar"}
-        </Button>
 
         {/* Resultados */}
-        <div className="flex-1 overflow-y-auto space-y-2 mt-1">
+        <div className="flex-1 overflow-y-auto space-y-2 mt-1 pr-1">
           {carregando ? (
-            <div className="text-center py-8 text-gray-400 text-sm">Buscando...</div>
+            <div className="text-center py-10 text-stone-400 text-sm">Buscando...</div>
           ) : profissionais.length === 0 ? (
-            <div className="text-center py-8 text-gray-400 text-sm">
+            <div className="text-center py-10 text-stone-400 text-sm">
               Nenhum profissional encontrado com esses filtros.
             </div>
           ) : (
             <>
-              <p className="text-xs text-gray-500 mb-2">
+              <p className="text-xs text-stone-400 mb-2">
                 {totalProfissionais > profissionais.length
-                  ? `Exibindo ${profissionais.length} de ${totalProfissionais} profissionais encontrados`
+                  ? `Exibindo ${profissionais.length} de ${totalProfissionais} profissionais`
                   : `${profissionais.length} profissional${profissionais.length !== 1 ? "is" : ""} encontrado${profissionais.length !== 1 ? "s" : ""}`}
               </p>
               {profissionais.map((p) => (
                 <div
                   key={p.id}
-                  className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3 shadow-sm"
+                  className="flex items-start gap-4 bg-white border border-stone-100 rounded-xl px-4 py-4 shadow-sm hover:border-[#4a6741]/20 hover:shadow-md transition-all"
                 >
                   {/* Avatar */}
-                  <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-teal-100 flex items-center justify-center">
+                  <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 bg-[#eaf2e7] flex items-center justify-center border border-[#4a6741]/10">
                     {p.foto ? (
                       <img src={p.foto} alt={p.nome} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-lg text-teal-500 font-bold leading-none">
+                      <span className="text-2xl font-bold text-[#4a6741]">
                         {p.nome.charAt(0).toUpperCase()}
                       </span>
                     )}
                   </div>
+
+                  {/* Dados */}
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-800 text-sm truncate">{p.nome}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">📍 {p.cidade}</p>
+                    <div className="flex items-start justify-between gap-2 flex-wrap">
+                      <p className="font-semibold text-[#3c2010] text-base leading-tight">{p.nome}</p>
+                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full shrink-0 ${COR_RAMO[p.ramo] ?? "bg-stone-100 text-stone-600"}`}>
+                        {p.ramo}
+                      </span>
+                    </div>
+
+                    <div className="mt-2 flex flex-col gap-1">
+                      <p className="text-sm text-stone-500 flex items-center gap-1.5">
+                        <span className="text-base">📍</span>
+                        {p.cidade} — {p.estado}
+                      </p>
+                      <a
+                        href={`mailto:${p.email}`}
+                        className="text-sm text-[#4a6741] hover:underline flex items-center gap-1.5"
+                      >
+                        <span className="text-base">✉️</span>
+                        {p.email}
+                      </a>
+                    </div>
+
+                    {p.atendimento?.length > 0 && (
+                      <div className="mt-2 flex gap-1.5 flex-wrap">
+                        {p.atendimento.map((a) => (
+                          <span key={a} className="text-xs bg-stone-100 text-stone-600 px-2 py-0.5 rounded-full">
+                            {a}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <span className={`text-xs font-medium px-2.5 py-1 rounded-full shrink-0 ${COR_RAMO[p.ramo] ?? "bg-gray-100 text-gray-600"}`}>
-                    {p.ramo}
-                  </span>
                 </div>
               ))}
             </>
