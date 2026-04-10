@@ -477,18 +477,6 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
               </p>
             </div>
             <div className="flex gap-3 justify-center">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSucesso(false);
-                  setNome(""); setCpf(""); setCarteirinha(""); setRamo("");
-                  setEstado(""); setCidade(""); setEmail("");
-                  setAtendOnline(false); setAtendPresencial(false);
-                  setOpcoesCidades([]);
-                }}
-              >
-                Novo cadastro
-              </Button>
               <Button className="bg-teal-600 hover:bg-teal-700" onClick={fechar}>
                 Fechar
               </Button>
