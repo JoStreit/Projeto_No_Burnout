@@ -61,6 +61,8 @@ interface Profissional {
   nome: string;
   ramo: string;
   cidade: string;
+  email: string;
+  telefone?: string;
 }
 
 const COR_RAMO: Record<string, string> = {
@@ -228,15 +230,23 @@ export default function AnaliseGratuitaModal({
                     profissionais.map((p) => (
                       <div
                         key={p.id}
-                        className="flex items-center justify-between bg-white rounded-lg px-3 py-2.5 border border-[#4a6741]/15"
+                        className="bg-white rounded-lg px-3 py-2.5 border border-[#4a6741]/15 space-y-1"
                       >
-                        <div>
+                        <div className="flex items-center justify-between gap-2">
                           <p className="text-sm font-medium text-[#3c2010]">{p.nome}</p>
-                          <p className="text-xs text-stone-400">📍 {p.cidade}</p>
+                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${COR_RAMO[p.ramo] ?? "bg-stone-100 text-stone-600"}`}>
+                            {p.ramo}
+                          </span>
                         </div>
-                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${COR_RAMO[p.ramo] ?? "bg-stone-100 text-stone-600"}`}>
-                          {p.ramo}
-                        </span>
+                        <p className="text-xs text-stone-400">📍 {p.cidade}</p>
+                        <a href={`mailto:${p.email}`} className="text-xs text-stone-500 hover:text-[#4a6741] hover:underline flex items-center gap-1">
+                          <span>✉️</span>{p.email}
+                        </a>
+                        {p.telefone && (
+                          <a href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-stone-500 hover:text-[#4a6741] hover:underline flex items-center gap-1">
+                            <span>📱</span>{p.telefone}
+                          </a>
+                        )}
                       </div>
                     ))
                   )}
