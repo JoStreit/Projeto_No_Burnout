@@ -239,8 +239,8 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                         {p.email}
                       </a>
                       {p.telefone && (
-                        <a href={`tel:${p.telefone.replace(/\D/g, "")}`} className="text-xs text-stone-600 hover:text-[#4a6741] hover:underline flex items-center gap-1">
-                          <span>📞</span>
+                        <a href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-stone-600 hover:text-[#4a6741] hover:underline flex items-center gap-1">
+                          <span>📱</span>
                           {p.telefone}
                         </a>
                       )}

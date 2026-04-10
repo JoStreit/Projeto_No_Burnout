@@ -400,7 +400,19 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
               <Campo label="Estado" valor={profissional.estado} />
               <Campo label="Cidade" valor={profissional.cidade} />
               <Campo label="E-mail" valor={profissional.email} />
-              {profissional.telefone && <Campo label="Telefone" valor={profissional.telefone} />}
+              {profissional.telefone && (
+                <div className="flex items-start justify-between gap-4 py-2 border-b border-gray-100">
+                  <span className="text-sm text-gray-500 shrink-0 w-28">Telefone</span>
+                  <a
+                    href={`https://wa.me/55${profissional.telefone.replace(/\D/g, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-medium text-gray-800 hover:text-[#4a6741] hover:underline text-right"
+                  >
+                    {profissional.telefone}
+                  </a>
+                </div>
+              )}
               <Campo label="Atendimento" valor={profissional.atendimento.join(" · ")} />
               <Campo label="Cadastrado em" valor={formatarData(profissional.criadoEm)} />
             </div>
