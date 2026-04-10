@@ -102,10 +102,10 @@ function CardFlip({
   onRevelar: () => void;
 }) {
   return (
-    <div className="h-28" style={{ perspective: "1000px" }}>
+    <div style={{ perspective: "1000px" }}>
       <div
         onClick={!revelada ? onRevelar : undefined}
-        className="relative w-full h-full transition-transform duration-700"
+        className="grid transition-transform duration-700"
         style={{
           transformStyle: "preserve-3d",
           transform: revelada ? "rotateY(180deg)" : "rotateY(0deg)",
@@ -114,7 +114,7 @@ function CardFlip({
       >
         {/* ── Frente (oculta) ── */}
         <div
-          className="absolute inset-0 rounded-2xl bg-[#eaf2e7] border border-[#4a6741]/20 flex flex-col items-center justify-center gap-2 hover:border-[#4a6741]/50 hover:bg-[#dceeda] transition-colors"
+          className="[grid-area:1/1] min-h-28 rounded-2xl bg-[#eaf2e7] border border-[#4a6741]/20 flex flex-col items-center justify-center gap-2 hover:border-[#4a6741]/50 hover:bg-[#dceeda] transition-colors"
           style={{ backfaceVisibility: "hidden" }}
         >
           <p className="text-xs font-semibold text-[#4a6741] uppercase tracking-widest select-none">
@@ -125,7 +125,7 @@ function CardFlip({
 
         {/* ── Verso (mensagem) ── */}
         <div
-          className="absolute inset-0 rounded-2xl bg-white border border-[#4a6741]/15 flex items-start gap-4 px-5 py-4"
+          className="[grid-area:1/1] min-h-28 rounded-2xl bg-white border border-[#4a6741]/15 flex items-start gap-4 px-5 py-4"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
           <div className="w-11 h-11 rounded-xl bg-[#eaf2e7] flex items-center justify-center shrink-0 text-xl">
@@ -135,7 +135,7 @@ function CardFlip({
             <p className="text-xs font-semibold text-[#4a6741] uppercase tracking-wide mb-0.5">
               {mensagem.titulo}
             </p>
-            <p className="text-sm text-stone-600 leading-relaxed line-clamp-3">
+            <p className="text-sm text-stone-600 leading-relaxed">
               {mensagem.texto}
             </p>
           </div>

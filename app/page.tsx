@@ -111,10 +111,10 @@ export default function Home() {
 
       {/* ─── Navbar ──────────────────────────────────────────────────────── */}
       <nav className="bg-[#eaf2e7] border-b border-[#4a6741]/15 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-6 py-2 flex items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-2 sm:gap-4">
 
           {/* Logo */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <Image
               src="/logo.png"
               alt="SaúdeConnect"
@@ -122,7 +122,7 @@ export default function Home() {
               height={72}
               className="object-contain mix-blend-multiply"
             />
-            <span className="font-bold text-[#3c2010] text-xl tracking-tight">
+            <span className="hidden sm:block font-bold text-[#3c2010] text-xl tracking-tight">
               Saúde<span className="text-[#4a6741]">Connect</span>
             </span>
           </div>
@@ -162,9 +162,10 @@ export default function Home() {
                 ) : (
                   <Button
                     onClick={() => setLoginAberto(true)}
-                    className="bg-[#4a6741] hover:bg-[#3d5836] text-white font-semibold text-sm h-9 px-4 rounded-full"
+                    className="bg-[#4a6741] hover:bg-[#3d5836] text-white font-semibold text-xs sm:text-sm h-8 sm:h-9 px-3 sm:px-4 rounded-full"
                   >
-                    Sou Paciente
+                    <span className="sm:hidden">Paciente</span>
+                    <span className="hidden sm:inline">Sou Paciente</span>
                   </Button>
                 )}
               </div>
@@ -202,9 +203,10 @@ export default function Home() {
                 ) : (
                   <Button
                     onClick={() => setLoginProfAberto(true)}
-                    className="bg-[#7a3d18] hover:bg-[#662f12] text-white font-semibold text-sm h-9 px-4 rounded-full"
+                    className="bg-[#7a3d18] hover:bg-[#662f12] text-white font-semibold text-xs sm:text-sm h-8 sm:h-9 px-3 sm:px-4 rounded-full"
                   >
-                    Sou Profissional
+                    <span className="sm:hidden">Profissional</span>
+                    <span className="hidden sm:inline">Sou Profissional</span>
                   </Button>
                 )}
               </div>
