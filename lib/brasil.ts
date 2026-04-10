@@ -29,10 +29,14 @@ export const ESTADOS = [
 ];
 
 export async function buscarCidadesPorEstado(uf: string): Promise<string[]> {
-  const res = await fetch(
-    `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`
-  );
-  if (!res.ok) return [];
-  const data = await res.json();
-  return data.map((m: { nome: string }) => m.nome);
+  try {
+    const res = await fetch(
+      `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome`
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.map((m: { nome: string }) => m.nome);
+  } catch {
+    return [];
+  }
 }
