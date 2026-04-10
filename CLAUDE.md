@@ -2,7 +2,7 @@
 
 Orientações do projeto:
 
-1 - Toda implementação e alteração deverá subir para o repositório no Guthub:
+1 - Toda implementação e alteração deverá subir para o repositório no Github.
 
 2 - Todo ajuste, tela nova, funcionalidade nova deverá ser criada no padrão de layout, fonte e cores da página principal. 
 
@@ -24,3 +24,5 @@ npm run dev
 7 - O arquivo data/db.json está no .gitignore por conter dados sensíveis.
 
 8 - Evitar SQL injection/XSS pelo sistema. E tente utilizar sempre bibliotecas atualizadas.
+
+9 - Sempre desenvolver evitando qualquer vulnerabilidade no sistema.

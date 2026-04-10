@@ -1,12 +1,13 @@
 import crypto from "crypto";
+import { revogarTokenDB, isTokenRevogadoDB } from "@/lib/db";
 
-const SECRET = process.env.AUTH_SECRET ?? "dev-secret-saude-connect";
-
-// Tokens revogados explicitamente (logout antes do vencimento)
-const tokensRevogados = new Set<string>();
+if (!process.env.AUTH_SECRET) {
+  throw new Error("AUTH_SECRET não está definido. Configure esta variável de ambiente antes de iniciar.");
+}
+const SECRET = process.env.AUTH_SECRET;
 
 export function revogarToken(token: string): void {
-  tokensRevogados.add(token);
+  revogarTokenDB(token);
 }
 
 export function criarToken(pacienteId: string): string {
@@ -23,7 +24,7 @@ export function criarToken(pacienteId: string): string {
 const TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 dias
 
 export function verificarToken(token: string): string | null {
-  if (tokensRevogados.has(token)) return null;
+  if (isTokenRevogadoDB(token)) return null;
   const parts = token.split(".");
   if (parts.length !== 2) return null;
   const [payload, sig] = parts;
@@ -31,7 +32,7 @@ export function verificarToken(token: string): string | null {
     .createHmac("sha256", SECRET)
     .update(payload)
     .digest("base64url");
-  if (sig !== expected) return null;
+  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return null;
   try {
     const { id, ts } = JSON.parse(Buffer.from(payload, "base64url").toString());
     if (!ts || Date.now() - ts > TOKEN_TTL_MS) return null;

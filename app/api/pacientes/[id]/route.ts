@@ -44,6 +44,11 @@ export async function PATCH(
   const body = await request.json();
   const { nome, email, estado, cidade, preferenciaBusca } = body;
 
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (email !== undefined && (typeof email !== "string" || !EMAIL_REGEX.test(email.trim()))) {
+    return Response.json({ erro: "E-mail inválido" }, { status: 400 });
+  }
+
   const PREFERENCIAS_VALIDAS = ["Presencial", "RemotoBrasil", "RemoToEstado"] as const;
   const preferenciaBuscaValida: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[] | undefined =
     Array.isArray(preferenciaBusca)
@@ -61,8 +66,7 @@ export async function PATCH(
       ...(preferenciaBuscaValida !== undefined ? { preferenciaBusca: preferenciaBuscaValida } : {}),
     });
     return Response.json(paciente);
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : "Erro ao atualizar";
-    return Response.json({ erro: msg }, { status: 400 });
+  } catch {
+    return Response.json({ erro: "Erro ao atualizar perfil" }, { status: 400 });
   }
 }

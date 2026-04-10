@@ -10,11 +10,19 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+function escapeHtml(str: string): string {
+  return str.replace(/[<>&"']/g, (c) =>
+    ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#39;" }[c] ?? c)
+  );
+}
+
 export async function enviarEmailResetSenha(
   para: string,
   nome: string,
   link: string
 ) {
+  const nomeSafe = escapeHtml(nome);
+  const linkSafe = encodeURI(link);
   await transporter.sendMail({
     from: process.env.EMAIL_FROM ?? "SaúdeConnect <noreply@saudeconnect.com>",
     to: para,
@@ -22,14 +30,14 @@ export async function enviarEmailResetSenha(
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px 24px;background:#f9fafb;border-radius:12px">
         <h2 style="color:#4a6741;margin-bottom:8px">Redefinição de senha</h2>
-        <p style="color:#374151">Olá, <strong>${nome}</strong>.</p>
+        <p style="color:#374151">Olá, <strong>${nomeSafe}</strong>.</p>
         <p style="color:#374151">Recebemos uma solicitação para redefinir a senha da sua conta no <strong>SaúdeConnect</strong>.</p>
         <p style="color:#374151">Clique no botão abaixo para criar uma nova senha. O link é válido por <strong>1 hora</strong>.</p>
-        <a href="${link}" style="display:inline-block;margin:20px 0;padding:12px 28px;background:#4a6741;color:#fff;border-radius:8px;text-decoration:none;font-weight:600">
+        <a href="${linkSafe}" style="display:inline-block;margin:20px 0;padding:12px 28px;background:#4a6741;color:#fff;border-radius:8px;text-decoration:none;font-weight:600">
           Redefinir senha
         </a>
         <p style="color:#9ca3af;font-size:13px">Se você não solicitou a redefinição, ignore este e-mail. Sua senha permanece a mesma.</p>
-        <p style="color:#9ca3af;font-size:12px">Link alternativo: <a href="${link}" style="color:#4a6741">${link}</a></p>
+        <p style="color:#9ca3af;font-size:12px">Link alternativo: <a href="${linkSafe}" style="color:#4a6741">${linkSafe}</a></p>
       </div>
     `,
   });

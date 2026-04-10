@@ -3,8 +3,13 @@ import { cookies } from "next/headers";
 import { verificarToken } from "@/lib/auth";
 import { listarMensagens, criarMensagem } from "@/lib/db";
 
-function stripHtml(str: string): string {
-  return str.replace(/<[^>]*>/g, "").trim();
+function sanitizarTexto(str: string): string {
+  return str
+    .replace(/<[^>]*>/g, "")        // Remove tags HTML
+    .replace(/javascript:/gi, "")   // Remove URIs javascript:
+    .replace(/on\w+\s*=/gi, "")     // Remove event handlers inline
+    .trim()
+    .slice(0, 500);                  // Limita tamanho
 }
 
 async function verificarAdmin() {
@@ -25,9 +30,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ erro: "Não autorizado" }, { status: 401 });
 
   const body = await req.json();
-  const icone = stripHtml(body.icone ?? "");
-  const titulo = stripHtml(body.titulo ?? "");
-  const texto = stripHtml(body.texto ?? "");
+  const icone = sanitizarTexto(body.icone ?? "");
+  const titulo = sanitizarTexto(body.titulo ?? "");
+  const texto = sanitizarTexto(body.texto ?? "");
   const ativa = body.ativa;
 
   if (!icone) return NextResponse.json({ erro: "Ícone é obrigatório" }, { status: 400 });

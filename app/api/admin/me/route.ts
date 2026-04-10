@@ -8,5 +8,5 @@ export async function GET() {
   if (!token) return Response.json(null);
   const id = verificarToken(token);
   if (!adminCpf || id !== adminCpf) return Response.json(null);
-  return Response.json({ cpf: adminCpf });
+  return Response.json({ authenticated: true });
 }

@@ -772,7 +772,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
           <div className="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center font-bold text-lg">A</div>
           <div>
             <h1 className="font-bold text-lg leading-tight">Painel Administrativo</h1>
-            <p className="text-xs text-gray-400">SaúdeConnect · CPF {fmtCPF(adminCpf)}</p>
+            <p className="text-xs text-gray-400">SaúdeConnect · Administrador</p>
           </div>
         </div>
         <Button
@@ -1266,8 +1266,7 @@ export default function AdminPage() {
     fetch("/api/admin/me")
       .then((r) => r.json())
       .then((data) => {
-        setAutenticado(!!data?.cpf);
-        if (data?.cpf) setAdminCpf(data.cpf);
+        setAutenticado(!!data?.authenticated);
       })
       .catch(() => setAutenticado(false));
   }

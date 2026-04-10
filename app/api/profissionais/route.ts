@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+  const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
   const { allowed, retryAfter } = checkRateLimit(`cadastro-prof:${ip}`);
   if (!allowed) {
     return Response.json(
@@ -72,8 +72,12 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
 
-  if (foto && foto.length > FOTO_MAX_BYTES)
-    return Response.json({ erro: "Foto muito grande. Tamanho máximo: 2 MB" }, { status: 400 });
+  if (foto) {
+    if (!/^data:image\/(png|jpe?g|webp);base64,/.test(foto))
+      return Response.json({ erro: "Formato de imagem inválido" }, { status: 400 });
+    if (foto.length > FOTO_MAX_BYTES)
+      return Response.json({ erro: "Foto muito grande. Tamanho máximo: 2 MB" }, { status: 400 });
+  }
 
   try {
     const profissional = criarProfissional({
@@ -95,6 +99,7 @@ export async function POST(request: NextRequest) {
     cookieStore.set("session_prof", token, {
       httpOnly: true,
       sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });

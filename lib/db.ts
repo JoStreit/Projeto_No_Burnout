@@ -76,6 +76,7 @@ interface DB {
   questionarios?: { id: string; timestamp: string }[];
   mensagens?: MensagemDica[];
   resetTokens?: ResetToken[];
+  tokensRevogados?: string[];
 }
 
 function lerDB(): DB {
@@ -109,6 +110,9 @@ function profissionalToPublico(p: Profissional): ProfissionalPublico {
   const { senhaHash: _, ...pub } = p;
   return pub;
 }
+
+// Hash fixo usado quando o usuário não existe — evita timing attack por enumeração de CPF
+const DUMMY_HASH = bcrypt.hashSync("__dummy_saude_connect__", 10);
 
 // ─── Pacientes ────────────────────────────────────────────────────────────────
 
@@ -199,8 +203,10 @@ export function atualizarPaciente(
 
 export function verificarSenhaPaciente(cpf: string, senha: string): PacientePublico | null {
   const paciente = buscarPacientePorCPF(cpf);
-  if (!paciente?.senhaHash) return null;
-  if (!bcrypt.compareSync(senha, paciente.senhaHash)) return null;
+  // Sempre executa bcrypt (mesmo sem usuário) para evitar timing attack
+  const hash = paciente?.senhaHash ?? DUMMY_HASH;
+  const valido = bcrypt.compareSync(senha, hash);
+  if (!valido || !paciente) return null;
   return pacienteToPublico(paciente);
 }
 
@@ -292,8 +298,10 @@ export function criarProfissional(dados: {
 
 export function verificarSenhaProfissional(cpf: string, senha: string): ProfissionalPublico | null {
   const profissional = buscarProfissionalPorCPF(cpf);
-  if (!profissional?.senhaHash) return null;
-  if (!bcrypt.compareSync(senha, profissional.senhaHash)) return null;
+  // Sempre executa bcrypt (mesmo sem usuário) para evitar timing attack
+  const hash = profissional?.senhaHash ?? DUMMY_HASH;
+  const valido = bcrypt.compareSync(senha, hash);
+  if (!valido || !profissional) return null;
   return profissionalToPublico(profissional);
 }
 
@@ -545,6 +553,22 @@ export function consumirResetToken(token: string): ResetToken | null {
   db.resetTokens = db.resetTokens.filter((t) => t.token !== token);
   salvarDB(db);
   return entry;
+}
+
+// ─── Tokens revogados (logout persistido) ─────────────────────────────────────
+
+export function revogarTokenDB(token: string): void {
+  const db = lerDB();
+  if (!db.tokensRevogados) db.tokensRevogados = [];
+  if (!db.tokensRevogados.includes(token)) {
+    db.tokensRevogados.push(token);
+    salvarDB(db);
+  }
+}
+
+export function isTokenRevogadoDB(token: string): boolean {
+  const db = lerDB();
+  return (db.tokensRevogados ?? []).includes(token);
 }
 
 export function atualizarSenhaPaciente(id: string, novaSenha: string): void {

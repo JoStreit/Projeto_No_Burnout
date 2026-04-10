@@ -38,8 +38,10 @@ export async function POST(request: NextRequest) {
     }
 
     const token = criarResetToken(usuario.id, tipoValido);
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-    const link = `${appUrl}/reset-senha?token=${token}&tipo=${tipoValido}`;
+    const rawUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    // Valida que é uma URL absoluta do próprio sistema
+    const appUrl = /^https?:\/\/.+/.test(rawUrl) ? rawUrl.replace(/\/$/, "") : "http://localhost:3000";
+    const link = `${appUrl}/reset-senha?token=${encodeURIComponent(token)}&tipo=${encodeURIComponent(tipoValido)}`;
 
     await enviarEmailResetSenha(usuario.email, usuario.nome, link);
   } catch {
