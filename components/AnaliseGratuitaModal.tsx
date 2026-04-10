@@ -253,7 +253,7 @@ export default function AnaliseGratuitaModal({
                 </div>
                 {profissionais.length > 0 && (
                   <p className="text-xs text-stone-400 text-center pt-1">
-                    Mostrando até 5 profissionais. Para ver mais, use{" "}
+                    Para ver mais profissionais, use o botão{" "}
                     <strong className="text-[#4a6741]">Buscar Profissionais</strong> no menu principal.
                   </p>
                 )}
