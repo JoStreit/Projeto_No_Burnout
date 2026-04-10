@@ -316,18 +316,22 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
             {/* Card 1 — Análise */}
-            <div className="group p-8 rounded-2xl border border-stone-100 hover:border-[#4a6741]/30 hover:shadow-lg hover:shadow-[#4a6741]/5 transition-all duration-300">
+            <div
+              className="group p-8 rounded-2xl border border-stone-100 hover:border-[#4a6741]/30 hover:shadow-lg hover:shadow-[#4a6741]/5 transition-all duration-300 cursor-pointer"
+              onClick={() => setAnaliseAberta(true)}
+            >
               <div className="w-14 h-14 bg-[#ede0d4] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#4a6741]/10 transition-colors">
                 <svg className="w-7 h-7 text-[#4a6741]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
               </div>
               <h3 className="font-semibold text-[#3c2010] text-lg mb-3">Análise Personalizada</h3>
-              <p className="text-stone-500 text-sm leading-relaxed">
+              <p className="text-stone-500 text-sm leading-relaxed mb-4">
                 {profissional
                   ? "Nosso algoritmo analisa o perfil do paciente e recomenda o profissional adequado — e este profissional pode ser você. Mantenha seu perfil ativo."
                   : "Nosso algoritmo analisa seu perfil e recomenda o profissional de saúde mais adequado para suas necessidades atuais."}
               </p>
+              <span className="text-xs font-medium text-[#4a6741]">Fazer análise →</span>
             </div>
 
             {/* Card 2 — Paciente / Profissional */}
@@ -399,7 +403,10 @@ export default function Home() {
                 <span className="text-xs font-medium text-[#4a6741]">Buscar profissionais →</span>
               </div>
             ) : (
-              <div className="group p-8 rounded-2xl border border-stone-100 hover:border-[#7a3d18]/30 hover:shadow-lg transition-all duration-300">
+              <div
+                className="group p-8 rounded-2xl border border-stone-100 hover:border-[#7a3d18]/30 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                onClick={() => profissional ? setPacienteAberto(true) : setProfissionalAberto(true)}
+              >
                 <div className="w-14 h-14 bg-[#ede0d4] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#7a3d18]/10 transition-colors">
                   <svg className="w-7 h-7 text-[#7a3d18]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -411,14 +418,9 @@ export default function Home() {
                     ? "Mesmo com perfil profissional você pode cadastrar seu perfil de paciente e encontrar um profissional de saúde para você."
                     : "Cadastre-se como profissional de saúde e seja recomendado para pacientes que precisam do seu perfil de atendimento."}
                 </p>
-                {!profissional && (
-                  <button
-                    onClick={() => setProfissionalAberto(true)}
-                    className="text-xs font-medium text-[#7a3d18] hover:underline"
-                  >
-                    Quero me cadastrar →
-                  </button>
-                )}
+                <span className="text-xs font-medium text-[#7a3d18]">
+                  {profissional ? "Cadastrar como paciente →" : "Quero me cadastrar →"}
+                </span>
               </div>
             )}
 
