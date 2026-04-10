@@ -98,7 +98,7 @@ export default function AnaliseGratuitaModal({
   useEffect(() => {
     if (ramoRecomendado && paciente) {
       setCarregandoProfs(true);
-      fetch(`/api/profissionais?ramo=${encodeURIComponent(ramoRecomendado)}`)
+      fetch(`/api/profissionais?ramo=${encodeURIComponent(ramoRecomendado)}&limit=5`)
         .then((r) => r.json())
         .then((data) => setProfissionais(Array.isArray(data) ? data : (data.data ?? [])))
         .catch(() => setProfissionais([]))
@@ -241,6 +241,12 @@ export default function AnaliseGratuitaModal({
                     ))
                   )}
                 </div>
+                {profissionais.length > 0 && (
+                  <p className="text-xs text-stone-400 text-center pt-1">
+                    Mostrando até 5 profissionais. Para ver mais, use{" "}
+                    <strong className="text-[#4a6741]">Buscar Profissionais</strong> no menu principal.
+                  </p>
+                )}
               </div>
             ) : (
               <div className="bg-[#eaf2e7] border border-[#4a6741]/25 rounded-xl p-4 text-center">

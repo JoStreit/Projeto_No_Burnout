@@ -55,6 +55,9 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [totalProfissionais, setTotalProfissionais] = useState(0);
   const [carregando, setCarregando] = useState(false);
+  const [carregandoMais, setCarregandoMais] = useState(false);
+  const [pagina, setPagina] = useState(1);
+  const LIMIT = 10;
 
   useEffect(() => {
     if (!aberto || !paciente) return;
@@ -76,14 +79,26 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     return "";
   }
 
+  function buildParams(page: number) {
+    const params = new URLSearchParams();
+    if (ramo) params.set("ramo", ramo);
+    if (presencial && !remoto && paciente?.cidade) params.set("cidade", paciente.cidade);
+    else if (remoto && !presencial && abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
+    params.set("limit", String(LIMIT));
+    params.set("page", String(page));
+    return params;
+  }
+
   const buscar = useCallback(async () => {
     setCarregando(true);
+    setPagina(1);
     try {
       const params = new URLSearchParams();
       if (ramo) params.set("ramo", ramo);
-      // Quando ambos marcados, ou remoto Brasil: sem filtro de localização
       if (presencial && !remoto && paciente?.cidade) params.set("cidade", paciente.cidade);
       else if (remoto && !presencial && abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
+      params.set("limit", String(LIMIT));
+      params.set("page", "1");
 
       const res = await fetch(`/api/profissionais?${params.toString()}`);
       const json = await res.json();
@@ -97,6 +112,22 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     }
   }, [ramo, presencial, remoto, abrangencia, paciente]);
 
+  async function carregarMais() {
+    const proxPagina = pagina + 1;
+    setCarregandoMais(true);
+    try {
+      const res = await fetch(`/api/profissionais?${buildParams(proxPagina).toString()}`);
+      const json = await res.json();
+      setProfissionais((prev) => [...prev, ...(json.data ?? [])]);
+      setTotalProfissionais(json.total ?? 0);
+      setPagina(proxPagina);
+    } catch {
+      // mantém lista atual
+    } finally {
+      setCarregandoMais(false);
+    }
+  }
+
   useEffect(() => {
     if (aberto) buscar();
   }, [aberto, buscar]);
@@ -106,6 +137,9 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     setPresencial(false);
     setRemoto(false);
     setAbrangencia("");
+    setProfissionais([]);
+    setTotalProfissionais(0);
+    setPagina(1);
     onFechar();
   }
 
@@ -258,6 +292,16 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                   </div>
                 </div>
               ))}
+              {profissionais.length < totalProfissionais && (
+                <Button
+                  variant="outline"
+                  className="w-full border-[#4a6741]/40 text-[#4a6741] hover:bg-[#eaf2e7]"
+                  onClick={carregarMais}
+                  disabled={carregandoMais}
+                >
+                  {carregandoMais ? "Carregando..." : `Carregar mais ${Math.min(LIMIT, totalProfissionais - profissionais.length)} profissionais`}
+                </Button>
+              )}
             </>
           )}
         </div>
