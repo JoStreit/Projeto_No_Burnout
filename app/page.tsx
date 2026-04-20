@@ -428,6 +428,91 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── Questionário & Especialidades ──────────────────────────────── */}
+      <section className="bg-[#faf7f4] py-20">
+        <div className="max-w-6xl mx-auto px-6">
+
+          {/* Intro do questionário */}
+          <div className="text-center mb-14">
+            <span className="inline-block bg-[#4a6741]/10 text-[#4a6741] text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5">
+              Avaliação personalizada
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#3c2010] mb-5">
+              O questionário que entende você
+            </h2>
+            <p className="text-stone-500 text-base leading-relaxed max-w-2xl mx-auto">
+              O questionário é uma avaliação rápida do seu estado atual — hábitos, bem-estar, objetivos e necessidades. A partir das suas respostas, nosso sistema identifica qual ou quais profissionais de saúde são mais indicados para a sua situação, de forma personalizada e sem achismos.
+            </p>
+            <button
+              onClick={() => setAnaliseAberta(true)}
+              className="mt-8 inline-flex items-center gap-2 bg-[#4a6741] hover:bg-[#3d5836] text-white font-semibold px-8 py-3.5 rounded-2xl shadow-md shadow-[#4a6741]/20 hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5"
+            >
+              Responder o questionário
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Blocos por especialidade */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            {/* Psicólogo */}
+            <div className="bg-white rounded-2xl p-6 border border-stone-100 hover:border-[#4a6741]/30 hover:shadow-lg hover:shadow-[#4a6741]/5 transition-all duration-300">
+              <div className="w-12 h-12 bg-[#4a6741]/10 rounded-xl flex items-center justify-center mb-5">
+                <svg className="w-6 h-6 text-[#4a6741]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-[#3c2010] text-base mb-2">Psicólogo</h3>
+              <p className="text-stone-500 text-sm leading-relaxed">
+                Cuida da saúde mental e emocional. Auxilia em questões como ansiedade, depressão, estresse, autoestima, relacionamentos e desenvolvimento pessoal através de acompanhamento terapêutico.
+              </p>
+            </div>
+
+            {/* Nutricionista */}
+            <div className="bg-white rounded-2xl p-6 border border-stone-100 hover:border-[#4a6741]/30 hover:shadow-lg hover:shadow-[#4a6741]/5 transition-all duration-300">
+              <div className="w-12 h-12 bg-[#4a6741]/10 rounded-xl flex items-center justify-center mb-5">
+                <svg className="w-6 h-6 text-[#4a6741]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-[#3c2010] text-base mb-2">Nutricionista</h3>
+              <p className="text-stone-500 text-sm leading-relaxed">
+                Especialista em alimentação e nutrição. Elabora planos alimentares personalizados para perda de peso, ganho de massa, controle de doenças crônicas e melhora do bem-estar geral.
+              </p>
+            </div>
+
+            {/* Personal Trainer */}
+            <div className="bg-white rounded-2xl p-6 border border-stone-100 hover:border-[#4a6741]/30 hover:shadow-lg hover:shadow-[#4a6741]/5 transition-all duration-300">
+              <div className="w-12 h-12 bg-[#4a6741]/10 rounded-xl flex items-center justify-center mb-5">
+                <svg className="w-6 h-6 text-[#4a6741]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-[#3c2010] text-base mb-2">Personal Trainer</h3>
+              <p className="text-stone-500 text-sm leading-relaxed">
+                Profissional de educação física focado em treino individualizado. Cria programas de exercícios para condicionamento, emagrecimento, hipertrofia e qualidade de vida com acompanhamento próximo.
+              </p>
+            </div>
+
+            {/* Fisioterapeuta */}
+            <div className="bg-white rounded-2xl p-6 border border-stone-100 hover:border-[#4a6741]/30 hover:shadow-lg hover:shadow-[#4a6741]/5 transition-all duration-300">
+              <div className="w-12 h-12 bg-[#4a6741]/10 rounded-xl flex items-center justify-center mb-5">
+                <svg className="w-6 h-6 text-[#4a6741]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <h3 className="font-bold text-[#3c2010] text-base mb-2">Fisioterapeuta</h3>
+              <p className="text-stone-500 text-sm leading-relaxed">
+                Atua na reabilitação e prevenção de lesões musculoesqueléticas. Trata dores, recupera mobilidade após cirurgias ou lesões e melhora a funcionalidade do corpo com técnicas terapêuticas especializadas.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* ─── FAQ ─────────────────────────────────────────────────────────── */}
       <section className="bg-[#7a3d18] py-20">
         <div className="max-w-4xl mx-auto px-6">
