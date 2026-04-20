@@ -243,7 +243,7 @@ export default function AnaliseGratuitaModal({
                           <span>✉️</span>{p.email}
                         </a>
                         {p.telefone && (
-                          <a href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-stone-500 hover:text-[#4a6741] hover:underline flex items-center gap-1">
+                          <a href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent("Olá, cheguei até você através do Saúde Connect. Gostaria de marcar uma avaliação/consulta.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-stone-500 hover:text-[#4a6741] hover:underline flex items-center gap-1">
                             <span>📱</span>{p.telefone}
                           </a>
                         )}
