@@ -115,7 +115,7 @@ export default function Home() {
           {/* Logo */}
           <div className="flex items-center shrink-0">
             <img
-              src="/logo.svg"
+              src="/logo_pequeno.svg"
               alt="Calma mente"
               className="h-10 sm:h-12 w-auto"
             />

@@ -1,0 +1,31 @@
+<svg width="100%" viewBox="0 0 430 200" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Calma mente - Logo</title>
+  <desc>Ícone minimalista com sol geométrico e folhas integradas</desc>
+
+  <rect x="10" y="10" width="410" height="180" rx="16" fill="#FFFDF0"/>
+
+  <!-- Sun: half circle -->
+  <path d="M68,105 A40,40 0 0,1 148,105" fill="#E8C910"/>
+
+  <!-- Sun rays -->
+  <line x1="108" y1="53" x2="108" y2="41" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="132" y1="60" x2="140" y2="49" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="84" y1="60" x2="76" y2="49" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="152" y1="81" x2="164" y2="75" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="64" y1="81" x2="52" y2="75" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="158" y1="105" x2="172" y2="105" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="58" y1="105" x2="44" y2="105" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Three leaves -->
+  <path d="M108,165 C90,145 78,123 84,103 C94,103 108,120 108,165 Z" fill="#5C8A3C"/>
+  <path d="M108,165 C108,135 108,105 108,73 C112,80 118,105 118,135 C118,150 115,162 108,165 Z" fill="#3A6624"/>
+  <path d="M108,165 C126,145 138,123 132,103 C122,103 108,120 108,165 Z" fill="#5C8A3C"/>
+
+  <!-- Stem -->
+  <line x1="108" y1="165" x2="108" y2="182" stroke="#3B2A14" stroke-width="3" stroke-linecap="round"/>
+  <path d="M88,182 Q108,176 128,182" fill="none" stroke="#3B2A14" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- TEXT -->
+  <text x="175" y="100" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#3B2A14">Calma</text>
+  <text x="175" y="148" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#5C8A3C">mente</text>
+</svg>
