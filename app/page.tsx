@@ -117,7 +117,7 @@ export default function Home() {
             <img
               src="/logo.svg"
               alt="Calma mente"
-              className="h-20 sm:h-24 w-auto"
+              className="h-10 sm:h-12 w-auto"
             />
           </div>
 
@@ -273,7 +273,7 @@ export default function Home() {
             <img
               src="/logo.svg"
               alt="Calma mente"
-              className="w-[576px] md:w-[768px] opacity-95"
+              className="w-72 md:w-96 opacity-95"
             />
           </div>
 

@@ -1,6 +1,8 @@
 <svg width="100%" viewBox="0 0 680 280" role="img" xmlns="http://www.w3.org/2000/svg">
-  <title>Calma mente</title>
+  <title>Modelo 1 - Sol com folhas</title>
   <desc>Ícone minimalista com sol geométrico e folhas integradas</desc>
+
+  <rect x="60" y="55" width="450" height="180" rx="18" fill="#FFFDF0"/>
 
   <!-- Sun: half circle at top -->
   <path d="M108,140 A40,40 0 0,1 188,140" fill="#E8C910"/>
