@@ -2,7 +2,7 @@
   <title>Calma mente - Logo</title>
   <desc>Ícone minimalista com sol geométrico e folhas integradas</desc>
 
-  <rect x="10" y="10" width="410" height="180" rx="16" fill="#FFFDF0"/>
+  <rect x="10" y="10" width="410" height="180" rx="16" fill="#EBF4E3"/>
 
   <!-- Sun: half circle -->
   <path d="M68,105 A40,40 0 0,1 148,105" fill="#E8C910"/>
