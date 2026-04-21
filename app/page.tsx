@@ -444,7 +444,7 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-6 border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg hover:shadow-[#5C8A3C]/5 transition-all duration-300">
               <div className="w-12 h-12 bg-[#5C8A3C]/10 rounded-xl flex items-center justify-center mb-5">
                 <svg className="w-6 h-6 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
               </div>
               <h3 className="font-bold text-[#3B2A14] text-base mb-2">Psicólogo</h3>
@@ -457,7 +457,7 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-6 border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg hover:shadow-[#5C8A3C]/5 transition-all duration-300">
               <div className="w-12 h-12 bg-[#5C8A3C]/10 rounded-xl flex items-center justify-center mb-5">
                 <svg className="w-6 h-6 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2C9 2 6 5 6 8c0 2.5 1.5 4.5 3.5 5.5V20a2.5 2.5 0 005 0v-6.5C16.5 12.5 18 10.5 18 8c0-3-3-6-6-6z" />
                 </svg>
               </div>
               <h3 className="font-bold text-[#3B2A14] text-base mb-2">Nutricionista</h3>
@@ -470,7 +470,7 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-6 border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg hover:shadow-[#5C8A3C]/5 transition-all duration-300">
               <div className="w-12 h-12 bg-[#5C8A3C]/10 rounded-xl flex items-center justify-center mb-5">
                 <svg className="w-6 h-6 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6.5 6.5h1M16.5 6.5h1M5 12h14M6.5 17.5h1M16.5 17.5h1M4 6.5a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm13 0a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zM4 17.5a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0zm13 0a1.5 1.5 0 103 0 1.5 1.5 0 00-3 0z" />
                 </svg>
               </div>
               <h3 className="font-bold text-[#3B2A14] text-base mb-2">Personal Trainer</h3>
@@ -483,7 +483,7 @@ export default function Home() {
             <div className="bg-white rounded-2xl p-6 border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg hover:shadow-[#5C8A3C]/5 transition-all duration-300">
               <div className="w-12 h-12 bg-[#5C8A3C]/10 rounded-xl flex items-center justify-center mb-5">
                 <svg className="w-6 h-6 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.5 3.5C9.5 2.12 10.62 1 12 1s2.5 1.12 2.5 2.5c0 .94-.52 1.75-1.28 2.18C14.95 6.5 16 8.1 16 10c0 1.48-.63 2.81-1.63 3.75L16 21H8l1.63-7.25C8.63 12.81 8 11.48 8 10c0-1.9 1.05-3.5 2.78-4.32A2.49 2.49 0 019.5 3.5z" />
                 </svg>
               </div>
               <h3 className="font-bold text-[#3B2A14] text-base mb-2">Fisioterapeuta</h3>
