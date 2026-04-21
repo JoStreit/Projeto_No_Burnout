@@ -531,7 +531,7 @@ export default function Home() {
       <footer className="bg-[#3B2A14] py-8">
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center">
-            <img src="/logo_pequeno.svg" alt="Calma mente" className="h-10 sm:h-12 w-auto" />
+            <img src="/logo_rodape.svg" alt="Calma mente" className="h-10 sm:h-12 w-auto" />
           </div>
           <p className="text-white/40 text-xs text-center">
             Conectando pacientes aos profissionais de saúde certos.
