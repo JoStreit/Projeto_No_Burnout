@@ -269,7 +269,7 @@ export default function Home() {
           </div>
 
           {/* Logo decorativa */}
-          <div className="shrink-0 hidden sm:flex flex-col items-center justify-center ml-20">
+          <div className="shrink-0 hidden sm:flex flex-col items-center justify-center ml-8">
             <img
               src="/logo.svg"
               alt="Calma mente"
