@@ -217,7 +217,7 @@ export default function Home() {
           {/* Texto */}
           <div className="flex-1 text-center md:text-left">
             <span className="inline-block bg-[#5C8A3C]/10 text-[#5C8A3C] text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6">
-              Plataforma de saúde personalizada
+              Plataforma de apoio personalizado
             </span>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#3B2A14] leading-tight mb-6">
@@ -226,8 +226,8 @@ export default function Home() {
             </h1>
 
             <p className="text-stone-500 text-lg leading-relaxed max-w-lg mb-10 mx-auto md:mx-0">
-              Responda algumas perguntas e descubra qual profissional de saúde é
-              ideal para o seu perfil. Rápido, gratuito e sem compromisso.
+              Responda algumas perguntas e descubra qual profissional é ideal
+              para o seu momento. Rápido, gratuito e sem compromisso.
             </p>
 
             <div className="flex flex-col items-center md:items-start gap-4">
@@ -293,6 +293,7 @@ export default function Home() {
             </h2>
             <p className="text-stone-500 max-w-xl mx-auto text-base">
               Uma forma simples e eficiente de conectar pacientes aos profissionais de saúde certos.
+              Você responde algumas perguntas, nós avaliamos e recomendamos os melhores profissionais para o seu bem estar.
             </p>
           </div>
 
@@ -424,7 +425,7 @@ export default function Home() {
               O questionário que entende você
             </h2>
             <p className="text-stone-500 text-base leading-relaxed max-w-2xl mx-auto">
-              O questionário é uma avaliação rápida do seu estado atual — hábitos, bem-estar, objetivos e necessidades. A partir das suas respostas, nosso sistema identifica qual ou quais profissionais de saúde são mais indicados para a sua situação, de forma personalizada e sem achismos.
+              O questionário é uma avaliação rápida do seu estado atual — hábitos, bem-estar, objetivos e necessidades. A partir das suas respostas, nosso sistema identifica qual ou quais profissionais de saúde são mais indicados para o seu momento, de forma personalizada e sem achismos.
             </p>
             <button
               onClick={() => setAnaliseAberta(true)}
