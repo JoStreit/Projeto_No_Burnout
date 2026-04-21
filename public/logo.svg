@@ -2,7 +2,7 @@
   <title>Modelo 1 - Sol com folhas</title>
   <desc>Ícone minimalista com sol geométrico e folhas integradas</desc>
 
-  <rect x="60" y="55" width="450" height="180" rx="18" fill="#FFFDF0"/>
+  <rect x="60" y="55" width="450" height="180" rx="18" fill="#F5EDD0"/>
 
   <!-- Sun: half circle at top -->
   <path d="M108,140 A40,40 0 0,1 188,140" fill="#E8C910"/>
