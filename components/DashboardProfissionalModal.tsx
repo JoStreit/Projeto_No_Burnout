@@ -407,7 +407,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
                     href={`https://wa.me/55${profissional.telefone.replace(/\D/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-medium text-gray-800 hover:text-[#4a6741] hover:underline text-right"
+                    className="text-sm font-medium text-gray-800 hover:text-[#5C8A3C] hover:underline text-right"
                   >
                     {profissional.telefone}
                   </a>

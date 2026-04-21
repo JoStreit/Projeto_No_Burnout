@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SaúdeConnect",
+  title: "Calma mente",
   description: "Encontre o profissional de saúde certo para você",
 };
 

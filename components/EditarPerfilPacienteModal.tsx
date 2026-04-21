@@ -148,9 +148,9 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-md max-h-[92vh] flex flex-col bg-[#faf7f4] border border-[#4a6741]/20">
+      <DialogContent className="max-w-md max-h-[92vh] flex flex-col bg-[#FFFDF0] border border-[#5C8A3C]/20">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[#3c2010]">
+          <DialogTitle className="text-xl font-bold text-[#3B2A14]">
             Editar Perfil
           </DialogTitle>
         </DialogHeader>
@@ -158,34 +158,34 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 overflow-y-auto pr-1">
           {/* Nome */}
           <div className="space-y-1.5">
-            <Label htmlFor="edit-pac-nome" className="text-sm font-medium text-[#3c2010]">Nome completo</Label>
+            <Label htmlFor="edit-pac-nome" className="text-sm font-medium text-[#3B2A14]">Nome completo</Label>
             <Input
               id="edit-pac-nome"
               value={nome}
               onChange={(e) => { setNome(e.target.value); limparErro("nome"); }}
               placeholder="Ex: Maria da Silva"
-              className={`bg-white border-[#4a6741]/25 focus:border-[#4a6741] focus:ring-[#4a6741]/20 ${erros.nome ? "border-red-400" : ""}`}
+              className={`bg-white border-[#5C8A3C]/25 focus:border-[#5C8A3C] focus:ring-[#5C8A3C]/20 ${erros.nome ? "border-red-400" : ""}`}
             />
             {erros.nome && <p className="text-xs text-red-500">{erros.nome}</p>}
           </div>
 
           {/* E-mail */}
           <div className="space-y-1.5">
-            <Label htmlFor="edit-pac-email" className="text-sm font-medium text-[#3c2010]">E-mail</Label>
+            <Label htmlFor="edit-pac-email" className="text-sm font-medium text-[#3B2A14]">E-mail</Label>
             <Input
               id="edit-pac-email"
               type="email"
               value={email}
               onChange={(e) => { setEmail(e.target.value); limparErro("email"); }}
               placeholder="Ex: maria@email.com"
-              className={`bg-white border-[#4a6741]/25 focus:border-[#4a6741] focus:ring-[#4a6741]/20 ${erros.email ? "border-red-400" : ""}`}
+              className={`bg-white border-[#5C8A3C]/25 focus:border-[#5C8A3C] focus:ring-[#5C8A3C]/20 ${erros.email ? "border-red-400" : ""}`}
             />
             {erros.email && <p className="text-xs text-red-500">{erros.email}</p>}
           </div>
 
           {/* Estado */}
           <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-[#3c2010]">Estado</Label>
+            <Label className="text-sm font-medium text-[#3B2A14]">Estado</Label>
             <Combobox
               options={OPCOES_ESTADO}
               value={estado}
@@ -203,7 +203,7 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
 
           {/* Cidade */}
           <div className="space-y-1.5">
-            <Label className="text-sm font-medium text-[#3c2010]">Cidade</Label>
+            <Label className="text-sm font-medium text-[#3B2A14]">Cidade</Label>
             <Combobox
               options={opcoesCidades}
               value={cidade}
@@ -225,7 +225,7 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
 
           {/* Preferência de Busca */}
           <div className="space-y-2">
-            <Label className="text-sm font-medium text-[#3c2010]">Preferência de Busca</Label>
+            <Label className="text-sm font-medium text-[#3B2A14]">Preferência de Busca</Label>
             <div className="flex flex-col sm:flex-row sm:gap-6 gap-3">
               <div className="flex items-center gap-2">
                 <Checkbox
@@ -235,7 +235,7 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
                     setPresencial(!!checked);
                     limparErro("preferenciaBusca");
                   }}
-                  className="border-[#4a6741]/40 data-[state=checked]:bg-[#4a6741] data-[state=checked]:border-[#4a6741]"
+                  className="border-[#5C8A3C]/40 data-[state=checked]:bg-[#5C8A3C] data-[state=checked]:border-[#5C8A3C]"
                 />
                 <label htmlFor="edit-pac-presencial" className="text-sm text-stone-700 cursor-pointer">Presencial</label>
               </div>
@@ -248,7 +248,7 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
                     if (!checked) setAbrangenciaRemoto("");
                     limparErro("preferenciaBusca");
                   }}
-                  className="border-[#4a6741]/40 data-[state=checked]:bg-[#4a6741] data-[state=checked]:border-[#4a6741]"
+                  className="border-[#5C8A3C]/40 data-[state=checked]:bg-[#5C8A3C] data-[state=checked]:border-[#5C8A3C]"
                 />
                 <label htmlFor="edit-pac-remoto" className="text-sm text-stone-700 cursor-pointer">Remoto</label>
               </div>
@@ -263,7 +263,7 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
                       setAbrangenciaRemoto(checked ? "Brasil" : "");
                       limparErro("preferenciaBusca");
                     }}
-                    className="border-[#4a6741]/40 data-[state=checked]:bg-[#4a6741] data-[state=checked]:border-[#4a6741]"
+                    className="border-[#5C8A3C]/40 data-[state=checked]:bg-[#5C8A3C] data-[state=checked]:border-[#5C8A3C]"
                   />
                   <label htmlFor="edit-pac-brasil" className="text-sm text-stone-700 cursor-pointer">Brasil (nacional)</label>
                 </div>
@@ -276,7 +276,7 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
                         setAbrangenciaRemoto(checked ? "Estado" : "");
                         limparErro("preferenciaBusca");
                       }}
-                      className="border-[#4a6741]/40 data-[state=checked]:bg-[#4a6741] data-[state=checked]:border-[#4a6741]"
+                      className="border-[#5C8A3C]/40 data-[state=checked]:bg-[#5C8A3C] data-[state=checked]:border-[#5C8A3C]"
                     />
                     <label htmlFor="edit-pac-estado" className="text-sm text-stone-700 cursor-pointer">{estado} (meu estado)</label>
                   </div>
@@ -298,14 +298,14 @@ export default function EditarPerfilPacienteModal({ aberto, onFechar }: Props) {
             <Button
               type="button"
               variant="outline"
-              className="flex-1 border-[#4a6741]/30 text-[#4a6741] hover:bg-[#eaf2e7]"
+              className="flex-1 border-[#5C8A3C]/30 text-[#5C8A3C] hover:bg-[#EBF4E3]"
               onClick={fechar}
             >
               Cancelar
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-[#4a6741] hover:bg-[#3a5331] text-white"
+              className="flex-1 bg-[#5C8A3C] hover:bg-[#3A6624] text-white"
               disabled={carregando}
             >
               {carregando ? "Salvando..." : "Salvar Alterações"}

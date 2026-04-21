@@ -1,0 +1,35 @@
+<svg width="100%" viewBox="0 0 680 280" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Calma mente</title>
+  <desc>Ícone minimalista com sol geométrico e folhas integradas</desc>
+
+  <!-- Sun: half circle at top -->
+  <path d="M108,140 A40,40 0 0,1 188,140" fill="#E8C910"/>
+
+  <!-- Sun rays -->
+  <line x1="148" y1="88" x2="148" y2="76" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="172" y1="95" x2="180" y2="84" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="124" y1="95" x2="116" y2="84" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="192" y1="116" x2="204" y2="110" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="104" y1="116" x2="92" y2="110" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="198" y1="140" x2="212" y2="140" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+  <line x1="98" y1="140" x2="84" y2="140" stroke="#E8C910" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Three leaves rising from base, fan style -->
+  <!-- Left leaf -->
+  <path d="M148,200 C130,180 118,158 124,138 C134,138 148,155 148,200 Z" fill="#5C8A3C"/>
+  <!-- Center leaf (tallest) -->
+  <path d="M148,200 C148,170 148,140 148,108 C152,115 158,140 158,170 C158,185 155,197 148,200 Z" fill="#3A6624"/>
+  <!-- Right leaf -->
+  <path d="M148,200 C166,180 178,158 172,138 C162,138 148,155 148,200 Z" fill="#5C8A3C"/>
+
+  <!-- Stem -->
+  <line x1="148" y1="200" x2="148" y2="220" stroke="#3B2A14" stroke-width="3" stroke-linecap="round"/>
+  <!-- Ground line -->
+  <path d="M124,220 Q148,214 172,220" fill="none" stroke="#3B2A14" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- TEXT -->
+  <text x="230" y="118" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#3B2A14">Calma</text>
+  <text x="230" y="164" font-family="Georgia, serif" font-size="44" font-weight="700" fill="#5C8A3C">mente</text>
+  <rect x="230" y="176" width="255" height="2" rx="1" fill="#E8C910"/>
+  <text x="230" y="200" font-family="Georgia, serif" font-size="12" fill="#7A5C2E" letter-spacing="2.5">SAÚDE · BEM-ESTAR · CUIDADO</text>
+</svg>

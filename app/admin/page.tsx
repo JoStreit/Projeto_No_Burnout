@@ -131,7 +131,7 @@ function TelaLogin({ onLogado }: { onLogado: () => void }) {
             <span className="text-white text-2xl font-bold">A</span>
           </div>
           <h1 className="text-xl font-bold text-gray-900">Painel Administrativo</h1>
-          <p className="text-sm text-gray-500 mt-1">SaúdeConnect — Acesso restrito</p>
+          <p className="text-sm text-gray-500 mt-1">Calma mente — Acesso restrito</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
@@ -507,7 +507,7 @@ function IconePicker({ valor, onChange }: { valor: string; onChange: (v: string)
                 key={ic}
                 type="button"
                 onClick={() => { onChange(ic); setAberto(false); }}
-                className={`text-xl p-1.5 rounded-lg hover:bg-[#eaf2e7] transition-colors ${valor === ic ? "bg-[#eaf2e7] ring-1 ring-[#4a6741]" : ""}`}
+                className={`text-xl p-1.5 rounded-lg hover:bg-[#EBF4E3] transition-colors ${valor === ic ? "bg-[#EBF4E3] ring-1 ring-[#5C8A3C]" : ""}`}
               >
                 {ic}
               </button>
@@ -567,7 +567,7 @@ function ModalMensagem({
     <Dialog open onOpenChange={onFechar}>
       <DialogContent className="max-w-md max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-[#4a6741]">
+          <DialogTitle className="text-[#5C8A3C]">
             {mensagem ? "Editar Mensagem" : "Nova Mensagem"}
           </DialogTitle>
         </DialogHeader>
@@ -596,7 +596,7 @@ function ModalMensagem({
           {erro && <p className="text-sm text-red-600">{erro}</p>}
           <div className="flex gap-3 pt-1">
             <Button type="button" variant="outline" className="flex-1" onClick={onFechar}>Cancelar</Button>
-            <Button type="submit" className="flex-1 bg-[#4a6741] hover:bg-[#3a5331]" disabled={salvando}>
+            <Button type="submit" className="flex-1 bg-[#5C8A3C] hover:bg-[#3A6624]" disabled={salvando}>
               {salvando ? "Salvando..." : "Salvar"}
             </Button>
           </div>
@@ -779,7 +779,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
           <div className="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center font-bold text-lg">A</div>
           <div>
             <h1 className="font-bold text-lg leading-tight">Painel Administrativo</h1>
-            <p className="text-xs text-gray-400">SaúdeConnect · Administrador</p>
+            <p className="text-xs text-gray-400">Calma mente · Administrador</p>
           </div>
         </div>
         <Button
@@ -1071,7 +1071,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
               </Button>
               <Button
                 size="sm"
-                className="bg-[#4a6741] hover:bg-[#3a5331] text-white"
+                className="bg-[#5C8A3C] hover:bg-[#3A6624] text-white"
                 onClick={() => setEditandoMsg("nova")}
               >
                 + Nova Mensagem
@@ -1112,7 +1112,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                               onClick={() => toggleAtiva(m)}
                               className={`text-xs font-medium px-2.5 py-1 rounded-full transition-colors ${
                                 m.ativa
-                                  ? "bg-[#eaf2e7] text-[#4a6741] hover:bg-[#d4e8d0]"
+                                  ? "bg-[#EBF4E3] text-[#5C8A3C] hover:bg-[#D5ECC6]"
                                   : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                               }`}
                             >
@@ -1126,7 +1126,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                                 size="sm"
                                 variant="outline"
                                 onClick={() => setEditandoMsg(m)}
-                                className="border-[#4a6741]/30 text-[#4a6741] hover:bg-[#eaf2e7] whitespace-nowrap"
+                                className="border-[#5C8A3C]/30 text-[#5C8A3C] hover:bg-[#EBF4E3] whitespace-nowrap"
                               >
                                 Editar
                               </Button>

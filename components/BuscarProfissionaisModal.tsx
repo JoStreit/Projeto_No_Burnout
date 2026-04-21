@@ -147,9 +147,9 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-3xl max-h-[96vh] flex flex-col bg-[#faf9f7]">
+      <DialogContent className="max-w-3xl max-h-[96vh] flex flex-col bg-[#FFFDF0]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-[#3b4f38]">
+          <DialogTitle className="text-2xl font-bold text-[#3B2A14]">
             Buscar Profissionais
           </DialogTitle>
         </DialogHeader>
@@ -158,8 +158,8 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 
           {/* Modalidade */}
-          <div className="rounded-lg border border-[#4a6741]/30 bg-[#eaf2e7] px-4 py-3 space-y-2">
-            <p className="text-xs font-bold text-[#4a6741] uppercase tracking-widest">Modalidade</p>
+          <div className="rounded-lg border border-[#5C8A3C]/30 bg-[#EBF4E3] px-4 py-3 space-y-2">
+            <p className="text-xs font-bold text-[#5C8A3C] uppercase tracking-widest">Modalidade</p>
             <div className="flex flex-col gap-2">
               <label className="flex items-center gap-2 cursor-pointer">
                 <Checkbox checked={presencial} onCheckedChange={(v) => setPresencial(!!v)} />
@@ -190,7 +190,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                 </div>
               )}
               {label && (
-                <p className="text-xs text-[#4a6741] font-semibold pt-1">
+                <p className="text-xs text-[#5C8A3C] font-semibold pt-1">
                   {label}
                 </p>
               )}
@@ -215,7 +215,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
             </div>
             <Button
               onClick={buscar}
-              className="bg-[#4a6741] hover:bg-[#3d5836] w-full mt-auto rounded-lg font-semibold"
+              className="bg-[#5C8A3C] hover:bg-[#3A6624] w-full mt-auto rounded-lg font-semibold"
               disabled={carregando}
             >
               {carregando ? "Buscando..." : "Buscar"}
@@ -244,11 +244,11 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                   className="flex items-start gap-3 bg-white border border-stone-200 rounded-lg px-4 py-3 shadow-sm hover:shadow-md transition-shadow"
                 >
                   {/* Avatar */}
-                  <div className="w-13 h-13 rounded-full overflow-hidden shrink-0 bg-[#eaf2e7] flex items-center justify-center border border-[#4a6741]/15" style={{ width: 52, height: 52 }}>
+                  <div className="w-13 h-13 rounded-full overflow-hidden shrink-0 bg-[#EBF4E3] flex items-center justify-center border border-[#5C8A3C]/15" style={{ width: 52, height: 52 }}>
                     {p.foto ? (
                       <img src={p.foto} alt={p.nome} className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-xl font-bold text-[#4a6741]">
+                      <span className="text-xl font-bold text-[#5C8A3C]">
                         {p.nome.charAt(0).toUpperCase()}
                       </span>
                     )}
@@ -268,12 +268,12 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                         <span>📍</span>
                         {p.cidade} — {p.estado}
                       </p>
-                      <a href={`mailto:${p.email}`} className="text-xs text-stone-600 hover:text-[#4a6741] hover:underline flex items-center gap-1">
+                      <a href={`mailto:${p.email}`} className="text-xs text-stone-600 hover:text-[#5C8A3C] hover:underline flex items-center gap-1">
                         <span>✉️</span>
                         {p.email}
                       </a>
                       {p.telefone && (
-                        <a href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent("Olá, cheguei até você através do Saúde Connect. Gostaria de marcar uma avaliação/consulta.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-stone-600 hover:text-[#4a6741] hover:underline flex items-center gap-1">
+                        <a href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent("Olá, cheguei até você através do Calma mente. Gostaria de marcar uma avaliação/consulta.")}`} target="_blank" rel="noopener noreferrer" className="text-xs text-stone-600 hover:text-[#5C8A3C] hover:underline flex items-center gap-1">
                           <span>📱</span>
                           {p.telefone}
                         </a>
@@ -295,7 +295,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
               {profissionais.length < totalProfissionais && (
                 <Button
                   variant="outline"
-                  className="w-full border-[#4a6741]/40 text-[#4a6741] hover:bg-[#eaf2e7]"
+                  className="w-full border-[#5C8A3C]/40 text-[#5C8A3C] hover:bg-[#EBF4E3]"
                   onClick={carregarMais}
                   disabled={carregandoMais}
                 >

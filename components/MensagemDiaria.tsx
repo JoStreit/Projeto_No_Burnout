@@ -114,25 +114,25 @@ function CardFlip({
       >
         {/* ── Frente (oculta) ── */}
         <div
-          className="[grid-area:1/1] min-h-28 rounded-2xl bg-[#eaf2e7] border border-[#4a6741]/20 flex flex-col items-center justify-center gap-2 hover:border-[#4a6741]/50 hover:bg-[#dceeda] transition-colors"
+          className="[grid-area:1/1] min-h-28 rounded-2xl bg-[#EBF4E3] border border-[#5C8A3C]/20 flex flex-col items-center justify-center gap-2 hover:border-[#5C8A3C]/50 hover:bg-[#D5ECC6] transition-colors"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <p className="text-xs font-semibold text-[#4a6741] uppercase tracking-widest select-none">
+          <p className="text-xs font-semibold text-[#5C8A3C] uppercase tracking-widest select-none">
             Dica do dia para você
           </p>
-          <p className="text-sm text-[#4a6741]/60 select-none">clique para revelar</p>
+          <p className="text-sm text-[#5C8A3C]/60 select-none">clique para revelar</p>
         </div>
 
         {/* ── Verso (mensagem) ── */}
         <div
-          className="[grid-area:1/1] min-h-28 rounded-2xl bg-white border border-[#4a6741]/15 flex items-start gap-4 px-5 py-4"
+          className="[grid-area:1/1] min-h-28 rounded-2xl bg-white border border-[#5C8A3C]/15 flex items-start gap-4 px-5 py-4"
           style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
         >
-          <div className="w-11 h-11 rounded-xl bg-[#eaf2e7] flex items-center justify-center shrink-0 text-xl">
+          <div className="w-11 h-11 rounded-xl bg-[#EBF4E3] flex items-center justify-center shrink-0 text-xl">
             {mensagem.icone}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-[#4a6741] uppercase tracking-wide mb-0.5">
+            <p className="text-xs font-semibold text-[#5C8A3C] uppercase tracking-wide mb-0.5">
               {mensagem.titulo}
             </p>
             <p className="text-sm text-stone-600 leading-relaxed">
@@ -180,7 +180,7 @@ export default function MensagemDiaria() {
   if (mensagensHoje.length < 2) return null;
 
   return (
-    <section className="bg-[#faf7f4] py-10">
+    <section className="bg-[#FFFDF0] py-10">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {mensagensHoje.map((m) => (
