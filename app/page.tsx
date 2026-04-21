@@ -533,12 +533,12 @@ export default function Home() {
           <div className="flex items-center">
             <img src="/logo_rodape.svg" alt="Calma mente" className="h-10 sm:h-12 w-auto" />
           </div>
-          <p className="text-white/40 text-xs text-center">
+          <p className="text-white/40 text-sm font-bold text-center">
             Conectando pacientes aos profissionais de saúde certos.
           </p>
           <button
             onClick={() => setAnaliseAberta(true)}
-            className="text-xs text-white/50 hover:text-white/80 transition-colors underline underline-offset-4"
+            className="text-sm font-bold text-white/50 hover:text-white/80 transition-colors underline underline-offset-4"
           >
             Fazer análise gratuita
           </button>
