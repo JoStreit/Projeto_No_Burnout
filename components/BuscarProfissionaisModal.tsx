@@ -266,7 +266,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                     <div className="mt-1.5 flex flex-col gap-0.5">
                       <p className="text-xs text-stone-500 flex items-center gap-1">
                         <span>📍</span>
-                        {p.cidade} — {p.estado}
+                        {p.cidade}, {p.estado}
                       </p>
                       <a href={`mailto:${p.email}`} className="text-xs text-stone-600 hover:text-[#5C8A3C] hover:underline flex items-center gap-1">
                         <span>✉️</span>

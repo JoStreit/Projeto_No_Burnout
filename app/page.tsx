@@ -20,7 +20,7 @@ const FAQS = [
   {
     pergunta: "Como funciona a análise gratuita?",
     resposta:
-      "Você responde algumas perguntas rápidas sobre saúde, hábitos e objetivos. Nosso sistema analisa suas respostas e indica o tipo de profissional mais adequado ao seu perfil — sem cadastro, sem custo.",
+      "Você responde algumas perguntas rápidas sobre saúde, hábitos e objetivos. Nosso sistema analisa suas respostas e indica o tipo de profissional mais adequado ao seu perfil, sem cadastro e sem custo.",
   },
   {
     pergunta: "Preciso me cadastrar para ver os profissionais?",
@@ -341,7 +341,7 @@ export default function Home() {
               <h3 className="font-semibold text-[#3B2A14] text-lg mb-3">Análise Personalizada</h3>
               <p className="text-stone-500 text-sm leading-relaxed mb-4">
                 {profissional
-                  ? "Nosso algoritmo analisa o perfil do paciente e recomenda o profissional adequado — e este profissional pode ser você. Mantenha seu perfil ativo."
+                  ? "Nosso algoritmo analisa o perfil do paciente e recomenda o profissional adequado, e este profissional pode ser você. Mantenha seu perfil ativo."
                   : "Nosso algoritmo analisa seu perfil e recomenda o profissional de saúde mais adequado para suas necessidades atuais."}
               </p>
               <span className="text-xs font-medium text-[#5C8A3C]">Fazer análise →</span>
@@ -434,7 +434,7 @@ export default function Home() {
               O questionário que entende você
             </h2>
             <p className="text-stone-500 text-base leading-relaxed max-w-2xl mx-auto">
-              O questionário é uma avaliação rápida do seu estado atual — hábitos, bem-estar, objetivos e necessidades. A partir das suas respostas, nosso sistema identifica qual ou quais profissionais de saúde são mais indicados para o seu momento, de forma personalizada e sem achismos.
+              O questionário é uma avaliação rápida do seu estado atual: hábitos, bem-estar, objetivos e necessidades. A partir das suas respostas, nosso sistema identifica qual ou quais profissionais de saúde são mais indicados para o seu momento, de forma personalizada e sem achismos.
             </p>
             <button
               onClick={() => setAnaliseAberta(true)}

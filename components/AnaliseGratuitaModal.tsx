@@ -40,10 +40,10 @@ const PERGUNTAS: Pergunta[] = [
     id: 2,
     texto: "Como você avalia a pressão que sente no trabalho ou na sua rotina?",
     opcoes: [
-      { texto: "Gerenciável — me sinto no controle", pontos: {} },
+      { texto: "Gerenciável,me sinto no controle", pontos: {} },
       { texto: "Alta, mas ainda consigo lidar", pontos: { "Psicólogo": 1 } },
-      { texto: "Muito alta — frequentemente me sinto sobrecarregado", pontos: { "Psicólogo": 2.5 } },
-      { texto: "Insuportável — sinto que não aguento mais", pontos: { "Psicólogo": 4 } },
+      { texto: "Muito alta,frequentemente me sinto sobrecarregado", pontos: { "Psicólogo": 2.5 } },
+      { texto: "Insuportável,sinto que não aguento mais", pontos: { "Psicólogo": 4 } },
     ],
   },
   {
@@ -52,18 +52,18 @@ const PERGUNTAS: Pergunta[] = [
     opcoes: [
       { texto: "Sim, me recupero bem com descanso", pontos: {} },
       { texto: "Às vezes ainda me sinto cansado após descansar", pontos: { "Psicólogo": 1 } },
-      { texto: "Raramente — o cansaço persiste mesmo dormindo bem", pontos: { "Psicólogo": 2.5 } },
-      { texto: "Não — não consigo me desligar nem nos momentos de folga", pontos: { "Psicólogo": 4 } },
+      { texto: "Raramente,o cansaço persiste mesmo dormindo bem", pontos: { "Psicólogo": 2.5 } },
+      { texto: "Não,não consigo me desligar nem nos momentos de folga", pontos: { "Psicólogo": 4 } },
     ],
   },
   {
     id: 4,
     texto: "Você tem evitado interações sociais ou atividades que antes gostava?",
     opcoes: [
-      { texto: "Não — estou bem socialmente", pontos: {} },
+      { texto: "Não,estou bem socialmente", pontos: {} },
       { texto: "Às vezes prefiro ficar sozinho", pontos: { "Psicólogo": 1 } },
       { texto: "Com frequência evito pessoas e compromissos sociais", pontos: { "Psicólogo": 2.5 } },
-      { texto: "Me isolei bastante — perdi o interesse na maioria das coisas", pontos: { "Psicólogo": 4 } },
+      { texto: "Me isolei bastante,perdi o interesse na maioria das coisas", pontos: { "Psicólogo": 4 } },
     ],
   },
   {
@@ -80,10 +80,10 @@ const PERGUNTAS: Pergunta[] = [
     id: 6,
     texto: "Você passa muitas horas sentado e sente dores posturais com frequência?",
     opcoes: [
-      { texto: "Não — não tenho esse problema", pontos: {} },
-      { texto: "Às vezes — dores leves nas costas ou pescoço", pontos: { "Fisioterapeuta": 1 } },
-      { texto: "Sim — dores frequentes que prejudicam minha concentração", pontos: { "Fisioterapeuta": 2.5 } },
-      { texto: "Sim — as dores são intensas e limitam minha rotina", pontos: { "Fisioterapeuta": 4 } },
+      { texto: "Não,não tenho esse problema", pontos: {} },
+      { texto: "Às vezes,dores leves nas costas ou pescoço", pontos: { "Fisioterapeuta": 1 } },
+      { texto: "Sim,dores frequentes que prejudicam minha concentração", pontos: { "Fisioterapeuta": 2.5 } },
+      { texto: "Sim,as dores são intensas e limitam minha rotina", pontos: { "Fisioterapeuta": 4 } },
     ],
   },
   {
@@ -100,10 +100,10 @@ const PERGUNTAS: Pergunta[] = [
     id: 8,
     texto: "Como você descreve seus hábitos alimentares?",
     opcoes: [
-      { texto: "Equilibrados — como bem na maioria das refeições", pontos: {} },
+      { texto: "Equilibrados,como bem na maioria das refeições", pontos: {} },
       { texto: "Razoáveis, mas poderia melhorar", pontos: { "Nutricionista": 1 } },
-      { texto: "Irregulares — pulo refeições ou como muito sob estresse", pontos: { "Nutricionista": 2.5 } },
-      { texto: "Ruins — excesso de ultraprocessados, açúcar ou perda de apetite", pontos: { "Nutricionista": 4 } },
+      { texto: "Irregulares,pulo refeições ou como muito sob estresse", pontos: { "Nutricionista": 2.5 } },
+      { texto: "Ruins,excesso de ultraprocessados, açúcar ou perda de apetite", pontos: { "Nutricionista": 4 } },
     ],
   },
   {
@@ -113,17 +113,17 @@ const PERGUNTAS: Pergunta[] = [
       { texto: "Não tenho dificuldades", pontos: {} },
       { texto: "Tenho dificuldade para controlar o peso", pontos: { "Nutricionista": 2 } },
       { texto: "Tenho problemas digestivos frequentes (gases, azia, intestino irregular)", pontos: { "Nutricionista": 2.5 } },
-      { texto: "Ambos — dificuldade com peso e problemas digestivos", pontos: { "Nutricionista": 4 } },
+      { texto: "Ambos,dificuldade com peso e problemas digestivos", pontos: { "Nutricionista": 4 } },
     ],
   },
   {
     id: 10,
     texto: "Você costuma comer em excesso ou de forma descontrolada quando está ansioso, estressado ou triste?",
     opcoes: [
-      { texto: "Não — meu apetite não muda com o humor", pontos: {} },
+      { texto: "Não,meu apetite não muda com o humor", pontos: {} },
       { texto: "Às vezes busco conforto na comida quando estou mal", pontos: { "Nutricionista": 1, "Psicólogo": 0.5 } },
-      { texto: "Com frequência — o estresse e a ansiedade me fazem comer sem controle", pontos: { "Nutricionista": 2.5, "Psicólogo": 1 } },
-      { texto: "Sempre — a comida é minha principal válvula de escape emocional", pontos: { "Nutricionista": 4, "Psicólogo": 1.5 } },
+      { texto: "Com frequência,o estresse e a ansiedade me fazem comer sem controle", pontos: { "Nutricionista": 2.5, "Psicólogo": 1 } },
+      { texto: "Sempre,a comida é minha principal válvula de escape emocional", pontos: { "Nutricionista": 4, "Psicólogo": 1.5 } },
     ],
   },
   {
@@ -131,9 +131,9 @@ const PERGUNTAS: Pergunta[] = [
     texto: "Como a sua alimentação afeta seu humor e energia ao longo do dia?",
     opcoes: [
       { texto: "Não percebo relação entre o que como e como me sinto", pontos: {} },
-      { texto: "Percebo um pouco — comer mal me deixa um pouco mais cansado", pontos: { "Nutricionista": 1 } },
-      { texto: "Percebo claramente — comer mal me deixa irritado, cansado ou ansioso", pontos: { "Nutricionista": 2.5 } },
-      { texto: "Muito — minha alimentação afeta diretamente meu humor e disposição o dia todo", pontos: { "Nutricionista": 4 } },
+      { texto: "Percebo um pouco,comer mal me deixa um pouco mais cansado", pontos: { "Nutricionista": 1 } },
+      { texto: "Percebo claramente,comer mal me deixa irritado, cansado ou ansioso", pontos: { "Nutricionista": 2.5 } },
+      { texto: "Muito,minha alimentação afeta diretamente meu humor e disposição o dia todo", pontos: { "Nutricionista": 4 } },
     ],
   },
   {
@@ -143,17 +143,17 @@ const PERGUNTAS: Pergunta[] = [
       { texto: "3 vezes por semana ou mais", pontos: {} },
       { texto: "1 a 2 vezes por semana", pontos: { "Personal Trainer": 2 } },
       { texto: "Raramente", pontos: { "Personal Trainer": 3 } },
-      { texto: "Nunca — minha rotina é completamente sedentária", pontos: { "Personal Trainer": 4 } },
+      { texto: "Nunca,minha rotina é completamente sedentária", pontos: { "Personal Trainer": 4 } },
     ],
   },
   {
     id: 13,
     texto: "Você sente que a falta de condicionamento físico prejudica seu bem-estar?",
     opcoes: [
-      { texto: "Não — estou satisfeito com meu condicionamento", pontos: {} },
-      { texto: "Um pouco — poderia me exercitar mais", pontos: { "Personal Trainer": 1.5 } },
-      { texto: "Sim — a falta de exercício afeta meu humor e minha energia", pontos: { "Personal Trainer": 3 } },
-      { texto: "Muito — me sinto sem disposição e isso impacta minha qualidade de vida", pontos: { "Personal Trainer": 4 } },
+      { texto: "Não,estou satisfeito com meu condicionamento", pontos: {} },
+      { texto: "Um pouco,poderia me exercitar mais", pontos: { "Personal Trainer": 1.5 } },
+      { texto: "Sim,a falta de exercício afeta meu humor e minha energia", pontos: { "Personal Trainer": 3 } },
+      { texto: "Muito,me sinto sem disposição e isso impacta minha qualidade de vida", pontos: { "Personal Trainer": 4 } },
     ],
   },
   {
@@ -162,8 +162,8 @@ const PERGUNTAS: Pergunta[] = [
     opcoes: [
       { texto: "Raramente ou nunca", pontos: {} },
       { texto: "Às vezes, mas consigo me motivar", pontos: { "Psicólogo": 0.5 } },
-      { texto: "Com frequência — tenho dificuldade de me animar para as coisas", pontos: { "Psicólogo": 1.5, "Personal Trainer": 0.5 } },
-      { texto: "Quase sempre — perdi a motivação para quase tudo", pontos: { "Psicólogo": 2.5, "Personal Trainer": 1 } },
+      { texto: "Com frequência,tenho dificuldade de me animar para as coisas", pontos: { "Psicólogo": 1.5, "Personal Trainer": 0.5 } },
+      { texto: "Quase sempre,perdi a motivação para quase tudo", pontos: { "Psicólogo": 2.5, "Personal Trainer": 1 } },
     ],
   },
 ];
@@ -317,7 +317,7 @@ export default function AnaliseGratuitaModal({
             <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            Questionário 100% anônimo — nenhum dado pessoal é coletado
+            Questionário 100% anônimo,nenhum dado pessoal é coletado
           </p>
         </DialogHeader>
 

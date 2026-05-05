@@ -35,7 +35,7 @@ const SECOES: Record<TopicoId, React.ReactNode> = {
       <h2 className="text-2xl md:text-3xl font-bold text-[#3B2A14]">O que é Burnout</h2>
       <p className="text-stone-600 text-base leading-relaxed">
         A Síndrome de Burnout, também chamada de Síndrome do Esgotamento Profissional, é um distúrbio
-        emocional caracterizado por exaustão extrema — física e mental — causada pelo estresse crônico
+        emocional caracterizado por exaustão extrema, física e mental, causada pelo estresse crônico
         no trabalho. É mais comum em pessoas que enfrentam longas jornadas, pressão excessiva por
         resultados ou ambientes organizacionais pouco saudáveis.
       </p>
@@ -83,7 +83,7 @@ const SECOES: Record<TopicoId, React.ReactNode> = {
       <div className="bg-[#F5EDD0] rounded-2xl p-6 border border-[#5C8A3C]/10">
         <p className="text-stone-700 text-base leading-relaxed">
           A diferença entre cansaço comum e burnout está na resposta ao descanso. O cansaço habitual
-          melhora após uma boa noite de sono; o burnout, não — a exaustão persiste mesmo com descanso
+          melhora após uma boa noite de sono; o burnout não: a exaustão persiste mesmo com descanso
           adequado e vem acompanhada de outros sintomas.
         </p>
       </div>
@@ -130,8 +130,8 @@ const SECOES: Record<TopicoId, React.ReactNode> = {
       <p className="text-stone-600 text-base leading-relaxed">
         A psicoterapia para burnout busca compreender as causas do esgotamento e construir estratégias
         para gerenciá-lo. O psicólogo ou psiquiatra acompanha o paciente com escuta ativa, identificando
-        práticas terapêuticas que favorecem a recuperação — como a Terapia Cognitivo-Comportamental (TCC)
-        — para que o indivíduo retome o equilíbrio e a qualidade de vida.
+        práticas terapêuticas que favorecem a recuperação, como a Terapia Cognitivo-Comportamental (TCC),
+        para que o indivíduo retome o equilíbrio e a qualidade de vida.
       </p>
       <div className="bg-[#EBF4E3] rounded-2xl p-6 border border-[#5C8A3C]/15">
         <h3 className="font-semibold text-[#3B2A14] text-base mb-4">O que esperar da terapia</h3>
@@ -157,7 +157,7 @@ const SECOES: Record<TopicoId, React.ReactNode> = {
       <h2 className="text-2xl md:text-3xl font-bold text-[#3B2A14]">Atividade Física</h2>
       <p className="text-stone-600 text-base leading-relaxed">
         A prática regular de exercícios é uma aliada importante no tratamento do burnout. A atividade
-        física libera endorfinas, reduz a ansiedade, melhora o humor e regula o sono — fatores
+        física libera endorfinas, reduz a ansiedade, melhora o humor e regula o sono, fatores
         diretamente afetados pela síndrome.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -503,7 +503,7 @@ export default function BurnoutPage() {
           </h2>
           <p className="text-stone-600 text-base leading-relaxed mb-8">
             Responda algumas perguntas e descubra qual especialista é mais indicado
-            para o seu momento — gratuito e sem compromisso.
+            para o seu momento, gratuito e sem compromisso.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
