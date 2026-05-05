@@ -459,9 +459,9 @@ export default function BurnoutPage() {
               {topicoPrev ? (
                 <button
                   onClick={() => setTopicoAtivo(topicoPrev.id)}
-                  className="text-xs font-medium text-stone-400 hover:text-[#5C8A3C] flex items-center gap-1.5 transition-colors"
+                  className="cursor-pointer text-xs font-semibold text-stone-500 hover:text-[#5C8A3C] bg-white hover:bg-[#5C8A3C]/8 border border-stone-200 hover:border-[#5C8A3C]/30 flex items-center gap-1.5 px-4 py-2 rounded-full transition-all duration-200"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                   {topicoPrev.label}
@@ -471,10 +471,10 @@ export default function BurnoutPage() {
               {topicoNext ? (
                 <button
                   onClick={() => setTopicoAtivo(topicoNext.id)}
-                  className="text-xs font-medium text-stone-400 hover:text-[#5C8A3C] flex items-center gap-1.5 transition-colors"
+                  className="cursor-pointer text-xs font-semibold text-stone-500 hover:text-[#5C8A3C] bg-white hover:bg-[#5C8A3C]/8 border border-stone-200 hover:border-[#5C8A3C]/30 flex items-center gap-1.5 px-4 py-2 rounded-full transition-all duration-200"
                 >
                   {topicoNext.label}
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>

@@ -126,7 +126,7 @@ export default function Home() {
           <div className="hidden sm:flex items-center flex-1 px-6">
             <Link
               href="/burnout"
-              className="text-sm font-medium text-stone-500 hover:text-[#5C8A3C] transition-colors"
+              className="text-xs font-semibold text-[#5C8A3C] bg-[#5C8A3C]/10 hover:bg-[#5C8A3C]/20 border border-[#5C8A3C]/25 hover:border-[#5C8A3C]/40 px-4 py-1.5 rounded-full transition-all duration-200"
             >
               Sobre o Burnout
             </Link>
