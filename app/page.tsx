@@ -237,8 +237,10 @@ export default function Home() {
             </h1>
 
             <p className="text-stone-500 text-lg leading-relaxed max-w-lg mb-10 mx-auto md:mx-0">
-              Responda algumas perguntas e descubra qual profissional é ideal
-              para o seu momento. Rápido, gratuito e sem compromisso.
+              Síndrome de burnout é um distúrbio emocional relacionado ao estresse frequente no
+              ambiente de trabalho, causando sintomas como exaustão física e emocional, falta de
+              motivação, insônia e irritabilidade constante. Responda algumas perguntas e descubra
+              qual profissional é ideal para o seu momento. Rápido, gratuito e sem compromisso.
             </p>
 
             <div className="flex flex-col items-center md:items-start gap-4">
@@ -308,7 +310,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
             {/* Card 1 — Análise */}
             <div
@@ -418,6 +420,22 @@ export default function Home() {
                 </span>
               </div>
             )}
+
+            {/* Card 4 — Sobre o Burnout */}
+            <Link href="/burnout">
+              <div className="group p-8 rounded-2xl border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg hover:shadow-[#5C8A3C]/5 transition-all duration-300 cursor-pointer h-full">
+                <div className="w-14 h-14 bg-[#F5EDD0] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#5C8A3C]/10 transition-colors">
+                  <svg className="w-7 h-7 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-[#3B2A14] text-lg mb-3">Sobre o Burnout</h3>
+                <p className="text-stone-500 text-sm leading-relaxed mb-4">
+                  Entenda o que é a síndrome de esgotamento profissional, seus sintomas e as abordagens disponíveis para tratamento e prevenção.
+                </p>
+                <span className="text-xs font-medium text-[#5C8A3C]">Saiba mais →</span>
+              </div>
+            </Link>
 
           </div>
         </div>
