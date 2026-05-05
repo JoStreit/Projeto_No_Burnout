@@ -477,7 +477,17 @@ export default function BurnoutPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
-              ) : <div />}
+              ) : (
+                <button
+                  onClick={() => setAnaliseAberta(true)}
+                  className="cursor-pointer text-xs font-semibold text-white bg-[#5C8A3C] hover:bg-[#3A6624] flex items-center gap-1.5 px-4 py-2 rounded-full shadow-sm shadow-[#5C8A3C]/25 transition-all duration-200"
+                >
+                  Fazer Avaliação
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              )}
             </div>
           </div>
 
