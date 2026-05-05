@@ -312,7 +312,23 @@ export default function Home() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
 
-            {/* Card 1 — Análise */}
+            {/* Card 1 — Sobre o Burnout */}
+            <Link href="/burnout">
+              <div className="group p-8 rounded-2xl border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg hover:shadow-[#5C8A3C]/5 transition-all duration-300 cursor-pointer h-full">
+                <div className="w-14 h-14 bg-[#F5EDD0] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#5C8A3C]/10 transition-colors">
+                  <svg className="w-7 h-7 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <h3 className="font-semibold text-[#3B2A14] text-lg mb-3">Sobre o Burnout</h3>
+                <p className="text-stone-500 text-sm leading-relaxed mb-4">
+                  Entenda o que é a síndrome de esgotamento profissional, seus sintomas e as abordagens disponíveis para tratamento e prevenção.
+                </p>
+                <span className="text-xs font-medium text-[#5C8A3C]">Saiba mais →</span>
+              </div>
+            </Link>
+
+            {/* Card 2 — Análise Personalizada */}
             <div
               className="group p-8 rounded-2xl border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg hover:shadow-[#5C8A3C]/5 transition-all duration-300 cursor-pointer"
               onClick={() => setAnaliseAberta(true)}
@@ -331,24 +347,8 @@ export default function Home() {
               <span className="text-xs font-medium text-[#5C8A3C]">Fazer análise →</span>
             </div>
 
-            {/* Card 2 — Paciente / Profissional */}
-            {profissional ? (
-              <div
-                className="group p-8 rounded-2xl border border-[#7A5C2E]/20 bg-[#7A5C2E]/3 hover:border-[#7A5C2E]/40 hover:shadow-lg transition-all duration-300 cursor-pointer"
-                onClick={() => setDashboardAberto(true)}
-              >
-                <div className="w-14 h-14 bg-[#7A5C2E]/10 rounded-2xl flex items-center justify-center mb-6">
-                  <svg className="w-7 h-7 text-[#7A5C2E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-[#3B2A14] text-lg mb-3">Meu Perfil Profissional</h3>
-                <p className="text-stone-500 text-sm leading-relaxed mb-4">
-                  Atualize suas informações, modalidade de atendimento e mantenha seu cadastro sempre em dia para ser encontrado pelos pacientes.
-                </p>
-                <span className="text-xs font-medium text-[#7A5C2E]">Abrir perfil →</span>
-              </div>
-            ) : paciente ? (
+            {/* Card 3 — Cadastro de Paciente */}
+            {paciente ? (
               <div
                 className="group p-8 rounded-2xl border border-[#5C8A3C]/20 bg-[#5C8A3C]/3 hover:border-[#5C8A3C]/40 hover:shadow-lg transition-all duration-300 cursor-pointer"
                 onClick={() => setEditarPacienteAberto(true)}
@@ -382,27 +382,27 @@ export default function Home() {
               </div>
             )}
 
-            {/* Card 3 — Buscar / Para Profissionais */}
-            {paciente && !profissional ? (
+            {/* Card 4 — Cadastro Profissional */}
+            {profissional ? (
               <div
-                className="group p-8 rounded-2xl border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg hover:shadow-[#5C8A3C]/5 transition-all duration-300 cursor-pointer"
-                onClick={() => setBuscarAberto(true)}
+                className="group p-8 rounded-2xl border border-[#7A5C2E]/20 bg-[#7A5C2E]/3 hover:border-[#7A5C2E]/40 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                onClick={() => setDashboardAberto(true)}
               >
-                <div className="w-14 h-14 bg-[#F5EDD0] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#5C8A3C]/10 transition-colors">
-                  <svg className="w-7 h-7 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <div className="w-14 h-14 bg-[#7A5C2E]/10 rounded-2xl flex items-center justify-center mb-6">
+                  <svg className="w-7 h-7 text-[#7A5C2E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-[#3B2A14] text-lg mb-3">Buscar Profissionais</h3>
+                <h3 className="font-semibold text-[#3B2A14] text-lg mb-3">Meu Perfil Profissional</h3>
                 <p className="text-stone-500 text-sm leading-relaxed mb-4">
-                  Encontre profissionais de saúde de acordo com sua localização e preferência de atendimento presencial ou online.
+                  Atualize suas informações, modalidade de atendimento e mantenha seu cadastro sempre em dia para ser encontrado pelos pacientes.
                 </p>
-                <span className="text-xs font-medium text-[#5C8A3C]">Buscar profissionais →</span>
+                <span className="text-xs font-medium text-[#7A5C2E]">Abrir perfil →</span>
               </div>
             ) : (
               <div
                 className="group p-8 rounded-2xl border border-stone-100 hover:border-[#7A5C2E]/30 hover:shadow-lg transition-all duration-300 cursor-pointer"
-                onClick={() => profissional ? setPacienteAberto(true) : setProfissionalAberto(true)}
+                onClick={() => setProfissionalAberto(true)}
               >
                 <div className="w-14 h-14 bg-[#F5EDD0] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#7A5C2E]/10 transition-colors">
                   <svg className="w-7 h-7 text-[#7A5C2E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -411,31 +411,11 @@ export default function Home() {
                 </div>
                 <h3 className="font-semibold text-[#3B2A14] text-lg mb-3">Para Profissionais</h3>
                 <p className="text-stone-500 text-sm leading-relaxed mb-4">
-                  {profissional
-                    ? "Mesmo com perfil profissional você pode cadastrar seu perfil de paciente e encontrar um profissional de saúde para você."
-                    : "Cadastre-se como profissional de saúde e seja recomendado para pacientes que precisam do seu perfil de atendimento."}
+                  Cadastre-se como profissional de saúde e seja recomendado para pacientes que precisam do seu perfil de atendimento.
                 </p>
-                <span className="text-xs font-medium text-[#7A5C2E]">
-                  {profissional ? "Cadastrar como paciente →" : "Quero me cadastrar →"}
-                </span>
+                <span className="text-xs font-medium text-[#7A5C2E]">Quero me cadastrar →</span>
               </div>
             )}
-
-            {/* Card 4 — Sobre o Burnout */}
-            <Link href="/burnout">
-              <div className="group p-8 rounded-2xl border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg hover:shadow-[#5C8A3C]/5 transition-all duration-300 cursor-pointer h-full">
-                <div className="w-14 h-14 bg-[#F5EDD0] rounded-2xl flex items-center justify-center mb-6 group-hover:bg-[#5C8A3C]/10 transition-colors">
-                  <svg className="w-7 h-7 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-[#3B2A14] text-lg mb-3">Sobre o Burnout</h3>
-                <p className="text-stone-500 text-sm leading-relaxed mb-4">
-                  Entenda o que é a síndrome de esgotamento profissional, seus sintomas e as abordagens disponíveis para tratamento e prevenção.
-                </p>
-                <span className="text-xs font-medium text-[#5C8A3C]">Saiba mais →</span>
-              </div>
-            </Link>
 
           </div>
         </div>
