@@ -20,7 +20,7 @@ const FAQS = [
   {
     pergunta: "Como funciona a análise gratuita?",
     resposta:
-      "Você responde 5 perguntas rápidas sobre saúde, hábitos e objetivos. Nosso sistema analisa suas respostas e indica o tipo de profissional mais adequado ao seu perfil — sem cadastro, sem custo.",
+      "Você responde algumas perguntas rápidas sobre saúde, hábitos e objetivos. Nosso sistema analisa suas respostas e indica o tipo de profissional mais adequado ao seu perfil — sem cadastro, sem custo.",
   },
   {
     pergunta: "Preciso me cadastrar para ver os profissionais?",
