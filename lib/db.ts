@@ -219,11 +219,14 @@ export function listarProfissionais(filtros?: {
   estado?: string;
   limit?: number;
   offset?: number;
+  incluirExpirados?: boolean;
 }): { data: ProfissionalPublico[]; total: number } {
   const agora = new Date();
-  let lista = lerDB().profissionais.filter(
-    (p) => p.vigenciaFim && new Date(p.vigenciaFim) > agora
-  );
+  let lista = filtros?.incluirExpirados
+    ? lerDB().profissionais
+    : lerDB().profissionais.filter(
+        (p) => p.vigenciaFim && new Date(p.vigenciaFim) > agora
+      );
   if (filtros?.ramo) {
     lista = lista.filter((p) => p.ramo?.toLowerCase() === filtros.ramo!.toLowerCase());
   }
