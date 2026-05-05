@@ -309,10 +309,16 @@ export default function AnaliseGratuitaModal({
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
       <DialogContent className="max-w-lg max-h-[90vh] flex flex-col bg-[#FFFDF0] border border-[#5C8A3C]/20">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[#3B2A14]">
+        <DialogHeader className="text-center">
+          <DialogTitle className="text-xl font-bold text-[#3B2A14] text-center">
             Análise Gratuita
           </DialogTitle>
+          <p className="text-xs text-stone-400 flex items-center justify-center gap-1 pt-1">
+            <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Questionário 100% anônimo — nenhum dado pessoal é coletado
+          </p>
         </DialogHeader>
 
         {!ramosRecomendados ? (
