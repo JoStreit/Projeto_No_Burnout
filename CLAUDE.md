@@ -26,3 +26,8 @@ npm run dev
 8 - Evitar SQL injection/XSS pelo sistema. E tente utilizar sempre bibliotecas atualizadas.
 
 9 - Sempre desenvolver evitando qualquer vulnerabilidade no sistema.
+
+10 - Quando selecionar o estado, listar as principais cidades do estado listado.
+
+11 - Sempre cuide para manter a responsividade da tela.
+

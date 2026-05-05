@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import AnaliseGratuitaModal from "@/components/AnaliseGratuitaModal";
 import CadastroPacienteModal from "@/components/CadastroPacienteModal";
@@ -119,6 +120,16 @@ export default function Home() {
               alt="Calma mente"
               className="h-10 sm:h-12 w-auto"
             />
+          </div>
+
+          {/* Nav links */}
+          <div className="hidden sm:flex items-center flex-1 px-6">
+            <Link
+              href="/burnout"
+              className="text-sm font-medium text-stone-500 hover:text-[#5C8A3C] transition-colors"
+            >
+              Sobre o Burnout
+            </Link>
           </div>
 
           {/* Auth área */}
