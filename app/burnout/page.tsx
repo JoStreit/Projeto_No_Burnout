@@ -295,8 +295,6 @@ export default function BurnoutPage() {
             <Link href="/">
               <img src="/logo_pequeno.svg" alt="Calma mente" className="h-10 sm:h-12 w-auto" />
             </Link>
-            <span className="hidden sm:inline text-stone-300 select-none">|</span>
-            <span className="hidden sm:inline text-sm font-semibold text-[#5C8A3C]">Entenda o Burnout</span>
           </div>
 
           <div className="flex items-center gap-2">
