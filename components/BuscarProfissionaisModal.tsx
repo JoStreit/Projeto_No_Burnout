@@ -42,6 +42,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
   const [presencial, setPresencial]       = useState(false);
   const [remoto, setRemoto]               = useState(false);
   const [abrangencia, setAbrangencia]     = useState<"Brasil" | "Estado" | "">("");
+  const [busca, setBusca]                 = useState("");
   const [profissionais, setProfissionais] = useState<Profissional[]>([]);
   const [totalProfissionais, setTotalProfissionais] = useState(0);
   const [carregando, setCarregando]       = useState(false);
@@ -126,6 +127,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     setPresencial(false);
     setRemoto(false);
     setAbrangencia("");
+    setBusca("");
     setProfissionais([]);
     setTotalProfissionais(0);
     setPagina(1);
@@ -133,61 +135,98 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
   }
 
   const label = labelAbrangencia();
+  const profissionaisFiltrados = busca.trim()
+    ? profissionais.filter((p) =>
+        p.nome.toLowerCase().includes(busca.toLowerCase()) ||
+        p.cidade.toLowerCase().includes(busca.toLowerCase())
+      )
+    : profissionais;
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-3xl max-h-[96vh] flex flex-col bg-[#FFFDF0] border border-[#5C8A3C]/15 p-0 overflow-hidden gap-0">
+      <DialogContent className="max-w-3xl max-h-[96vh] flex flex-col bg-[#FFFDF0] border-0 p-0 overflow-hidden gap-0">
 
-        {/* ─── Cabeçalho + Filtros ─────────────────────────────────────── */}
-        <div className="bg-[#F5EDD0] px-6 pt-5 pb-4 border-b border-[#5C8A3C]/10 space-y-4">
+        {/* ─── Cabeçalho ───────────────────────────────────────────────── */}
+        <div className="bg-[#5C8A3C] px-6 pt-6 pb-5">
           <DialogHeader>
-            <DialogTitle className="text-xl font-bold text-[#3B2A14]">
+            <DialogTitle className="text-2xl font-bold text-white">
               Buscar Profissionais
             </DialogTitle>
-            <p className="text-sm text-stone-500">Encontre o profissional ideal para o seu momento</p>
+            <p className="text-white/70 text-sm mt-1">
+              Encontre o profissional ideal para o seu momento
+            </p>
           </DialogHeader>
+        </div>
 
-          {/* Filtro de especialidade */}
-          <div>
-            <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-2">Especialidade</p>
-            <div className="flex gap-2 flex-wrap">
-              {["", ...RAMOS].map((r) => (
-                <button
-                  key={r || "todos"}
-                  onClick={() => setRamo(r)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
-                    ramo === r
-                      ? "bg-[#5C8A3C] text-white shadow-sm"
-                      : "bg-white border border-stone-200 text-stone-500 hover:border-[#5C8A3C]/40 hover:text-[#5C8A3C]"
-                  }`}
-                >
-                  {r || "Todos"}
-                </button>
-              ))}
-            </div>
+        {/* ─── Filtros ─────────────────────────────────────────────────── */}
+        <div className="bg-white border-b border-stone-100 px-6 py-4 space-y-4">
+
+          {/* Campo de busca */}
+          <div className="relative">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              placeholder="Buscar por nome do profissional ou cidade..."
+              className="w-full pl-9 pr-4 py-2.5 text-sm rounded-xl border border-stone-200 bg-[#FFFDF0] text-stone-700 placeholder-stone-400 focus:outline-none focus:border-[#5C8A3C]/50 focus:ring-1 focus:ring-[#5C8A3C]/20 transition"
+            />
+            {busca && (
+              <button
+                onClick={() => setBusca("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
 
-          {/* Filtro de modalidade + botão buscar */}
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div className="space-y-2">
-              <p className="text-xs font-semibold text-stone-400 uppercase tracking-widest">Modalidade</p>
-              <div className="flex gap-2 flex-wrap items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+            {/* Especialidade */}
+            <div className="bg-[#EBF4E3] rounded-xl p-3 space-y-2">
+              <p className="text-xs font-bold text-[#5C8A3C] uppercase tracking-widest">Especialidade</p>
+              <div className="flex gap-1.5 flex-wrap">
+                {["", ...RAMOS].map((r) => (
+                  <button
+                    key={r || "todos"}
+                    onClick={() => setRamo(r)}
+                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${
+                      ramo === r
+                        ? "bg-[#5C8A3C] text-white shadow-sm"
+                        : "bg-white border border-[#5C8A3C]/20 text-stone-600 hover:border-[#5C8A3C]/50 hover:text-[#5C8A3C]"
+                    }`}
+                  >
+                    {r || "Todos"}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Modalidade */}
+            <div className="bg-[#F5EDD0] rounded-xl p-3 space-y-2">
+              <p className="text-xs font-bold text-[#7A5C2E] uppercase tracking-widest">Modalidade</p>
+              <div className="flex gap-1.5 flex-wrap items-center">
                 <button
                   onClick={() => setPresencial(!presencial)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                  className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all duration-200 ${
                     presencial
-                      ? "bg-[#5C8A3C]/15 border-[#5C8A3C]/50 text-[#5C8A3C]"
-                      : "bg-white border-stone-200 text-stone-500 hover:border-[#5C8A3C]/30 hover:text-[#5C8A3C]"
+                      ? "bg-[#7A5C2E] text-white shadow-sm"
+                      : "bg-white border-[#7A5C2E]/20 text-stone-600 hover:border-[#7A5C2E]/50 hover:text-[#7A5C2E]"
                   }`}
                 >
                   Presencial
                 </button>
                 <button
                   onClick={() => { setRemoto(!remoto); if (remoto) setAbrangencia(""); }}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                  className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all duration-200 ${
                     remoto
-                      ? "bg-[#5C8A3C]/15 border-[#5C8A3C]/50 text-[#5C8A3C]"
-                      : "bg-white border-stone-200 text-stone-500 hover:border-[#5C8A3C]/30 hover:text-[#5C8A3C]"
+                      ? "bg-[#7A5C2E] text-white shadow-sm"
+                      : "bg-white border-[#7A5C2E]/20 text-stone-600 hover:border-[#7A5C2E]/50 hover:text-[#7A5C2E]"
                   }`}
                 >
                   Remoto
@@ -196,10 +235,10 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                   <>
                     <button
                       onClick={() => setAbrangencia(abrangencia === "Brasil" ? "" : "Brasil")}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                      className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all duration-200 ${
                         abrangencia === "Brasil"
-                          ? "bg-[#5C8A3C]/15 border-[#5C8A3C]/50 text-[#5C8A3C]"
-                          : "bg-white border-stone-200 text-stone-500 hover:border-[#5C8A3C]/30 hover:text-[#5C8A3C]"
+                          ? "bg-[#7A5C2E] text-white shadow-sm"
+                          : "bg-white border-[#7A5C2E]/20 text-stone-600 hover:border-[#7A5C2E]/50 hover:text-[#7A5C2E]"
                       }`}
                     >
                       Brasil
@@ -207,10 +246,10 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                     {paciente?.estado && (
                       <button
                         onClick={() => setAbrangencia(abrangencia === "Estado" ? "" : "Estado")}
-                        className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 ${
+                        className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all duration-200 ${
                           abrangencia === "Estado"
-                            ? "bg-[#5C8A3C]/15 border-[#5C8A3C]/50 text-[#5C8A3C]"
-                            : "bg-white border-stone-200 text-stone-500 hover:border-[#5C8A3C]/30 hover:text-[#5C8A3C]"
+                            ? "bg-[#7A5C2E] text-white shadow-sm"
+                            : "bg-white border-[#7A5C2E]/20 text-stone-600 hover:border-[#7A5C2E]/50 hover:text-[#7A5C2E]"
                         }`}
                       >
                         {paciente.estado}
@@ -220,7 +259,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                 )}
               </div>
               {label && (
-                <p className="text-xs text-[#5C8A3C] font-medium flex items-center gap-1">
+                <p className="text-xs text-[#7A5C2E] font-medium flex items-center gap-1">
                   <svg className="w-3 h-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -229,15 +268,16 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                 </p>
               )}
             </div>
-
-            <button
-              onClick={buscar}
-              disabled={carregando}
-              className="shrink-0 bg-[#5C8A3C] hover:bg-[#3A6624] text-white text-sm font-semibold px-6 py-2 rounded-full shadow-sm shadow-[#5C8A3C]/25 transition-all duration-200 disabled:opacity-60"
-            >
-              {carregando ? "Buscando..." : "Buscar"}
-            </button>
           </div>
+
+          {/* Botão buscar */}
+          <button
+            onClick={buscar}
+            disabled={carregando}
+            className="w-full bg-[#5C8A3C] hover:bg-[#3A6624] text-white text-sm font-semibold py-2.5 rounded-xl shadow-sm shadow-[#5C8A3C]/20 transition-all duration-200 disabled:opacity-60"
+          >
+            {carregando ? "Buscando..." : "Buscar"}
+          </button>
         </div>
 
         {/* ─── Resultados ──────────────────────────────────────────────── */}
@@ -247,7 +287,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
               <div className="w-8 h-8 border-2 border-[#5C8A3C]/20 border-t-[#5C8A3C] rounded-full animate-spin" />
               <p className="text-sm text-stone-400">Buscando profissionais...</p>
             </div>
-          ) : profissionais.length === 0 ? (
+          ) : profissionaisFiltrados.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
               <div className="w-14 h-14 rounded-full bg-[#EBF4E3] flex items-center justify-center mb-1">
                 <svg className="w-7 h-7 text-[#5C8A3C]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -255,18 +295,20 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                 </svg>
               </div>
               <p className="text-stone-500 text-sm font-medium">Nenhum profissional encontrado</p>
-              <p className="text-stone-400 text-xs">Tente ajustar os filtros de busca</p>
+              <p className="text-stone-400 text-xs">Tente ajustar os filtros ou a busca</p>
             </div>
           ) : (
             <>
               <p className="text-xs text-stone-400 mb-3">
-                {totalProfissionais > profissionais.length
-                  ? `Exibindo ${profissionais.length} de ${totalProfissionais} profissionais`
-                  : `${profissionais.length} profissional${profissionais.length !== 1 ? "is" : ""} encontrado${profissionais.length !== 1 ? "s" : ""}`}
+                {busca.trim()
+                  ? `${profissionaisFiltrados.length} resultado${profissionaisFiltrados.length !== 1 ? "s" : ""} para "${busca}"`
+                  : totalProfissionais > profissionais.length
+                    ? `Exibindo ${profissionais.length} de ${totalProfissionais} profissionais`
+                    : `${profissionais.length} profissional${profissionais.length !== 1 ? "is" : ""} encontrado${profissionais.length !== 1 ? "s" : ""}`}
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {profissionais.map((p) => (
+                {profissionaisFiltrados.map((p) => (
                   <div
                     key={p.id}
                     className="bg-white rounded-2xl border border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-md hover:shadow-[#5C8A3C]/5 transition-all duration-200 p-4 flex flex-col gap-3"
@@ -339,7 +381,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                 ))}
               </div>
 
-              {profissionais.length < totalProfissionais && (
+              {profissionais.length < totalProfissionais && !busca.trim() && (
                 <button
                   onClick={carregarMais}
                   disabled={carregandoMais}
