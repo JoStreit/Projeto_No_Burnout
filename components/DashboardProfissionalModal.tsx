@@ -371,23 +371,24 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
                   >
                     {atualizando ? "Aguarde..." : "Desativar cadastro"}
                   </Button>
+                ) : dentro ? (
+                  <Button
+                    size="sm"
+                    className="w-full bg-emerald-600 hover:bg-emerald-700"
+                    onClick={() => atualizarStatus("Ativo")}
+                    disabled={atualizando}
+                  >
+                    {atualizando ? "Aguarde..." : "Ativar cadastro"}
+                  </Button>
                 ) : (
                   <Button
                     size="sm"
-                    className={`w-full ${dentro ? "bg-emerald-600 hover:bg-emerald-700" : "bg-gray-300 cursor-not-allowed"}`}
-                    onClick={() => dentro && atualizarStatus("Ativo")}
-                    disabled={atualizando || !dentro}
-                    title={!dentro ? "Vigência expirada — não é possível reativar" : ""}
+                    className="w-full bg-[#5C8A3C] hover:bg-[#3A6624] text-white"
                   >
-                    {atualizando ? "Aguarde..." : dentro ? "Ativar cadastro" : "Vigência expirada"}
+                    Ativar Cadastro
                   </Button>
                 )}
                 {erroStatus && <p className="text-xs text-red-500 mt-1 text-center">{erroStatus}</p>}
-                {!dentro && !ativo && (
-                  <p className="text-xs text-gray-400 mt-1 text-center">
-                    Para reativar, renove sua vigência com o suporte.
-                  </p>
-                )}
               </div>
             </div>
 
