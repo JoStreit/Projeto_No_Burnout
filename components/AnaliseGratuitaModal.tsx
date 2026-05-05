@@ -118,6 +118,26 @@ const PERGUNTAS: Pergunta[] = [
   },
   {
     id: 10,
+    texto: "Você costuma comer em excesso ou de forma descontrolada quando está ansioso, estressado ou triste?",
+    opcoes: [
+      { texto: "Não — meu apetite não muda com o humor", pontos: {} },
+      { texto: "Às vezes busco conforto na comida quando estou mal", pontos: { "Nutricionista": 1, "Psicólogo": 0.5 } },
+      { texto: "Com frequência — o estresse e a ansiedade me fazem comer sem controle", pontos: { "Nutricionista": 2.5, "Psicólogo": 1 } },
+      { texto: "Sempre — a comida é minha principal válvula de escape emocional", pontos: { "Nutricionista": 4, "Psicólogo": 1.5 } },
+    ],
+  },
+  {
+    id: 11,
+    texto: "Como a sua alimentação afeta seu humor e energia ao longo do dia?",
+    opcoes: [
+      { texto: "Não percebo relação entre o que como e como me sinto", pontos: {} },
+      { texto: "Percebo um pouco — comer mal me deixa um pouco mais cansado", pontos: { "Nutricionista": 1 } },
+      { texto: "Percebo claramente — comer mal me deixa irritado, cansado ou ansioso", pontos: { "Nutricionista": 2.5 } },
+      { texto: "Muito — minha alimentação afeta diretamente meu humor e disposição o dia todo", pontos: { "Nutricionista": 4 } },
+    ],
+  },
+  {
+    id: 12,
     texto: "Com que frequência você pratica atividade física?",
     opcoes: [
       { texto: "3 vezes por semana ou mais", pontos: {} },
@@ -127,7 +147,7 @@ const PERGUNTAS: Pergunta[] = [
     ],
   },
   {
-    id: 11,
+    id: 13,
     texto: "Você sente que a falta de condicionamento físico prejudica seu bem-estar?",
     opcoes: [
       { texto: "Não — estou satisfeito com meu condicionamento", pontos: {} },
@@ -137,7 +157,7 @@ const PERGUNTAS: Pergunta[] = [
     ],
   },
   {
-    id: 12,
+    id: 14,
     texto: "Você se sente frequentemente sem energia ou sem vontade de realizar atividades que antes gostava?",
     opcoes: [
       { texto: "Raramente ou nunca", pontos: {} },
@@ -152,10 +172,10 @@ const PERGUNTAS: Pergunta[] = [
 
 // Soma máxima possível por profissional (para normalização)
 const MAX_PONTOS: Record<Ramo, number> = {
-  "Psicólogo":        21,   // Q1(4)+Q2(4)+Q3(4)+Q4(4)+Q7(2.5)+Q12(2.5)
+  "Psicólogo":        22.5, // Q1(4)+Q2(4)+Q3(4)+Q4(4)+Q7(2.5)+Q10(1.5)+Q14(2.5)
   "Fisioterapeuta":   9.5,  // Q5(4)+Q6(4)+Q7(1.5)
-  "Nutricionista":    8,    // Q8(4)+Q9(4)
-  "Personal Trainer": 9,    // Q10(4)+Q11(4)+Q12(1)
+  "Nutricionista":    16,   // Q8(4)+Q9(4)+Q10(4)+Q11(4)
+  "Personal Trainer": 9,    // Q12(4)+Q13(4)+Q14(1)
 };
 
 const MOTIVOS: Record<Ramo, string> = {
