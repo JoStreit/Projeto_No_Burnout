@@ -144,7 +144,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-5xl max-h-[96vh] flex flex-col bg-[#FFFDF0] border-0 p-0 overflow-hidden gap-0">
+      <DialogContent className="w-[95vw] max-w-[1400px] max-h-[96vh] flex flex-col bg-[#FFFDF0] border-0 p-0 overflow-hidden gap-0">
 
         {/* ─── Cabeçalho ───────────────────────────────────────────────── */}
         <div className="bg-[#5C8A3C] px-6 pt-6 pb-5">
