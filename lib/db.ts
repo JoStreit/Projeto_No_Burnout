@@ -213,6 +213,19 @@ export function verificarSenhaPaciente(cpf: string, senha: string): PacientePubl
 
 // ─── Profissionais ────────────────────────────────────────────────────────────
 
+function expirarProfissionaisVencidos(): void {
+  const db = lerDB();
+  const agora = new Date();
+  let alterou = false;
+  db.profissionais.forEach((p, idx) => {
+    if (p.status === "Ativo" && p.vigenciaFim && new Date(p.vigenciaFim) <= agora) {
+      db.profissionais[idx] = { ...p, status: "Inativo" };
+      alterou = true;
+    }
+  });
+  if (alterou) salvarDB(db);
+}
+
 export function listarProfissionais(filtros?: {
   ramo?: string;
   cidade?: string;
@@ -221,6 +234,7 @@ export function listarProfissionais(filtros?: {
   offset?: number;
   incluirExpirados?: boolean;
 }): { data: ProfissionalPublico[]; total: number } {
+  expirarProfissionaisVencidos();
   const agora = new Date();
   let lista = filtros?.incluirExpirados
     ? lerDB().profissionais
