@@ -144,7 +144,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="w-[95vw] max-w-[1400px] max-h-[96vh] flex flex-col bg-[#FFFDF0] border-0 p-0 overflow-hidden gap-0">
+      <DialogContent className="w-[95vw] sm:w-[90vw] sm:max-w-[1100px] max-h-[96vh] flex flex-col bg-[#FFFDF0] border-0 p-0 overflow-hidden gap-0">
 
         {/* ─── Cabeçalho ───────────────────────────────────────────────── */}
         <div className="bg-[#5C8A3C] px-6 pt-6 pb-5">
@@ -325,7 +325,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-[#3B2A14] text-sm leading-tight truncate">{p.nome}</p>
+                        <p className="font-bold text-[#3B2A14] text-sm leading-tight">{p.nome}</p>
                         <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full mt-1 ${COR_RAMO[p.ramo] ?? "bg-stone-100 text-stone-600"}`}>
                           {p.ramo}
                         </span>
