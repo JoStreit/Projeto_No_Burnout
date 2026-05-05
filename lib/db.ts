@@ -220,7 +220,10 @@ export function listarProfissionais(filtros?: {
   limit?: number;
   offset?: number;
 }): { data: ProfissionalPublico[]; total: number } {
-  let lista = lerDB().profissionais;
+  const agora = new Date();
+  let lista = lerDB().profissionais.filter(
+    (p) => p.vigenciaFim && new Date(p.vigenciaFim) > agora
+  );
   if (filtros?.ramo) {
     lista = lista.filter((p) => p.ramo?.toLowerCase() === filtros.ramo!.toLowerCase());
   }
