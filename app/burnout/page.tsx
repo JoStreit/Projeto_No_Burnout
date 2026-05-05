@@ -249,12 +249,11 @@ const SECOES: Record<TopicoId, React.ReactNode> = {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
-          { icone: "🥦", titulo: "Fibras e vegetais",  desc: "Regulam o intestino e favorecem a produção de serotonina" },
-          { icone: "🫐", titulo: "Antioxidantes",      desc: "Frutas e vegetais coloridos combatem a inflamação crônica" },
-          { icone: "🐟", titulo: "Ômega-3",            desc: "Peixes e sementes auxiliam na saúde cerebral e no humor" },
-        ].map(({ icone, titulo, desc }) => (
+          { titulo: "Fibras e vegetais",  desc: "Regulam o intestino e favorecem a produção de serotonina" },
+          { titulo: "Antioxidantes",      desc: "Frutas e vegetais coloridos combatem a inflamação crônica" },
+          { titulo: "Ômega-3",            desc: "Peixes e sementes auxiliam na saúde cerebral e no humor" },
+        ].map(({ titulo, desc }) => (
           <div key={titulo} className="bg-[#FFFDF0] rounded-xl p-4 border border-stone-100 text-center">
-            <span className="text-3xl block mb-2">{icone}</span>
             <h4 className="font-semibold text-[#3B2A14] text-sm mb-1">{titulo}</h4>
             <p className="text-stone-500 text-xs leading-relaxed">{desc}</p>
           </div>
