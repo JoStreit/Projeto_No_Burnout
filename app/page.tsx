@@ -236,7 +236,7 @@ export default function Home() {
           {/* Texto */}
           <div className="flex-1 text-center md:text-left">
             <span className="inline-block bg-[#5C8A3C]/10 text-[#5C8A3C] text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6">
-              Plataforma de apoio personalizado
+              Plataforma de apoio personalizado para o Burnout
             </span>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#3B2A14] leading-tight mb-6">
