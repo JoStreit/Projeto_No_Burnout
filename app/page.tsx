@@ -181,16 +181,19 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 {profissional ? (
                   <>
-                    {/* Badge com avatar + nome */}
-                    <div className="flex items-center gap-2 bg-white/70 border border-[#7A5C2E]/20 rounded-full pl-1 pr-3 py-1">
+                    {/* Badge com avatar + nome + label Profissional */}
+                    <div className="flex items-center gap-2 bg-white/70 border border-[#7A5C2E]/30 rounded-full pl-1 pr-3 py-1">
                       <div className="w-7 h-7 rounded-full bg-[#7A5C2E] flex items-center justify-center shrink-0">
                         <span className="text-white font-bold text-xs">
                           {profissional.nome.charAt(0).toUpperCase()}
                         </span>
                       </div>
-                      <span className="hidden sm:block text-sm font-semibold text-[#3B2A14]">
-                        {profissional.nome.split(" ")[0]}
-                      </span>
+                      <div className="hidden sm:flex flex-col leading-none">
+                        <span className="text-xs font-bold text-[#7A5C2E] uppercase tracking-wide">Profissional</span>
+                        <span className="text-sm font-semibold text-[#3B2A14]">
+                          {profissional.nome.split(" ")[0]}
+                        </span>
+                      </div>
                     </div>
                     <button
                       onClick={() => setDashboardAberto(true)}
