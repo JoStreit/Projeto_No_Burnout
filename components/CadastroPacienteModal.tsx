@@ -66,6 +66,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
     if (!estado) {
       setOpcoesCidades([]);
       setCidade("");
+      setAbrangenciaRemoto((prev) => (prev === "Estado" ? "" : prev));
       return;
     }
     setCarregandoCidades(true);
@@ -74,6 +75,11 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
       .then((lista) => setOpcoesCidades(lista.map((c) => ({ value: c, label: c }))))
       .finally(() => setCarregandoCidades(false));
   }, [estado]);
+
+  // Desmarca presencial quando cidade é removida
+  useEffect(() => {
+    if (!cidade) setPresencial(false);
+  }, [cidade]);
 
   function limparErro(campo: keyof Erros) {
     setErros((prev) => ({ ...prev, [campo]: undefined }));
@@ -94,9 +100,6 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
 
     if (!email.trim()) novos.email = "E-mail é obrigatório";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) novos.email = "E-mail inválido";
-
-    if (!estado) novos.estado = "Selecione um estado";
-    if (!cidade) novos.cidade = "Selecione uma cidade";
 
     if (!presencial && !remoto) {
       novos.preferenciaBusca = "Selecione pelo menos uma preferência de busca";
@@ -207,21 +210,22 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
 
             {/* Estado */}
             <div className="space-y-1.5">
-              <Label>Estado</Label>
+              <Label>Estado <span className="text-stone-400 font-normal">(opcional)</span></Label>
               <Combobox
                 options={OPCOES_ESTADO}
                 value={estado}
                 onChange={(v) => { setEstado(v); limparErro("estado"); }}
                 placeholder="Selecione o estado"
                 searchPlaceholder="Buscar por sigla ou nome..."
-                error={!!erros.estado}
               />
-              {erros.estado && <p className="text-xs text-red-500">{erros.estado}</p>}
+              {!estado && (
+                <p className="text-xs text-stone-400">Sem estado selecionado, apenas busca remota nacional estará disponível.</p>
+              )}
             </div>
 
             {/* Cidade */}
             <div className="space-y-1.5">
-              <Label>Cidade</Label>
+              <Label>Cidade <span className="text-stone-400 font-normal">(opcional)</span></Label>
               <Combobox
                 options={opcoesCidades}
                 value={cidade}
@@ -235,10 +239,11 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
                 }
                 searchPlaceholder="Digite o nome da cidade..."
                 disabled={!estado || carregandoCidades}
-                error={!!erros.cidade}
                 emptyText="Nenhuma cidade encontrada."
               />
-              {erros.cidade && <p className="text-xs text-red-500">{erros.cidade}</p>}
+              {!cidade && estado && (
+                <p className="text-xs text-stone-400">Sem cidade selecionada, atendimento presencial não estará disponível.</p>
+              )}
             </div>
 
             {/* Preferência de Busca */}
@@ -249,12 +254,19 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
                   <Checkbox
                     id="pac-presencial"
                     checked={presencial}
+                    disabled={!cidade}
                     onCheckedChange={(checked) => {
                       setPresencial(!!checked);
                       limparErro("preferenciaBusca");
                     }}
                   />
-                  <label htmlFor="pac-presencial" className="text-sm cursor-pointer">Presencial</label>
+                  <label
+                    htmlFor="pac-presencial"
+                    className={`text-sm ${!cidade ? "text-stone-400 cursor-not-allowed" : "cursor-pointer"}`}
+                  >
+                    Presencial
+                    {!cidade && <span className="ml-1 text-xs">(requer cidade)</span>}
+                  </label>
                 </div>
                 <div className="flex items-center gap-2">
                   <Checkbox

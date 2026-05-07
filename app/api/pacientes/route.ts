@@ -45,13 +45,6 @@ export async function POST(request: NextRequest) {
     return Response.json({ erro: "E-mail inválido" }, { status: 400 });
   }
 
-  if (!estado?.trim()) {
-    return Response.json({ erro: "Estado é obrigatório" }, { status: 400 });
-  }
-
-  if (!cidade?.trim()) {
-    return Response.json({ erro: "Cidade é obrigatória" }, { status: 400 });
-  }
 
   if (!senha || !SENHA_REGEX.test(senha)) {
     return Response.json(
