@@ -295,6 +295,12 @@ export default function BurnoutPage() {
             <Link href="/">
               <img src="/logo_pequeno.svg" alt="Calma mente" className="h-10 sm:h-12 w-auto" />
             </Link>
+            <Link
+              href="/"
+              className="hidden sm:inline text-xs font-semibold text-[#5C8A3C] bg-[#5C8A3C]/10 hover:bg-[#5C8A3C]/20 border border-[#5C8A3C]/25 hover:border-[#5C8A3C]/40 px-4 py-1.5 rounded-full transition-all duration-200"
+            >
+              Início
+            </Link>
           </div>
 
           <div className="flex items-center gap-2">
