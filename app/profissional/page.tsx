@@ -67,6 +67,11 @@ export default function ProfissionalPage() {
     profissional, carregandoProfissional, logoutProfissional,
   } = useAuth();
 
+  const diasVigencia = profissional
+    ? Math.ceil((new Date(profissional.vigenciaFim).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : Infinity;
+  const planoUrgente = profissional ? diasVigencia <= 7 : false;
+
   const [cadastroAberto,      setCadastroAberto]      = useState(false);
   const [loginProfAberto,     setLoginProfAberto]     = useState(false);
   const [dashboardAberto,     setDashboardAberto]     = useState(false);
@@ -136,6 +141,16 @@ export default function ProfissionalPage() {
                       </div>
                     </div>
                     <button onClick={() => setDashboardAberto(true)} className="hidden sm:block text-xs font-medium text-[#7A5C2E] bg-[#7A5C2E]/10 hover:bg-[#7A5C2E]/20 px-3 py-1.5 rounded-full transition-colors">Perfil</button>
+                    <button
+                      onClick={() => document.getElementById("planos")?.scrollIntoView({ behavior: "smooth" })}
+                      className={`hidden sm:block text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
+                        planoUrgente
+                          ? "text-white bg-amber-500 hover:bg-amber-600 shadow-sm"
+                          : "text-[#7A5C2E] bg-[#7A5C2E]/10 hover:bg-[#7A5C2E]/20"
+                      }`}
+                    >
+                      {planoUrgente ? "Renovar Plano" : "Planos"}
+                    </button>
                     {profissional.status === "Inativo" && (
                       <button className="hidden sm:block text-xs font-semibold text-white bg-[#5C8A3C] hover:bg-[#3A6624] px-3 py-1.5 rounded-full transition-colors shadow-sm">Ativar Cadastro</button>
                     )}
@@ -180,12 +195,28 @@ export default function ProfissionalPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               {profissional ? (
-                <Button
-                  onClick={() => setDashboardAberto(true)}
-                  className="bg-[#7A5C2E] hover:bg-[#662f12] text-white px-8 py-5 sm:px-12 sm:py-7 text-base sm:text-lg rounded-2xl font-bold shadow-lg shadow-[#7A5C2E]/25 hover:shadow-xl transition-all duration-200 hover:-translate-y-1 w-full sm:w-auto"
-                >
-                  Acessar meu Perfil
-                </Button>
+                <>
+                  <Button
+                    onClick={() => setDashboardAberto(true)}
+                    className="bg-[#7A5C2E] hover:bg-[#662f12] text-white px-8 py-5 sm:px-12 sm:py-7 text-base sm:text-lg rounded-2xl font-bold shadow-lg shadow-[#7A5C2E]/25 hover:shadow-xl transition-all duration-200 hover:-translate-y-1 w-full sm:w-auto"
+                  >
+                    Acessar meu Perfil
+                  </Button>
+                  <Button
+                    onClick={() => document.getElementById("planos")?.scrollIntoView({ behavior: "smooth" })}
+                    className={`px-8 py-5 sm:px-10 sm:py-7 text-base sm:text-lg rounded-2xl font-bold transition-all duration-200 hover:-translate-y-1 w-full sm:w-auto ${
+                      planoUrgente
+                        ? "bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/25 hover:shadow-xl"
+                        : "border-2 border-[#7A5C2E] text-[#7A5C2E] hover:bg-[#7A5C2E]/8"
+                    }`}
+                  >
+                    {planoUrgente
+                      ? diasVigencia <= 0
+                        ? "Renovar Plano — Expirado"
+                        : `Renovar Plano — ${diasVigencia}d`
+                      : "Ver Planos"}
+                  </Button>
+                </>
               ) : (
                 <>
                   <Button
@@ -389,7 +420,7 @@ export default function ProfissionalPage() {
       </section>
 
       {/* ─── Planos ──────────────────────────────────────────────────────── */}
-      <section className="bg-white py-20">
+      <section id="planos" className="bg-white py-20">
         <div className="max-w-6xl mx-auto px-6">
           <div className="text-center mb-14">
             <span className="inline-block bg-[#5C8A3C]/10 text-[#5C8A3C] text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5">

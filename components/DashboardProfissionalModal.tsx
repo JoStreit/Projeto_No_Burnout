@@ -34,6 +34,10 @@ function vigenciaAtiva(vigenciaFim: string): boolean {
   return new Date() <= new Date(vigenciaFim);
 }
 
+function diasParaVencer(vigenciaFim: string): number {
+  return Math.ceil((new Date(vigenciaFim).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+}
+
 interface Props {
   aberto: boolean;
   onFechar: () => void;
@@ -170,6 +174,13 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
 
   const dentro = vigenciaAtiva(profissional.vigenciaFim);
   const ativo = profissional.status === "Ativo";
+  const dias = diasParaVencer(profissional.vigenciaFim);
+  const urgente = dias <= 7;
+
+  function irParaPlanos() {
+    onFechar();
+    setTimeout(() => document.getElementById("planos")?.scrollIntoView({ behavior: "smooth" }), 150);
+  }
 
   return (
     <Dialog open={aberto} onOpenChange={onFechar}>
@@ -323,6 +334,22 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
                 {salvando ? "Salvando..." : "Salvar Alterações"}
               </Button>
             </div>
+
+            <button
+              type="button"
+              onClick={irParaPlanos}
+              className={`w-full rounded-lg py-2 px-3 text-sm font-semibold transition-all ${
+                urgente
+                  ? "bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/25"
+                  : "border border-[#5C8A3C]/40 text-[#5C8A3C] hover:bg-[#5C8A3C]/10"
+              }`}
+            >
+              {dias <= 0
+                ? "Vigência expirada — Contratar Plano"
+                : dias <= 7
+                ? `Vence em ${dias} dia${dias === 1 ? "" : "s"} — Contratar Plano`
+                : "Contratar Plano"}
+            </button>
           </form>
         ) : (
           <div className="flex flex-col gap-4 overflow-y-auto pr-1">
@@ -390,6 +417,22 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
                 )}
                 {erroStatus && <p className="text-xs text-red-500 mt-1 text-center">{erroStatus}</p>}
               </div>
+
+              <button
+                type="button"
+                onClick={irParaPlanos}
+                className={`w-full rounded-lg py-2 px-3 text-sm font-semibold transition-all ${
+                  urgente
+                    ? "bg-amber-500 hover:bg-amber-600 text-white shadow-md shadow-amber-500/25"
+                    : "border border-[#5C8A3C]/40 text-[#5C8A3C] hover:bg-[#5C8A3C]/10"
+                }`}
+              >
+                {dias <= 0
+                  ? "Vigência expirada — Contratar Plano"
+                  : dias <= 7
+                  ? `Vence em ${dias} dia${dias === 1 ? "" : "s"} — Contratar Plano`
+                  : "Contratar Plano"}
+              </button>
             </div>
 
             {/* Dados do perfil */}
