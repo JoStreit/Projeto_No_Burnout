@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -44,6 +45,7 @@ interface Props {
 }
 
 export default function DashboardProfissionalModal({ aberto, onFechar }: Props) {
+  const router = useRouter();
   const { profissional, recarregarProfissional } = useAuth();
   const [atualizando, setAtualizando] = useState(false);
   const [erroStatus, setErroStatus] = useState("");
@@ -179,7 +181,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
 
   function irParaPlanos() {
     onFechar();
-    setTimeout(() => document.getElementById("planos")?.scrollIntoView({ behavior: "smooth" }), 150);
+    router.push("/profissional#planos");
   }
 
   return (

@@ -143,7 +143,7 @@ export default function ProfissionalPage() {
                     <button onClick={() => setDashboardAberto(true)} className="hidden sm:block text-xs font-medium text-[#7A5C2E] bg-[#7A5C2E]/10 hover:bg-[#7A5C2E]/20 px-3 py-1.5 rounded-full transition-colors">Perfil</button>
                     <button
                       onClick={() => document.getElementById("planos")?.scrollIntoView({ behavior: "smooth" })}
-                      className={`hidden sm:block text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
+                      className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
                         planoUrgente
                           ? "text-white bg-amber-500 hover:bg-amber-600 shadow-sm"
                           : "text-[#7A5C2E] bg-[#7A5C2E]/10 hover:bg-[#7A5C2E]/20"
