@@ -107,7 +107,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
       novos.preferenciaBusca = "Selecione a abrangência da busca remota";
     }
 
-    if (senha.length < 6) novos.senha = "Mínimo de 6 caracteres";
+    if (!/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(senha)) novos.senha = "Mínimo 8 caracteres, uma maiúscula e um número";
     if (senha !== confirmarSenha) novos.confirmarSenha = "Senhas não conferem";
 
     setErros(novos);
@@ -322,7 +322,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
                 type="password"
                 value={senha}
                 onChange={(e) => { setSenha(e.target.value); limparErro("senha"); }}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Mínimo 8 caracteres, uma maiúscula e um número"
                 className={erros.senha ? "border-red-400" : ""}
               />
               {erros.senha && <p className="text-xs text-red-500">{erros.senha}</p>}

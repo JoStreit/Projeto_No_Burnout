@@ -158,7 +158,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
     if (!atendOnline && !atendPresencial)
       novos.atendimento = "Selecione ao menos uma modalidade";
 
-    if (senha.length < 6) novos.senha = "Mínimo de 6 caracteres";
+    if (!/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(senha)) novos.senha = "Mínimo 8 caracteres, uma maiúscula e um número";
     if (senha !== confirmarSenha) novos.confirmarSenha = "Senhas não conferem";
 
     setErros(novos);
@@ -411,7 +411,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
                 type="password"
                 value={senha}
                 onChange={(e) => { setSenha(e.target.value); limparErro("senha"); }}
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Mínimo 8 caracteres, uma maiúscula e um número"
                 className={erros.senha ? "border-red-400" : ""}
               />
               {erros.senha && <p className="text-xs text-red-500">{erros.senha}</p>}
