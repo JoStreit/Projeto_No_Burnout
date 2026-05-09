@@ -439,9 +439,10 @@ export default function ProfissionalPage() {
             {PLANOS.map((plano) => (
               <div
                 key={plano.nome}
-                className={`relative rounded-2xl p-7 flex flex-col gap-5 border transition-all duration-300 ${
+                onClick={() => setCadastroAberto(true)}
+                className={`relative rounded-2xl p-7 flex flex-col gap-5 border transition-all duration-300 cursor-pointer ${
                   plano.destaque
-                    ? "border-[#5C8A3C] shadow-xl shadow-[#5C8A3C]/10 scale-105"
+                    ? "border-[#5C8A3C] shadow-xl shadow-[#5C8A3C]/10 scale-105 hover:shadow-2xl hover:scale-[1.07]"
                     : "border-stone-100 hover:border-[#5C8A3C]/30 hover:shadow-lg"
                 }`}
               >
