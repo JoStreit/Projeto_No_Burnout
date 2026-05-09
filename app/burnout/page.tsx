@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
@@ -272,6 +272,16 @@ export default function BurnoutPage() {
   } = useAuth();
 
   const [topicoAtivo, setTopicoAtivo] = useState<TopicoId>("o-que-e");
+  const conteudoRef = useRef<HTMLDivElement>(null);
+  const montouRef   = useRef(false);
+
+  useEffect(() => {
+    if (!montouRef.current) { montouRef.current = true; return; }
+    if (conteudoRef.current) {
+      const y = conteudoRef.current.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    }
+  }, [topicoAtivo]);
   const [analiseAberta,       setAnaliseAberta]       = useState(false);
   const [pacienteAberto,      setPacienteAberto]      = useState(false);
   const [profissionalAberto,  setProfissionalAberto]  = useState(false);
@@ -452,7 +462,7 @@ export default function BurnoutPage() {
           </aside>
 
           {/* Painel de conteúdo */}
-          <div className="flex-1 min-w-0">
+          <div ref={conteudoRef} className="flex-1 min-w-0">
             <div className="bg-white rounded-2xl border border-stone-100 p-7 md:p-10 shadow-sm min-h-80">
               {SECOES[topicoAtivo]}
             </div>
