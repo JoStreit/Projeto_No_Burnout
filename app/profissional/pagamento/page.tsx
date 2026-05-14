@@ -18,7 +18,7 @@ export default function PagamentoPage() {
           <p className="text-stone-400 text-sm">Integração de pagamento em breve.</p>
         </div>
 
-        <Link href="/profissional">
+        <Link href="/profissional#planos">
           <Button variant="outline" className="border-stone-300 text-stone-600 hover:bg-stone-50 rounded-xl w-full">
             Voltar
           </Button>
