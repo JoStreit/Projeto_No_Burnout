@@ -406,22 +406,23 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
                   >
                     {atualizando ? "Aguarde..." : "Desativar Cadastro"}
                   </Button>
+                ) : dentro ? (
+                  <Button
+                    size="sm"
+                    className="w-full bg-emerald-600 hover:bg-emerald-700"
+                    onClick={() => atualizarStatus("Ativo")}
+                    disabled={atualizando}
+                  >
+                    {atualizando ? "Aguarde..." : "Ativar Cadastro"}
+                  </Button>
                 ) : (
-                  <>
-                    <Button
-                      size="sm"
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={() => dentro && atualizarStatus("Ativo")}
-                      disabled={atualizando || !dentro}
-                    >
-                      {atualizando ? "Aguarde..." : "Ativar Cadastro"}
-                    </Button>
-                    {!dentro && (
-                      <p className="text-xs text-red-500 text-center">
-                        Vigência expirada. Contrate um plano para reativar.
-                      </p>
-                    )}
-                  </>
+                  <Button
+                    size="sm"
+                    className="w-full bg-[#7A5C2E] hover:bg-[#5A3C10] text-white"
+                    onClick={() => setEditando(true)}
+                  >
+                    Ativar Cadastro
+                  </Button>
                 )}
                 {erroStatus && <p className="text-xs text-red-500 mt-1 text-center">{erroStatus}</p>}
               </div>
