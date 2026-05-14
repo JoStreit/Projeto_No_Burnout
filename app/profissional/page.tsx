@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
@@ -62,6 +63,7 @@ const PLANOS = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ProfissionalPage() {
+  const router = useRouter();
   const {
     paciente, carregandoPaciente, logoutPaciente,
     profissional, carregandoProfissional, logoutProfissional,
@@ -476,7 +478,11 @@ export default function ProfissionalPage() {
                 </ul>
 
                 <Button
-                  onClick={() => setCadastroAberto(true)}
+                  onClick={() =>
+                    profissional
+                      ? router.push(`/profissional/pagamento?plano=${encodeURIComponent(plano.nome)}`)
+                      : setCadastroAberto(true)
+                  }
                   className={`w-full rounded-xl font-semibold ${
                     plano.destaque
                       ? "bg-[#5C8A3C] hover:bg-[#3A6624] text-white shadow-md shadow-[#5C8A3C]/20"
