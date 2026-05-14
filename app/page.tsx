@@ -203,7 +203,10 @@ export default function Home() {
                       Perfil
                     </button>
                     {profissional.status === "Inativo" && (
-                      <button className="hidden sm:block text-xs font-semibold text-white bg-[#5C8A3C] hover:bg-[#3A6624] px-3 py-1.5 rounded-full transition-colors shadow-sm">
+                      <button
+                        onClick={() => { setDashboardEditando(true); setDashboardAberto(true); }}
+                        className="hidden sm:block text-xs font-semibold text-white bg-[#5C8A3C] hover:bg-[#3A6624] px-3 py-1.5 rounded-full transition-colors shadow-sm"
+                      >
                         Ativar Cadastro
                       </button>
                     )}
