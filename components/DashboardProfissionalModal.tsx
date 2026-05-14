@@ -419,7 +419,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
                   <Button
                     size="sm"
                     className="w-full bg-[#7A5C2E] hover:bg-[#5A3C10] text-white"
-                    onClick={() => setEditando(true)}
+                    onClick={irParaPlanos}
                   >
                     Ativar Cadastro
                   </Button>
