@@ -155,7 +155,7 @@ export default function ProfissionalPage() {
                       {planoUrgente ? "Renovar Plano" : "Planos"}
                     </button>
                     {profissional.status === "Inativo" && (
-                      <button onClick={() => { setDashboardEditando(true); setDashboardAberto(true); }} className="hidden sm:block text-xs font-semibold text-white bg-[#5C8A3C] hover:bg-[#3A6624] px-3 py-1.5 rounded-full transition-colors shadow-sm">Ativar Cadastro</button>
+                      <button onClick={() => setDashboardAberto(true)} className="hidden sm:block text-xs font-semibold text-white bg-[#5C8A3C] hover:bg-[#3A6624] px-3 py-1.5 rounded-full transition-colors shadow-sm">Ativar Cadastro</button>
                     )}
                     <button onClick={logoutProfissional} className="text-xs font-medium text-stone-500 hover:text-red-500 bg-white/50 hover:bg-red-50 border border-stone-200 hover:border-red-200 px-3 py-1.5 rounded-full transition-colors">Sair</button>
                   </>
