@@ -288,9 +288,17 @@ export default function Home() {
             </div>
 
             {profissional && new Date(profissional.vigenciaFim) < new Date() && (
-              <p className="mt-2 text-red-700 font-semibold text-base text-center md:text-left">
-                Cadastro desativado, vigência vencida.
-              </p>
+              <>
+                <p className="mt-2 text-red-700 font-semibold text-base text-center md:text-left">
+                  Cadastro desativado, vigência vencida.
+                </p>
+                <Button
+                  onClick={() => setDashboardAberto(true)}
+                  className="bg-[#7A5C2E] hover:bg-[#5A3C10] text-white px-10 py-6 text-base rounded-2xl font-semibold w-full sm:w-auto"
+                >
+                  Ativar Cadastro
+                </Button>
+              </>
             )}
 
           </div>
