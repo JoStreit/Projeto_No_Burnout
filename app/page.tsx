@@ -103,6 +103,7 @@ export default function Home() {
   const [loginProfAberto, setLoginProfAberto] = useState(false);
   const [buscarAberto, setBuscarAberto] = useState(false);
   const [dashboardAberto, setDashboardAberto] = useState(false);
+  const [dashboardEditando, setDashboardEditando] = useState(false);
   const [editarPacienteAberto, setEditarPacienteAberto] = useState(false);
   const [faqAberto, setFaqAberto] = useState<number | null>(null);
 
@@ -293,7 +294,7 @@ export default function Home() {
                   Cadastro desativado, vigência vencida.
                 </p>
                 <Button
-                  onClick={() => setDashboardAberto(true)}
+                  onClick={() => { setDashboardEditando(true); setDashboardAberto(true); }}
                   className="bg-[#7A5C2E] hover:bg-[#5A3C10] text-white px-10 py-6 text-base rounded-2xl font-semibold w-full sm:w-auto"
                 >
                   Ativar Cadastro
@@ -590,7 +591,8 @@ export default function Home() {
       />
       <DashboardProfissionalModal
         aberto={dashboardAberto}
-        onFechar={() => setDashboardAberto(false)}
+        onFechar={() => { setDashboardAberto(false); setDashboardEditando(false); }}
+        iniciarEditando={dashboardEditando}
       />
       <EditarPerfilPacienteModal
         aberto={editarPacienteAberto}

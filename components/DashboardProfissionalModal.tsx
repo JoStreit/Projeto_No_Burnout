@@ -42,16 +42,17 @@ function diasParaVencer(vigenciaFim: string): number {
 interface Props {
   aberto: boolean;
   onFechar: () => void;
+  iniciarEditando?: boolean;
 }
 
-export default function DashboardProfissionalModal({ aberto, onFechar }: Props) {
+export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEditando = false }: Props) {
   const router = useRouter();
   const { profissional, recarregarProfissional } = useAuth();
   const [atualizando, setAtualizando] = useState(false);
   const [erroStatus, setErroStatus] = useState("");
 
   // Modo de edição
-  const [editando, setEditando] = useState(false);
+  const [editando, setEditando] = useState(iniciarEditando);
   const [nome, setNome] = useState("");
   const [estado, setEstado] = useState("");
   const [cidade, setCidade] = useState("");
@@ -65,6 +66,11 @@ export default function DashboardProfissionalModal({ aberto, onFechar }: Props) 
   const [carregandoCidades, setCarregandoCidades] = useState(false);
   const [erroEdicao, setErroEdicao] = useState("");
   const [salvando, setSalvando] = useState(false);
+
+  // Sincronizar modo edição ao abrir
+  useEffect(() => {
+    if (aberto) setEditando(iniciarEditando);
+  }, [aberto, iniciarEditando]);
 
   // Auto-expirar se vigência passou
   useEffect(() => {
