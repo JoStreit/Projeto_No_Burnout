@@ -18,7 +18,7 @@ import AnaliseGratuitaModal from "@/components/AnaliseGratuitaModal";
 const PLANOS = [
   {
     nome: "Mensal",
-    preco: "R$ 20",
+    preco: "R$ 22",
     periodo: "/mês",
     porMes: null,
     descricao: "Ideal para começar e testar a plataforma.",
@@ -32,9 +32,9 @@ const PLANOS = [
   },
   {
     nome: "Trimestral",
-    preco: "R$ 50",
+    preco: "R$ 52",
     periodo: "/trimestre",
-    porMes: "R$ 16,67/mês",
+    porMes: "R$ 17,33/mês",
     descricao: "Melhor custo-benefício para quem busca constância.",
     destaque: true,
     items: [
@@ -46,9 +46,9 @@ const PLANOS = [
   },
   {
     nome: "Anual",
-    preco: "R$ 120",
+    preco: "R$ 122",
     periodo: "/ano",
-    porMes: "R$ 10,00/mês",
+    porMes: "R$ 10,17/mês",
     descricao: "Para profissionais comprometidos com crescimento contínuo.",
     destaque: false,
     items: [
