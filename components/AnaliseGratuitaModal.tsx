@@ -226,6 +226,7 @@ export default function AnaliseGratuitaModal({
   const [profissionais, setProfissionais]             = useState<Profissional[]>([]);
   const [carregandoProfs, setCarregandoProfs]         = useState(false);
   const [tudoBem, setTudoBem]                         = useState(false);
+  const [paginaBem, setPaginaBem]                     = useState(0);
 
   const perguntaAtual = PERGUNTAS[etapa];
   const totalPerguntas = PERGUNTAS.length;
@@ -310,6 +311,7 @@ export default function AnaliseGratuitaModal({
     setRamosRecomendados(null);
     setProfissionais([]);
     setTudoBem(false);
+    setPaginaBem(0);
   }
 
   function fechar() {
@@ -369,148 +371,176 @@ export default function AnaliseGratuitaModal({
 
             {tudoBem ? (
               <>
-                {/* Cabeçalho — tudo bem */}
-                <div className="text-center">
-                  <div className="flex justify-center mb-3">
-                    <div className="w-16 h-16 rounded-full bg-[#EBF4E3] border border-[#5C8A3C]/20 flex items-center justify-center">
-                      <svg className="w-8 h-8 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                    </div>
-                  </div>
-                  <p className="text-2xl font-bold text-[#5C8A3C] mb-2">Você parece estar bem!</p>
-                  <p className="text-stone-500 text-sm leading-relaxed max-w-sm mx-auto">
-                    Suas respostas indicam que você está em equilíbrio emocional, físico e mental. Continue assim!
-                  </p>
-                </div>
-
-                {/* Sugestão do psicólogo */}
-                <div className="bg-[#F5EDD0] border border-[#7A5C2E]/20 rounded-xl p-4">
-                  <p className="text-sm font-semibold text-[#7A5C2E] mb-1">Quer evoluir ainda mais?</p>
-                  <p className="text-xs text-stone-600 leading-relaxed">
-                    Mesmo estando bem, uma conversa com um{" "}
-                    <strong className="text-[#7A5C2E]">Psicólogo</strong> pode potencializar seu
-                    autoconhecimento e prepará-lo para desafios futuros com mais equilíbrio e clareza.
-                  </p>
-                </div>
-
-                {/* Áreas de evolução */}
-                <div>
-                  <p className="text-sm font-semibold text-[#3B2A14] mb-2">Áreas que você pode explorar:</p>
-                  <div className="space-y-2">
-                    {[
-                      { area: "Autoconhecimento", desc: "Aprofunde seu entendimento sobre emoções e padrões de comportamento." },
-                      { area: "Prevenção do Burnout", desc: "Desenvolva estratégias proativas para manter o equilíbrio mesmo sob pressão." },
-                      { area: "Inteligência Emocional", desc: "Aprimore sua capacidade de gerenciar emoções e relacionamentos." },
-                      { area: "Performance e Foco", desc: "Técnicas de mindfulness e gestão de energia para render mais com menos esforço." },
-                    ].map(({ area, desc }) => (
-                      <div key={area} className="flex gap-3 items-start bg-white rounded-lg px-3 py-2.5 border border-[#5C8A3C]/10">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#5C8A3C] mt-1.5 shrink-0" />
-                        <div>
-                          <p className="text-xs font-semibold text-[#3B2A14]">{area}</p>
-                          <p className="text-xs text-stone-400 leading-relaxed">{desc}</p>
+                {paginaBem === 0 ? (
+                  <>
+                    {/* Página 1 — resultado e áreas de evolução */}
+                    <div className="text-center">
+                      <div className="flex justify-center mb-3">
+                        <div className="w-16 h-16 rounded-full bg-[#EBF4E3] border border-[#5C8A3C]/20 flex items-center justify-center">
+                          <svg className="w-8 h-8 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                          </svg>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Psicólogos disponíveis (logado) ou CTA (não logado) */}
-                {paciente ? (
-                  <div className="flex flex-col gap-3 overflow-hidden">
-                    <p className="text-sm font-semibold text-[#3B2A14]">Psicólogos disponíveis</p>
-                    <div className="overflow-y-auto max-h-44 space-y-2 pr-1">
-                      {carregandoProfs ? (
-                        <p className="text-sm text-stone-400 text-center py-4">Buscando...</p>
-                      ) : profissionais.length === 0 ? (
-                        <p className="text-sm text-stone-400 text-center py-4">
-                          Nenhum psicólogo cadastrado ainda.
-                        </p>
-                      ) : (
-                        profissionais.map((p) => (
-                          <div
-                            key={p.id}
-                            className="bg-white rounded-lg px-3 py-2.5 border border-[#5C8A3C]/15 space-y-1"
-                          >
-                            <div className="flex items-center justify-between gap-2">
-                              <p className="text-sm font-medium text-[#3B2A14]">{p.nome}</p>
-                              <span className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0 bg-[#F5EDD0] text-[#7A5C2E]">
-                                Psicólogo
-                              </span>
-                            </div>
-                            <p className="text-xs text-stone-400">📍 {p.cidade}</p>
-                            <a
-                              href={`mailto:${p.email}`}
-                              className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
-                            >
-                              <span>✉️</span>{p.email}
-                            </a>
-                            {p.telefone && (
-                              <a
-                                href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent("Olá, cheguei até você através do Calma mente. Gostaria de marcar uma avaliação/consulta.")}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
-                              >
-                                <span>📱</span>{p.telefone}
-                              </a>
-                            )}
-                          </div>
-                        ))
-                      )}
-                    </div>
-                    {profissionais.length > 0 && (
-                      <p className="text-xs text-stone-400 text-center pt-1">
-                        Para ver mais, use o botão{" "}
-                        <strong className="text-[#5C8A3C]">Buscar Profissionais</strong> no menu principal.
+                      <p className="text-2xl font-bold text-[#5C8A3C] mb-2">Você parece estar bem!</p>
+                      <p className="text-stone-500 text-sm leading-relaxed max-w-sm mx-auto">
+                        Suas respostas indicam que você está em equilíbrio emocional, físico e mental. Continue assim!
                       </p>
-                    )}
-                  </div>
-                ) : (
-                  <div className="bg-[#EBF4E3] border border-[#5C8A3C]/25 rounded-xl p-4 text-center">
-                    <p className="text-sm font-semibold text-[#3B2A14] mb-1">
-                      Veja os psicólogos disponíveis
-                    </p>
-                    <p className="text-xs text-stone-500 mb-3">
-                      Faça login ou cadastre-se gratuitamente para ver a lista de psicólogos da plataforma.
-                    </p>
-                    <div className="flex gap-2 justify-center">
+                    </div>
+
+                    <div className="bg-[#F5EDD0] border border-[#7A5C2E]/20 rounded-xl p-4">
+                      <p className="text-sm font-semibold text-[#7A5C2E] mb-1">Quer evoluir ainda mais?</p>
+                      <p className="text-xs text-stone-600 leading-relaxed">
+                        Mesmo estando bem, uma conversa com um{" "}
+                        <strong className="text-[#7A5C2E]">Psicólogo</strong> pode potencializar seu
+                        autoconhecimento e prepará-lo para desafios futuros com mais equilíbrio e clareza.
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-semibold text-[#3B2A14] mb-2">Áreas que você pode explorar:</p>
+                      <div className="space-y-2">
+                        {[
+                          { area: "Autoconhecimento", desc: "Aprofunde seu entendimento sobre emoções e padrões de comportamento." },
+                          { area: "Prevenção do Burnout", desc: "Desenvolva estratégias proativas para manter o equilíbrio mesmo sob pressão." },
+                          { area: "Inteligência Emocional", desc: "Aprimore sua capacidade de gerenciar emoções e relacionamentos." },
+                          { area: "Performance e Foco", desc: "Técnicas de mindfulness e gestão de energia para render mais com menos esforço." },
+                        ].map(({ area, desc }) => (
+                          <div key={area} className="flex gap-3 items-start bg-white rounded-lg px-3 py-2.5 border border-[#5C8A3C]/10">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#5C8A3C] mt-1.5 shrink-0" />
+                            <div>
+                              <p className="text-xs font-semibold text-[#3B2A14]">{area}</p>
+                              <p className="text-xs text-stone-400 leading-relaxed">{desc}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
                       <Button
-                        size="sm"
                         variant="outline"
-                        className="border-[#5C8A3C]/40 text-[#5C8A3C] hover:bg-[#5C8A3C]/10"
-                        onClick={() => { fechar(); onLoginClick(); }}
+                        size="sm"
+                        onClick={reiniciar}
+                        className="flex-1 border-[#5C8A3C]/30 text-[#5C8A3C] hover:bg-[#EBF4E3]"
                       >
-                        Entrar
+                        Refazer análise
                       </Button>
                       <Button
                         size="sm"
-                        className="bg-[#5C8A3C] hover:bg-[#3A6624] text-white"
-                        onClick={() => { fechar(); onCadastrarClick(); }}
+                        className="flex-1 bg-[#5C8A3C] hover:bg-[#3A6624] text-white"
+                        onClick={() => setPaginaBem(1)}
                       >
-                        Cadastrar-se
+                        Ver psicólogos →
                       </Button>
                     </div>
-                  </div>
-                )}
+                  </>
+                ) : (
+                  <>
+                    {/* Página 2 — lista de psicólogos */}
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-[#5C8A3C] mb-1">Psicólogos disponíveis</p>
+                      <p className="text-xs text-stone-400">
+                        Profissionais que podem apoiar seu crescimento pessoal
+                      </p>
+                    </div>
 
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={reiniciar}
-                    className="flex-1 border-[#5C8A3C]/30 text-[#5C8A3C] hover:bg-[#EBF4E3]"
-                  >
-                    Refazer análise
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="flex-1 bg-[#5C8A3C] hover:bg-[#3A6624] text-white"
-                    onClick={fechar}
-                  >
-                    Fechar
-                  </Button>
-                </div>
+                    {paciente ? (
+                      <div className="flex flex-col gap-3 overflow-hidden">
+                        <div className="overflow-y-auto max-h-64 space-y-2 pr-1">
+                          {carregandoProfs ? (
+                            <p className="text-sm text-stone-400 text-center py-4">Buscando...</p>
+                          ) : profissionais.length === 0 ? (
+                            <p className="text-sm text-stone-400 text-center py-4">
+                              Nenhum psicólogo cadastrado ainda.
+                            </p>
+                          ) : (
+                            profissionais.map((p) => (
+                              <div
+                                key={p.id}
+                                className="bg-white rounded-lg px-3 py-2.5 border border-[#5C8A3C]/15 space-y-1"
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className="text-sm font-medium text-[#3B2A14]">{p.nome}</p>
+                                  <span className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0 bg-[#F5EDD0] text-[#7A5C2E]">
+                                    Psicólogo
+                                  </span>
+                                </div>
+                                <p className="text-xs text-stone-400">📍 {p.cidade}</p>
+                                <a
+                                  href={`mailto:${p.email}`}
+                                  className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
+                                >
+                                  <span>✉️</span>{p.email}
+                                </a>
+                                {p.telefone && (
+                                  <a
+                                    href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent("Olá, cheguei até você através do Calma mente. Gostaria de marcar uma avaliação/consulta.")}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
+                                  >
+                                    <span>📱</span>{p.telefone}
+                                  </a>
+                                )}
+                              </div>
+                            ))
+                          )}
+                        </div>
+                        {profissionais.length > 0 && (
+                          <p className="text-xs text-stone-400 text-center">
+                            Para ver mais, use o botão{" "}
+                            <strong className="text-[#5C8A3C]">Buscar Profissionais</strong> no menu principal.
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="bg-[#EBF4E3] border border-[#5C8A3C]/25 rounded-xl p-4 text-center">
+                        <p className="text-sm font-semibold text-[#3B2A14] mb-1">
+                          Veja os psicólogos disponíveis
+                        </p>
+                        <p className="text-xs text-stone-500 mb-3">
+                          Faça login ou cadastre-se gratuitamente para ver a lista de psicólogos da plataforma.
+                        </p>
+                        <div className="flex gap-2 justify-center">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-[#5C8A3C]/40 text-[#5C8A3C] hover:bg-[#5C8A3C]/10"
+                            onClick={() => { fechar(); onLoginClick(); }}
+                          >
+                            Entrar
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="bg-[#5C8A3C] hover:bg-[#3A6624] text-white"
+                            onClick={() => { fechar(); onCadastrarClick(); }}
+                          >
+                            Cadastrar-se
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPaginaBem(0)}
+                        className="flex-1 border-[#5C8A3C]/30 text-[#5C8A3C] hover:bg-[#EBF4E3]"
+                      >
+                        ← Voltar
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="flex-1 bg-[#5C8A3C] hover:bg-[#3A6624] text-white"
+                        onClick={fechar}
+                      >
+                        Fechar
+                      </Button>
+                    </div>
+                  </>
+                )}
               </>
             ) : (
               <>
