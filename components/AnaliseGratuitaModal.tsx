@@ -330,7 +330,7 @@ export default function AnaliseGratuitaModal({
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-lg max-h-[90vh] flex flex-col bg-[#FFFDF0] border border-[#5C8A3C]/20">
+      <DialogContent className="max-w-lg max-h-[85dvh] sm:max-h-[90vh] flex flex-col overflow-hidden bg-[#FFFDF0] border border-[#5C8A3C]/20">
         <DialogHeader className="text-center">
           <DialogTitle className="text-xl font-bold text-[#3B2A14] text-center">
             Análise Gratuita
@@ -343,6 +343,7 @@ export default function AnaliseGratuitaModal({
           </p>
         </DialogHeader>
 
+        <div className="overflow-y-auto flex-1 min-h-0">
         {!ramosRecomendados ? (
           <div className="space-y-6">
             {/* Barra de progresso */}
@@ -388,7 +389,7 @@ export default function AnaliseGratuitaModal({
             )}
           </div>
         ) : (
-          <div className="flex flex-col gap-5 overflow-hidden">
+          <div className="flex flex-col gap-5">
 
             {tudoBem ? (
               <>
@@ -468,7 +469,7 @@ export default function AnaliseGratuitaModal({
 
                     {paciente ? (
                       <div className="flex flex-col gap-3 overflow-hidden">
-                        <div className="overflow-y-auto max-h-64 space-y-2 pr-1">
+                        <div className="space-y-2">
                           {carregandoProfs ? (
                             <p className="text-sm text-stone-400 text-center py-4">Buscando...</p>
                           ) : profissionais.length === 0 ? (
@@ -612,7 +613,7 @@ export default function AnaliseGratuitaModal({
                     <p className="text-sm font-semibold text-[#3B2A14]">
                       Profissionais disponíveis
                     </p>
-                    <div className="overflow-y-auto max-h-52 space-y-2 pr-1">
+                    <div className="space-y-2">
                       {carregandoProfs ? (
                         <p className="text-sm text-stone-400 text-center py-4">Buscando...</p>
                       ) : profissionais.length === 0 ? (
@@ -709,6 +710,7 @@ export default function AnaliseGratuitaModal({
 
           </div>
         )}
+        </div>
       </DialogContent>
     </Dialog>
   );
