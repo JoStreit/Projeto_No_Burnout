@@ -289,6 +289,15 @@ export default function Home() {
                   Criar conta gratuitamente
                 </Button>
               )}
+
+              <Link href="/burnout" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  className="border-[#5C8A3C] text-[#5C8A3C] hover:bg-[#5C8A3C]/8 px-10 py-6 text-base rounded-2xl font-semibold w-full sm:w-auto"
+                >
+                  Sobre o Burnout
+                </Button>
+              </Link>
             </div>
 
             {profissional && new Date(profissional.vigenciaFim) < new Date() && (
