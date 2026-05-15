@@ -234,15 +234,16 @@ export default function AnaliseGratuitaModal({
   const ramosPrimario = ramosRecomendados?.[0] ?? null;
 
   useEffect(() => {
-    if (ramosPrimario && paciente) {
+    const ramo = tudoBem ? "Psicólogo" : ramosPrimario;
+    if (ramo && paciente) {
       setCarregandoProfs(true);
-      fetch(`/api/profissionais?ramo=${encodeURIComponent(ramosPrimario)}&limit=5`)
+      fetch(`/api/profissionais?ramo=${encodeURIComponent(ramo)}&limit=5`)
         .then((r) => r.json())
         .then((data) => setProfissionais(Array.isArray(data) ? data : (data.data ?? [])))
         .catch(() => setProfissionais([]))
         .finally(() => setCarregandoProfs(false));
     }
-  }, [ramosPrimario, paciente]);
+  }, [ramosPrimario, paciente, tudoBem]);
 
   function responder(opcao: Opcao) {
     const novasRespostas = { ...respostas, [perguntaAtual.id]: opcao };
@@ -413,6 +414,85 @@ export default function AnaliseGratuitaModal({
                     ))}
                   </div>
                 </div>
+
+                {/* Psicólogos disponíveis (logado) ou CTA (não logado) */}
+                {paciente ? (
+                  <div className="flex flex-col gap-3 overflow-hidden">
+                    <p className="text-sm font-semibold text-[#3B2A14]">Psicólogos disponíveis</p>
+                    <div className="overflow-y-auto max-h-44 space-y-2 pr-1">
+                      {carregandoProfs ? (
+                        <p className="text-sm text-stone-400 text-center py-4">Buscando...</p>
+                      ) : profissionais.length === 0 ? (
+                        <p className="text-sm text-stone-400 text-center py-4">
+                          Nenhum psicólogo cadastrado ainda.
+                        </p>
+                      ) : (
+                        profissionais.map((p) => (
+                          <div
+                            key={p.id}
+                            className="bg-white rounded-lg px-3 py-2.5 border border-[#5C8A3C]/15 space-y-1"
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <p className="text-sm font-medium text-[#3B2A14]">{p.nome}</p>
+                              <span className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0 bg-[#F5EDD0] text-[#7A5C2E]">
+                                Psicólogo
+                              </span>
+                            </div>
+                            <p className="text-xs text-stone-400">📍 {p.cidade}</p>
+                            <a
+                              href={`mailto:${p.email}`}
+                              className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
+                            >
+                              <span>✉️</span>{p.email}
+                            </a>
+                            {p.telefone && (
+                              <a
+                                href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent("Olá, cheguei até você através do Calma mente. Gostaria de marcar uma avaliação/consulta.")}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
+                              >
+                                <span>📱</span>{p.telefone}
+                              </a>
+                            )}
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    {profissionais.length > 0 && (
+                      <p className="text-xs text-stone-400 text-center pt-1">
+                        Para ver mais, use o botão{" "}
+                        <strong className="text-[#5C8A3C]">Buscar Profissionais</strong> no menu principal.
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-[#EBF4E3] border border-[#5C8A3C]/25 rounded-xl p-4 text-center">
+                    <p className="text-sm font-semibold text-[#3B2A14] mb-1">
+                      Veja os psicólogos disponíveis
+                    </p>
+                    <p className="text-xs text-stone-500 mb-3">
+                      Faça login ou cadastre-se gratuitamente para ver a lista de psicólogos da plataforma.
+                    </p>
+                    <div className="flex gap-2 justify-center">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-[#5C8A3C]/40 text-[#5C8A3C] hover:bg-[#5C8A3C]/10"
+                        onClick={() => { fechar(); onLoginClick(); }}
+                      >
+                        Entrar
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="bg-[#5C8A3C] hover:bg-[#3A6624] text-white"
+                        onClick={() => { fechar(); onCadastrarClick(); }}
+                      >
+                        Cadastrar-se
+                      </Button>
+                    </div>
+                  </div>
+                )}
 
                 <div className="flex gap-2">
                   <Button
