@@ -210,7 +210,7 @@ export default function ProfissionalPage() {
                     className={`px-8 py-5 sm:px-10 sm:py-7 text-base sm:text-lg rounded-2xl font-bold transition-all duration-200 hover:-translate-y-1 w-full sm:w-auto ${
                       planoUrgente
                         ? "bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/25 hover:shadow-xl"
-                        : "bg-[#7A5C2E] hover:bg-[#662f12] text-white shadow-lg shadow-[#7A5C2E]/25 hover:shadow-xl"
+                        : "bg-[#5C8A3C] hover:bg-[#3A6624] text-white shadow-lg shadow-[#5C8A3C]/25 hover:shadow-xl"
                     }`}
                   >
                     {planoUrgente
