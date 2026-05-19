@@ -31,6 +31,7 @@ type Erros = {
   preferenciaBusca?: string;
   senha?: string;
   confirmarSenha?: string;
+  termos?: string;
   geral?: string;
 };
 
@@ -53,6 +54,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
   const [abrangenciaRemoto, setAbrangenciaRemoto] = useState<"Brasil" | "Estado" | "">("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [aceitouTermos, setAceitouTermos] = useState(false);
 
   const [opcoesCidades, setOpcoesCidades] = useState<{ value: string; label: string }[]>([]);
   const [carregandoCidades, setCarregandoCidades] = useState(false);
@@ -109,6 +111,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
 
     if (!/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(senha)) novos.senha = "Mínimo 8 caracteres, uma maiúscula e um número";
     if (senha !== confirmarSenha) novos.confirmarSenha = "Senhas não conferem";
+    if (!aceitouTermos) novos.termos = "Você deve aceitar a Política de Privacidade e os Termos de Uso para continuar";
 
     setErros(novos);
     return Object.keys(novos).length === 0;
@@ -129,7 +132,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
       const res = await fetch("/api/pacientes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, email, estado, cidade, senha, preferenciaBusca }),
+        body: JSON.stringify({ nome, cpf, email, estado, cidade, senha, preferenciaBusca, consentimentoLGPD: true }),
       });
 
       const data = await res.json();
@@ -152,6 +155,7 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
     setNome(""); setCpf(""); setEmail(""); setEstado("");
     setCidade(""); setSenha(""); setConfirmarSenha("");
     setPresencial(false); setRemoto(false); setAbrangenciaRemoto("");
+    setAceitouTermos(false);
     setErros({}); setSucesso(false); setOpcoesCidades([]);
     onFechar();
   }
@@ -342,6 +346,30 @@ export default function CadastroPacienteModal({ aberto, onFechar, onLoginClick }
               {erros.confirmarSenha && (
                 <p className="text-xs text-red-500">{erros.confirmarSenha}</p>
               )}
+            </div>
+
+            {/* Aceite LGPD */}
+            <div className="space-y-1">
+              <div className="flex items-start gap-2">
+                <Checkbox
+                  id="pac-termos"
+                  checked={aceitouTermos}
+                  onCheckedChange={(v) => { setAceitouTermos(!!v); limparErro("termos"); }}
+                  className={erros.termos ? "border-red-400" : ""}
+                />
+                <label htmlFor="pac-termos" className="text-xs text-gray-600 cursor-pointer leading-relaxed">
+                  Li e aceito a{" "}
+                  <a href="/politica-privacidade" target="_blank" rel="noopener noreferrer" className="underline text-green-600">
+                    Política de Privacidade
+                  </a>{" "}
+                  e os{" "}
+                  <a href="/termos-servico" target="_blank" rel="noopener noreferrer" className="underline text-green-600">
+                    Termos de Uso
+                  </a>
+                  . Concordo com o tratamento dos meus dados pessoais conforme a LGPD (Lei 13.709/2018).
+                </label>
+              </div>
+              {erros.termos && <p className="text-xs text-red-500">{erros.termos}</p>}
             </div>
 
             {erros.geral && (

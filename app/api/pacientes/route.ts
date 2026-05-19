@@ -31,7 +31,14 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { nome, cpf, email, estado, cidade, senha, preferenciaBusca } = body;
+  const { nome, cpf, email, estado, cidade, senha, preferenciaBusca, consentimentoLGPD } = body;
+
+  if (!consentimentoLGPD) {
+    return Response.json(
+      { erro: "É necessário aceitar a Política de Privacidade e os Termos de Uso para continuar" },
+      { status: 400 }
+    );
+  }
 
   if (!nome?.trim()) {
     return Response.json({ erro: "Nome é obrigatório" }, { status: 400 });
@@ -68,6 +75,7 @@ export async function POST(request: NextRequest) {
       estado: estado.trim(),
       cidade: cidade.trim(),
       senha,
+      consentimentoLGPD: true,
       ...(preferenciaBuscaValida ? { preferenciaBusca: preferenciaBuscaValida } : {}),
     });
 

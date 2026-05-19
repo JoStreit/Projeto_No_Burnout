@@ -1,10 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function PagamentoPage() {
+function PagamentoConteudo() {
   const searchParams = useSearchParams();
   const plano = searchParams.get("plano") ?? "Plano";
 
@@ -25,5 +26,13 @@ export default function PagamentoPage() {
         </Link>
       </div>
     </main>
+  );
+}
+
+export default function PagamentoPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-stone-50 flex items-center justify-center"><p className="text-stone-400 text-sm">Carregando...</p></div>}>
+      <PagamentoConteudo />
+    </Suspense>
   );
 }

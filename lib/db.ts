@@ -13,6 +13,7 @@ export interface Paciente {
   cidade: string;
   senhaHash: string;
   criadoEm: string;
+  consentimentoLGPD?: string;
   preferenciaBusca?: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[];
 }
 
@@ -44,6 +45,7 @@ export interface Profissional {
   vigenciaFim: string;
   status: "Ativo" | "Inativo";
   criadoEm: string;
+  consentimentoLGPD?: string;
 }
 
 export type ProfissionalPublico = Omit<Profissional, "senhaHash">;
@@ -138,6 +140,7 @@ export function criarPaciente(dados: {
   estado: string;
   cidade: string;
   senha: string;
+  consentimentoLGPD?: boolean;
   preferenciaBusca?: ("Presencial" | "RemotoBrasil" | "RemoToEstado")[];
 }): PacientePublico {
   const db = lerDB();
@@ -160,6 +163,7 @@ export function criarPaciente(dados: {
     cidade: dados.cidade,
     senhaHash: bcrypt.hashSync(dados.senha, 10),
     criadoEm: new Date().toISOString(),
+    consentimentoLGPD: dados.consentimentoLGPD ? new Date().toISOString() : undefined,
     ...(dados.preferenciaBusca ? { preferenciaBusca: dados.preferenciaBusca } : {}),
   };
 
@@ -279,6 +283,7 @@ export function criarProfissional(dados: {
   atendimento: string[];
   foto?: string;
   senha: string;
+  consentimentoLGPD?: boolean;
 }): ProfissionalPublico {
   const db = lerDB();
   const cpfLimpo = dados.cpf.replace(/\D/g, "");
@@ -312,6 +317,7 @@ export function criarProfissional(dados: {
     vigenciaFim: vigenciaFim.toISOString(),
     status: "Ativo",
     criadoEm: agora.toISOString(),
+    consentimentoLGPD: dados.consentimentoLGPD ? agora.toISOString() : undefined,
   };
 
   db.profissionais.push(profissional);
@@ -612,4 +618,62 @@ export function atualizarSenhaProfissional(id: string, novaSenha: string): void 
   if (idx === -1) throw new Error("Profissional não encontrado");
   db.profissionais[idx].senhaHash = bcrypt.hashSync(novaSenha, 10);
   salvarDB(db);
+}
+
+// ─── Direitos LGPD: Exportação e Exclusão ────────────────────────────────────
+
+export function exportarDadosPacienteCompleto(id: string): Omit<Paciente, "senhaHash"> | null {
+  const p = lerDB().pacientes.find((p) => p.id === id);
+  if (!p) return null;
+  const { senhaHash: _, ...dados } = p;
+  return dados;
+}
+
+export function exportarDadosProfissionalCompleto(id: string): Omit<Profissional, "senhaHash"> | null {
+  const p = lerDB().profissionais.find((p) => p.id === id);
+  if (!p) return null;
+  const { senhaHash: _, ...dados } = p;
+  return dados;
+}
+
+export function deletarPaciente(id: string): void {
+  const db = lerDB();
+  const idx = db.pacientes.findIndex((p) => p.id === id);
+  if (idx === -1) throw new Error("Paciente não encontrado");
+  db.pacientes.splice(idx, 1);
+  if (db.resetTokens) db.resetTokens = db.resetTokens.filter((t) => t.userId !== id);
+  salvarDB(db);
+}
+
+export function deletarProfissional(id: string): void {
+  const db = lerDB();
+  const idx = db.profissionais.findIndex((p) => p.id === id);
+  if (idx === -1) throw new Error("Profissional não encontrado");
+  db.profissionais.splice(idx, 1);
+  if (db.resetTokens) db.resetTokens = db.resetTokens.filter((t) => t.userId !== id);
+  salvarDB(db);
+}
+
+// ─── Retenção de Dados: Limpeza automática ────────────────────────────────────
+
+export function limparDadosAntigos(): { visitas: number; questionarios: number } {
+  const db = lerDB();
+  const limite90d = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+  const limite30d = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+
+  const visitasAntes = (db.visitas ?? []).length;
+  const questAntes = (db.questionarios ?? []).length;
+
+  db.visitas = (db.visitas ?? []).filter((v) => v.timestamp >= limite90d);
+  db.questionarios = (db.questionarios ?? []).filter((q) => q.timestamp >= limite30d);
+
+  if (db.resetTokens) {
+    db.resetTokens = db.resetTokens.filter((t) => new Date(t.expiraEm) > new Date());
+  }
+
+  salvarDB(db);
+  return {
+    visitas: visitasAntes - (db.visitas ?? []).length,
+    questionarios: questAntes - (db.questionarios ?? []).length,
+  };
 }

@@ -11,14 +11,14 @@ export function proxy(request: NextRequest) {
 
   // Sem Origin: apenas server-to-server ou ferramentas — logar mas permitir
   if (!origin) {
-    logSeguranca("sem_origin", { host: host ?? "desconhecido", rota: request.nextUrl.pathname });
+    logSeguranca("sem_origin", { info: host ?? "desconhecido", rota: request.nextUrl.pathname });
     return NextResponse.next();
   }
 
   try {
     const originHost = new URL(origin).host;
     if (originHost !== host) {
-      logSeguranca("csrf_bloqueado", { origin, host: host ?? "desconhecido", rota: request.nextUrl.pathname });
+      logSeguranca("csrf_bloqueado", { info: `origin=${origin} host=${host ?? "desconhecido"}`, rota: request.nextUrl.pathname });
       return NextResponse.json({ erro: "Origem não permitida" }, { status: 403 });
     }
   } catch {

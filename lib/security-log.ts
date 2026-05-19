@@ -12,7 +12,8 @@ export type EventoSeguranca =
   | "login_falhou"
   | "acesso_negado"
   | "rate_limit"
-  | "csrf_bloqueado";
+  | "csrf_bloqueado"
+  | "sem_origin";
 
 export function logSeguranca(
   evento: EventoSeguranca,

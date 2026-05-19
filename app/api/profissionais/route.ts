@@ -40,7 +40,14 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { nome, cpf, carteirinha, ramo, estado, cidade, email, telefone, atendimento, foto, senha } = body;
+  const { nome, cpf, carteirinha, ramo, estado, cidade, email, telefone, atendimento, foto, senha, consentimentoLGPD } = body;
+
+  if (!consentimentoLGPD) {
+    return Response.json(
+      { erro: "É necessário aceitar a Política de Privacidade e os Termos de Uso para continuar" },
+      { status: 400 }
+    );
+  }
 
   if (!nome?.trim())
     return Response.json({ erro: "Nome é obrigatório" }, { status: 400 });
@@ -92,6 +99,7 @@ export async function POST(request: NextRequest) {
       atendimento,
       ...(foto ? { foto } : {}),
       senha,
+      consentimentoLGPD: true,
     });
 
     // Auto-login após cadastro
