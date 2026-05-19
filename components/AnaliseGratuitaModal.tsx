@@ -262,7 +262,8 @@ export default function AnaliseGratuitaModal({
     const temPresencial    = prefs.includes("Presencial");
     const temRemotoBrasil  = prefs.includes("RemotoBrasil");
     const temRemoToEstado  = prefs.includes("RemoToEstado");
-    const baseUrl = `/api/profissionais?ramo=${encodeURIComponent(ramo)}&limit=5`;
+    // Busca mais do que 5 para ter pool suficiente para embaralhar
+    const baseUrl = `/api/profissionais?ramo=${encodeURIComponent(ramo)}&limit=20`;
 
     const promises: Promise<Response>[] = [];
 
@@ -301,6 +302,11 @@ export default function AnaliseGratuitaModal({
               merged.push(p);
             }
           }
+        }
+        // Fisher-Yates: garante rotatividade justa entre todos os profissionais
+        for (let i = merged.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [merged[i], merged[j]] = [merged[j], merged[i]];
         }
         const final = merged.slice(0, 5);
         setProfissionais(final);
