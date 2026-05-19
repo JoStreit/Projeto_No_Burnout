@@ -254,24 +254,66 @@ export default function AnaliseGratuitaModal({
 
   useEffect(() => {
     const ramo = tudoBem ? "Psicólogo" : ramosPrimario;
-    if (ramo && paciente) {
-      setCarregandoProfs(true);
-      fetch(`/api/profissionais?ramo=${encodeURIComponent(ramo)}&limit=5`)
-        .then((r) => r.json())
-        .then((data) => {
-          const lista: { id: string }[] = Array.isArray(data) ? data : (data.data ?? []);
-          setProfissionais(lista as typeof profissionais);
-          lista.forEach((p) => {
-            fetch(`/api/profissionais/${p.id}/interacao`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ tipo: "sugestao" }),
-            }).catch(() => {});
-          });
-        })
-        .catch(() => setProfissionais([]))
-        .finally(() => setCarregandoProfs(false));
+    if (!ramo || !paciente) return;
+
+    setCarregandoProfs(true);
+
+    const prefs = paciente.preferenciaBusca ?? [];
+    const temPresencial    = prefs.includes("Presencial");
+    const temRemotoBrasil  = prefs.includes("RemotoBrasil");
+    const temRemoToEstado  = prefs.includes("RemoToEstado");
+    const baseUrl = `/api/profissionais?ramo=${encodeURIComponent(ramo)}&limit=5`;
+
+    const promises: Promise<Response>[] = [];
+
+    if (prefs.length === 0) {
+      // Sem preferência configurada → mostra todos
+      promises.push(fetch(baseUrl));
+    } else {
+      if (temPresencial && paciente.cidade) {
+        promises.push(
+          fetch(`${baseUrl}&atendimento=Presencial&cidade=${encodeURIComponent(paciente.cidade)}`)
+        );
+      }
+      if (temRemotoBrasil) {
+        promises.push(fetch(`${baseUrl}&atendimento=Online`));
+      } else if (temRemoToEstado && paciente.estado) {
+        promises.push(
+          fetch(`${baseUrl}&atendimento=Online&estado=${encodeURIComponent(paciente.estado)}`)
+        );
+      }
+      // Fallback: se a combinação não gerou nenhuma busca (ex: presencial sem cidade)
+      if (promises.length === 0) {
+        promises.push(fetch(baseUrl));
+      }
     }
+
+    Promise.all(promises)
+      .then((responses) => Promise.all(responses.map((r) => r.json())))
+      .then((results) => {
+        const seen = new Set<string>();
+        const merged: Profissional[] = [];
+        for (const result of results) {
+          const lista = (Array.isArray(result) ? result : (result.data ?? [])) as Profissional[];
+          for (const p of lista) {
+            if (!seen.has(p.id)) {
+              seen.add(p.id);
+              merged.push(p);
+            }
+          }
+        }
+        const final = merged.slice(0, 5);
+        setProfissionais(final);
+        final.forEach((p) => {
+          fetch(`/api/profissionais/${p.id}/interacao`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tipo: "sugestao" }),
+          }).catch(() => {});
+        });
+      })
+      .catch(() => setProfissionais([]))
+      .finally(() => setCarregandoProfs(false));
   }, [ramosPrimario, paciente, tudoBem]);
 
   function voltar() {

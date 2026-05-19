@@ -236,6 +236,7 @@ export function listarProfissionais(filtros?: {
   ramo?: string;
   cidade?: string;
   estado?: string;
+  atendimento?: string;
   limit?: number;
   offset?: number;
   incluirExpirados?: boolean;
@@ -255,6 +256,9 @@ export function listarProfissionais(filtros?: {
   }
   if (filtros?.estado) {
     lista = lista.filter((p) => p.estado?.toLowerCase() === filtros.estado!.toLowerCase());
+  }
+  if (filtros?.atendimento) {
+    lista = lista.filter((p) => p.atendimento?.includes(filtros.atendimento!));
   }
   const total = lista.length;
   const offset = filtros?.offset ?? 0;

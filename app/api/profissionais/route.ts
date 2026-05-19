@@ -25,7 +25,13 @@ export async function GET(request: NextRequest) {
   const page = Math.max(Number(searchParams.get("page") ?? 1), 1);
   const offset = (page - 1) * limit;
 
-  const { data, total } = listarProfissionais({ ramo, cidade, estado, limit, offset });
+  const atendimentoParam = searchParams.get("atendimento");
+  const atendimento =
+    atendimentoParam === "Presencial" || atendimentoParam === "Online"
+      ? atendimentoParam
+      : undefined;
+
+  const { data, total } = listarProfissionais({ ramo, cidade, estado, atendimento, limit, offset });
   return Response.json({ data, total, page, limit });
 }
 
