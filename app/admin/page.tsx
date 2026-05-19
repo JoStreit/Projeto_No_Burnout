@@ -631,6 +631,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
   const [buscaProf, setBuscaProf] = useState("");
   const [carregandoProf, setCarregandoProf] = useState(false);
   const [editandoProf, setEditandoProf] = useState<Profissional | null>(null);
+  const [ordenacaoProf, setOrdenacaoProf] = useState<{ campo: string; dir: "asc" | "desc" }>({ campo: "criadoEm", dir: "desc" });
 
   // Mensagens
   const [mensagens, setMensagens] = useState<MensagemDica[]>([]);
@@ -752,6 +753,28 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
       (p.cidade ?? "").toLowerCase().includes(q) ||
       (p.estado ?? "").toLowerCase().includes(q)
     );
+  });
+
+  function toggleOrdenacao(campo: string) {
+    setOrdenacaoProf((prev) =>
+      prev.campo === campo
+        ? { campo, dir: prev.dir === "asc" ? "desc" : "asc" }
+        : { campo, dir: "asc" }
+    );
+  }
+
+  const profissionaisOrdenados = [...profissionaisFiltrados].sort((a, b) => {
+    const { campo, dir } = ordenacaoProf;
+    let va: string | number = 0;
+    let vb: string | number = 0;
+    if (campo === "nome")          { va = a.nome ?? "";            vb = b.nome ?? ""; }
+    else if (campo === "criadoEm") { va = a.criadoEm ?? "";        vb = b.criadoEm ?? ""; }
+    else if (campo === "vezesSugerido") { va = a.vezesSugerido ?? 0; vb = b.vezesSugerido ?? 0; }
+    else if (campo === "cliquesContato") { va = a.cliquesContato ?? 0; vb = b.cliquesContato ?? 0; }
+    else if (campo === "vigenciaFim") { va = a.vigenciaFim ?? "";   vb = b.vigenciaFim ?? ""; }
+    else if (campo === "status")   { va = a.status ?? "";           vb = b.status ?? ""; }
+    if (typeof va === "string") return dir === "asc" ? va.localeCompare(vb as string) : (vb as string).localeCompare(va);
+    return dir === "asc" ? (va as number) - (vb as number) : (vb as number) - (va as number);
   });
 
   const mensagensFiltradas = mensagens.filter((m) => {
@@ -986,20 +1009,44 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
-                      {["Foto", "Nome", "CPF", "Ramo", "Cidade / Estado", "Status", "Vigência", "Atendimento", "Sugerido", "Contatos", ""].map((h) => (
-                        <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
-                          {h}
+                      {[
+                        { label: "Foto",           campo: null },
+                        { label: "Nome",           campo: "nome" },
+                        { label: "CPF",            campo: null },
+                        { label: "Ramo",           campo: null },
+                        { label: "Cidade / Estado",campo: null },
+                        { label: "Status",         campo: "status" },
+                        { label: "Vigência",       campo: "vigenciaFim" },
+                        { label: "Cadastro",       campo: "criadoEm" },
+                        { label: "Atendimento",    campo: null },
+                        { label: "Sugerido",       campo: "vezesSugerido" },
+                        { label: "Contatos",       campo: "cliquesContato" },
+                        { label: "",               campo: null },
+                      ].map(({ label, campo }) => (
+                        <th
+                          key={label}
+                          onClick={() => campo && toggleOrdenacao(campo)}
+                          className={`px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap ${campo ? "cursor-pointer select-none hover:text-gray-700" : ""}`}
+                        >
+                          {label}
+                          {campo && (
+                            <span className="ml-1">
+                              {ordenacaoProf.campo === campo
+                                ? ordenacaoProf.dir === "asc" ? "↑" : "↓"
+                                : <span className="text-gray-300">↕</span>}
+                            </span>
+                          )}
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {carregandoProf ? (
-                      <tr><td colSpan={11} className="text-center py-8 text-gray-400">Carregando...</td></tr>
-                    ) : profissionaisFiltrados.length === 0 ? (
-                      <tr><td colSpan={11} className="text-center py-8 text-gray-400">Nenhum profissional encontrado</td></tr>
+                      <tr><td colSpan={12} className="text-center py-8 text-gray-400">Carregando...</td></tr>
+                    ) : profissionaisOrdenados.length === 0 ? (
+                      <tr><td colSpan={12} className="text-center py-8 text-gray-400">Nenhum profissional encontrado</td></tr>
                     ) : (
-                      profissionaisFiltrados.map((p) => {
+                      profissionaisOrdenados.map((p) => {
                         const ativo = p.status === "Ativo";
                         const dentro = p.vigenciaFim ? vigenciaAtiva(p.vigenciaFim) : false;
                         return (
@@ -1036,6 +1083,9 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                               ) : (
                                 <span className="text-gray-400">—</span>
                               )}
+                            </td>
+                            <td className="px-2 sm:px-4 py-3 text-gray-500 text-xs whitespace-nowrap hidden md:table-cell">
+                              {p.criadoEm ? fmt(p.criadoEm) : "—"}
                             </td>
                             <td className="px-2 sm:px-4 py-3 text-gray-500 text-xs whitespace-nowrap hidden xl:table-cell">
                               {(p.atendimento ?? []).join(" · ") || "—"}
