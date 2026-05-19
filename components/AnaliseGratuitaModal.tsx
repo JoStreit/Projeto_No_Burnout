@@ -234,13 +234,31 @@ export default function AnaliseGratuitaModal({
 
   const ramosPrimario = ramosRecomendados?.[0] ?? null;
 
+  function registrarContato(id: string) {
+    fetch(`/api/profissionais/${id}/interacao`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tipo: "contato" }),
+    }).catch(() => {});
+  }
+
   useEffect(() => {
     const ramo = tudoBem ? "Psicólogo" : ramosPrimario;
     if (ramo && paciente) {
       setCarregandoProfs(true);
       fetch(`/api/profissionais?ramo=${encodeURIComponent(ramo)}&limit=5`)
         .then((r) => r.json())
-        .then((data) => setProfissionais(Array.isArray(data) ? data : (data.data ?? [])))
+        .then((data) => {
+          const lista: { id: string }[] = Array.isArray(data) ? data : (data.data ?? []);
+          setProfissionais(lista as typeof profissionais);
+          lista.forEach((p) => {
+            fetch(`/api/profissionais/${p.id}/interacao`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ tipo: "sugestao" }),
+            }).catch(() => {});
+          });
+        })
         .catch(() => setProfissionais([]))
         .finally(() => setCarregandoProfs(false));
     }
@@ -491,6 +509,7 @@ export default function AnaliseGratuitaModal({
                                 <p className="text-xs text-stone-400">📍 {p.cidade}</p>
                                 <a
                                   href={`mailto:${p.email}`}
+                                  onClick={() => registrarContato(p.id)}
                                   className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
                                 >
                                   <span>✉️</span>{p.email}
@@ -500,6 +519,7 @@ export default function AnaliseGratuitaModal({
                                     href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent("Olá, cheguei até você através do Calma mente. Gostaria de marcar uma avaliação/consulta.")}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    onClick={() => registrarContato(p.id)}
                                     className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
                                   >
                                     <span>📱</span>{p.telefone}
@@ -635,6 +655,7 @@ export default function AnaliseGratuitaModal({
                             <p className="text-xs text-stone-400">📍 {p.cidade}</p>
                             <a
                               href={`mailto:${p.email}`}
+                              onClick={() => registrarContato(p.id)}
                               className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
                             >
                               <span>✉️</span>{p.email}
@@ -644,6 +665,7 @@ export default function AnaliseGratuitaModal({
                                 href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent("Olá, cheguei até você através do Calma mente. Gostaria de marcar uma avaliação/consulta.")}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                onClick={() => registrarContato(p.id)}
                                 className="text-xs text-stone-500 hover:text-[#5C8A3C] hover:underline flex items-center gap-1"
                               >
                                 <span>📱</span>{p.telefone}

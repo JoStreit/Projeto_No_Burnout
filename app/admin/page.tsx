@@ -80,6 +80,8 @@ interface Profissional {
   vigenciaFim: string;
   status: "Ativo" | "Inativo";
   criadoEm: string;
+  vezesSugerido?: number;
+  cliquesContato?: number;
 }
 
 function fmt(iso: string) {
@@ -982,7 +984,7 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                 <table className="w-full text-sm">
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
-                      {["Foto", "Nome", "CPF", "Ramo", "Cidade / Estado", "Status", "Vigência", "Atendimento", ""].map((h) => (
+                      {["Foto", "Nome", "CPF", "Ramo", "Cidade / Estado", "Status", "Vigência", "Atendimento", "Sugerido", "Contatos", ""].map((h) => (
                         <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">
                           {h}
                         </th>
@@ -991,9 +993,9 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {carregandoProf ? (
-                      <tr><td colSpan={9} className="text-center py-8 text-gray-400">Carregando...</td></tr>
+                      <tr><td colSpan={11} className="text-center py-8 text-gray-400">Carregando...</td></tr>
                     ) : profissionaisFiltrados.length === 0 ? (
-                      <tr><td colSpan={9} className="text-center py-8 text-gray-400">Nenhum profissional encontrado</td></tr>
+                      <tr><td colSpan={11} className="text-center py-8 text-gray-400">Nenhum profissional encontrado</td></tr>
                     ) : (
                       profissionaisFiltrados.map((p) => {
                         const ativo = p.status === "Ativo";
@@ -1035,6 +1037,16 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
                             </td>
                             <td className="px-2 sm:px-4 py-3 text-gray-500 text-xs whitespace-nowrap hidden xl:table-cell">
                               {(p.atendimento ?? []).join(" · ") || "—"}
+                            </td>
+                            <td className="px-2 sm:px-4 py-3 text-center whitespace-nowrap hidden lg:table-cell">
+                              <span className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full">
+                                🔍 {p.vezesSugerido ?? 0}
+                              </span>
+                            </td>
+                            <td className="px-2 sm:px-4 py-3 text-center whitespace-nowrap hidden lg:table-cell">
+                              <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">
+                                📞 {p.cliquesContato ?? 0}
+                              </span>
                             </td>
                             <td className="px-2 sm:px-4 py-3">
                               <Button

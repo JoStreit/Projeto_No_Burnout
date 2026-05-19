@@ -46,6 +46,8 @@ export interface Profissional {
   status: "Ativo" | "Inativo";
   criadoEm: string;
   consentimentoLGPD?: string;
+  vezesSugerido?: number;
+  cliquesContato?: number;
 }
 
 export type ProfissionalPublico = Omit<Profissional, "senhaHash">;
@@ -617,6 +619,24 @@ export function atualizarSenhaProfissional(id: string, novaSenha: string): void 
   const idx = db.profissionais.findIndex((p) => p.id === id);
   if (idx === -1) throw new Error("Profissional não encontrado");
   db.profissionais[idx].senhaHash = bcrypt.hashSync(novaSenha, 10);
+  salvarDB(db);
+}
+
+// ─── Contadores de interação ─────────────────────────────────────────────────
+
+export function registrarSugestao(id: string): void {
+  const db = lerDB();
+  const idx = db.profissionais.findIndex((p) => p.id === id);
+  if (idx === -1) return;
+  db.profissionais[idx].vezesSugerido = (db.profissionais[idx].vezesSugerido ?? 0) + 1;
+  salvarDB(db);
+}
+
+export function registrarCliqueContato(id: string): void {
+  const db = lerDB();
+  const idx = db.profissionais.findIndex((p) => p.id === id);
+  if (idx === -1) return;
+  db.profissionais[idx].cliquesContato = (db.profissionais[idx].cliquesContato ?? 0) + 1;
   salvarDB(db);
 }
 
