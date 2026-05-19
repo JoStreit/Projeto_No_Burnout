@@ -180,7 +180,7 @@ export default function ProfissionalPage() {
             <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Cadastre-se até 15/06/2026 e ganhe 3 meses gratuitos
+            Cadastre-se e tenha acesso gratuito até 30/09/2026
           </div>
 
           <div className="max-w-2xl">
@@ -515,11 +515,11 @@ export default function ProfissionalPage() {
             </svg>
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Cadastre-se até 15/06/2026 e ganhe 3 meses gratuitos
+            Cadastre-se e tenha acesso gratuito até 30/09/2026
           </h2>
           <p className="text-white/75 text-base leading-relaxed mb-8">
-            Profissionais que realizarem o cadastro até o dia 15 de junho de 2026 terão
-            3 meses de plataforma sem nenhum custo. É a oportunidade de começar a receber
+            Profissionais que realizarem o cadastro agora terão acesso completo à plataforma
+            sem nenhum custo até 30 de setembro de 2026. É a oportunidade de começar a receber
             pacientes agora e avaliar os resultados antes de qualquer investimento.
           </p>
           <Button

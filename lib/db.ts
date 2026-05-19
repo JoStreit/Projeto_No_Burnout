@@ -303,8 +303,7 @@ export function criarProfissional(dados: {
   }
 
   const agora = new Date();
-  const vigenciaFim = new Date(agora);
-  vigenciaFim.setDate(vigenciaFim.getDate() + 3);
+  const vigenciaFim = new Date("2026-09-30T23:59:59.000Z");
 
   const profissional: Profissional = {
     id: crypto.randomUUID(),
