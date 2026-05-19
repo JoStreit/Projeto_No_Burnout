@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { verificarToken } from "@/lib/auth";
-import { listarVisitas, contarQuestionarios } from "@/lib/db";
+import { listarVisitas, contarQuestionarios, contarCliquesPlanos } from "@/lib/db";
 
 async function autenticarAdmin(): Promise<boolean> {
   const cookieStore = await cookies();
@@ -21,11 +21,12 @@ export async function GET(request: NextRequest) {
 
   const visitas = listarVisitas({ inicio, fim });
   const questionarios = contarQuestionarios({ inicio, fim });
+  const cliquesPlanos = contarCliquesPlanos({ inicio, fim });
 
   const total = visitas.length;
   const pacientes = visitas.filter((v) => v.tipo === "paciente").length;
   const profissionais = visitas.filter((v) => v.tipo === "profissional").length;
   const anonimos = visitas.filter((v) => v.tipo === "anonimo").length;
 
-  return Response.json({ total, pacientes, profissionais, anonimos, questionarios });
+  return Response.json({ total, pacientes, profissionais, anonimos, questionarios, cliquesPlanos });
 }

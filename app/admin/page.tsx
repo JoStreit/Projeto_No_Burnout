@@ -51,6 +51,7 @@ interface Stats {
   profissionais: number;
   anonimos: number;
   questionarios: number;
+  cliquesPlanos: number;
 }
 
 interface Paciente {
@@ -843,12 +844,13 @@ function Dashboard({ onLogout, adminCpf }: { onLogout: () => void; adminCpf: str
 
             {/* Cards de estatísticas */}
             {stats ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <StatCard label="Total de Visitas" valor={stats.total} cor="bg-white border-gray-200 text-gray-800" />
                 <StatCard label="Visitas de Pacientes" valor={stats.pacientes} cor="bg-green-50 border-green-200 text-green-800" />
                 <StatCard label="Visitas de Profissionais" valor={stats.profissionais} cor="bg-teal-50 border-teal-200 text-teal-800" />
                 <StatCard label="Visitas Anônimas" valor={stats.anonimos} cor="bg-gray-50 border-gray-200 text-gray-600" />
                 <StatCard label="Questionários Respondidos" valor={stats.questionarios} cor="bg-purple-50 border-purple-200 text-purple-800" />
+                <StatCard label="Tentativas de Pagamento" valor={stats.cliquesPlanos ?? 0} cor="bg-amber-50 border-amber-200 text-amber-800" />
               </div>
             ) : (
               <div className="text-center py-10 text-gray-400">Carregando estatísticas...</div>

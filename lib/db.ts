@@ -79,6 +79,7 @@ interface DB {
   profissionais: Profissional[];
   visitas?: Visita[];
   questionarios?: { id: string; timestamp: string }[];
+  cliquesPlanos?: { id: string; timestamp: string }[];
   mensagens?: MensagemDica[];
   resetTokens?: ResetToken[];
   tokensRevogados?: string[];
@@ -623,6 +624,23 @@ export function atualizarSenhaProfissional(id: string, novaSenha: string): void 
   if (idx === -1) throw new Error("Profissional não encontrado");
   db.profissionais[idx].senhaHash = bcrypt.hashSync(novaSenha, 10);
   salvarDB(db);
+}
+
+// ─── Cliques nos Planos ───────────────────────────────────────────────────────
+
+export function registrarCliquePlano(): void {
+  const db = lerDB();
+  if (!db.cliquesPlanos) db.cliquesPlanos = [];
+  db.cliquesPlanos.push({ id: crypto.randomUUID(), timestamp: new Date().toISOString() });
+  salvarDB(db);
+}
+
+export function contarCliquesPlanos(filtros?: { inicio?: string; fim?: string }): number {
+  const db = lerDB();
+  let lista = db.cliquesPlanos ?? [];
+  if (filtros?.inicio) lista = lista.filter((c) => c.timestamp >= filtros.inicio!);
+  if (filtros?.fim) lista = lista.filter((c) => c.timestamp <= filtros.fim! + "T23:59:59.999Z");
+  return lista.length;
 }
 
 // ─── Contadores de interação ─────────────────────────────────────────────────

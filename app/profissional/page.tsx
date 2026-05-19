@@ -74,6 +74,15 @@ export default function ProfissionalPage() {
     : Infinity;
   const planoUrgente = profissional ? diasVigencia <= 7 : false;
 
+  function handlePlanoClick(planoNome: string) {
+    fetch("/api/planos/clique", { method: "POST" }).catch(() => {});
+    if (profissional) {
+      router.push(`/profissional/pagamento?plano=${encodeURIComponent(planoNome)}`);
+    } else {
+      setCadastroAberto(true);
+    }
+  }
+
   const [cadastroAberto,      setCadastroAberto]      = useState(false);
   const [loginProfAberto,     setLoginProfAberto]     = useState(false);
   const [dashboardAberto,     setDashboardAberto]     = useState(false);
@@ -442,11 +451,7 @@ export default function ProfissionalPage() {
             {PLANOS.map((plano) => (
               <div
                 key={plano.nome}
-                onClick={() =>
-                    profissional
-                      ? router.push(`/profissional/pagamento?plano=${encodeURIComponent(plano.nome)}`)
-                      : setCadastroAberto(true)
-                  }
+                onClick={() => handlePlanoClick(plano.nome)}
                 className={`relative rounded-2xl p-7 flex flex-col gap-5 border transition-all duration-300 cursor-pointer ${
                   plano.destaque
                     ? "border-[#5C8A3C] shadow-xl shadow-[#5C8A3C]/10 scale-105 hover:shadow-2xl hover:scale-[1.07]"
@@ -483,11 +488,7 @@ export default function ProfissionalPage() {
                 </ul>
 
                 <Button
-                  onClick={() =>
-                    profissional
-                      ? router.push(`/profissional/pagamento?plano=${encodeURIComponent(plano.nome)}`)
-                      : setCadastroAberto(true)
-                  }
+                  onClick={(e) => { e.stopPropagation(); handlePlanoClick(plano.nome); }}
                   className={`w-full rounded-xl font-semibold ${
                     plano.destaque
                       ? "bg-[#5C8A3C] hover:bg-[#3A6624] text-white shadow-md shadow-[#5C8A3C]/20"
