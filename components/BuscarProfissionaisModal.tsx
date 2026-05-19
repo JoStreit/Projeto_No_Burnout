@@ -356,6 +356,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                     <div className="flex flex-col gap-1.5 pt-2.5 border-t border-stone-100">
                       <a
                         href={`mailto:${p.email}`}
+                        onClick={() => fetch(`/api/profissionais/${p.id}/interacao`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tipo: "contato" }) }).catch(() => {})}
                         className="flex items-center gap-1.5 text-xs text-stone-500 hover:text-[#5C8A3C] transition-colors"
                       >
                         <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -368,6 +369,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                           href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent("Olá, cheguei até você através do Calma mente. Gostaria de marcar uma avaliação/consulta.")}`}
                           target="_blank"
                           rel="noopener noreferrer"
+                          onClick={() => fetch(`/api/profissionais/${p.id}/interacao`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tipo: "contato" }) }).catch(() => {})}
                           className="flex items-center gap-1.5 text-xs text-stone-500 hover:text-[#5C8A3C] transition-colors"
                         >
                           <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
