@@ -227,12 +227,22 @@ export default function AnaliseGratuitaModal({
   const [carregandoProfs, setCarregandoProfs]         = useState(false);
   const [tudoBem, setTudoBem]                         = useState(false);
   const [paginaBem, setPaginaBem]                     = useState(0);
+  const [carregandoResultado, setCarregandoResultado] = useState(false);
+  const [bloqueado, setBloqueado]                     = useState<{ retryAfter: number; isLogado: boolean } | null>(null);
 
   const perguntaAtual = PERGUNTAS[etapa];
   const totalPerguntas = PERGUNTAS.length;
   const progresso = (etapa / totalPerguntas) * 100;
 
   const ramosPrimario = ramosRecomendados?.[0] ?? null;
+
+  function formatarTempoRestante(segundos: number): string {
+    if (segundos < 60) return "menos de 1 minuto";
+    const minutos = Math.ceil(segundos / 60);
+    if (minutos < 60) return `${minutos} minuto${minutos !== 1 ? "s" : ""}`;
+    const horas = Math.ceil(minutos / 60);
+    return `${horas} hora${horas !== 1 ? "s" : ""}`;
+  }
 
   function registrarContato(id: string) {
     fetch(`/api/profissionais/${id}/interacao`, {
@@ -273,15 +283,29 @@ export default function AnaliseGratuitaModal({
     setEtapa(etapa - 1);
   }
 
-  function responder(opcao: Opcao) {
+  async function responder(opcao: Opcao) {
     const novasRespostas = { ...respostas, [perguntaAtual.id]: opcao };
     setRespostas(novasRespostas);
 
     if (etapa + 1 < totalPerguntas) {
       setEtapa(etapa + 1);
-    } else {
-      gerarResultado(novasRespostas);
+      return;
     }
+
+    setCarregandoResultado(true);
+    try {
+      const res = await fetch("/api/questionarios", { method: "POST" });
+      if (res.status === 429) {
+        const data = await res.json().catch(() => ({}));
+        setBloqueado({ retryAfter: data.retryAfter ?? 3600, isLogado: data.isLogado ?? false });
+        return;
+      }
+    } catch {
+      // Se a API falhar, exibe o resultado mesmo assim
+    } finally {
+      setCarregandoResultado(false);
+    }
+    gerarResultado(novasRespostas);
   }
 
   function gerarResultado(resp: Record<number, Opcao>) {
@@ -312,14 +336,12 @@ export default function AnaliseGratuitaModal({
     if (maxNorm === 0) {
       setTudoBem(true);
       setRamosRecomendados([]);
-      fetch("/api/questionarios", { method: "POST" }).catch(() => {});
       return;
     }
 
     // Se todos os scores são muito baixos → recomendação preventiva
     if (maxNorm < 0.5) {
       setRamosRecomendados(["Personal Trainer"]);
-      fetch("/api/questionarios", { method: "POST" }).catch(() => {});
       return;
     }
 
@@ -329,7 +351,6 @@ export default function AnaliseGratuitaModal({
       .slice(0, 3);
 
     setRamosRecomendados(recomendados);
-    fetch("/api/questionarios", { method: "POST" }).catch(() => {});
   }
 
   function reiniciar() {
@@ -339,6 +360,8 @@ export default function AnaliseGratuitaModal({
     setProfissionais([]);
     setTudoBem(false);
     setPaginaBem(0);
+    setBloqueado(null);
+    setCarregandoResultado(false);
   }
 
   function fechar() {
@@ -362,7 +385,58 @@ export default function AnaliseGratuitaModal({
         </DialogHeader>
 
         <div className="overflow-y-auto flex-1 min-h-0">
-        {!ramosRecomendados ? (
+        {carregandoResultado ? (
+          <div className="flex flex-col items-center justify-center py-16 gap-4">
+            <div className="w-10 h-10 rounded-full border-4 border-[#5C8A3C]/20 border-t-[#5C8A3C] animate-spin" />
+            <p className="text-sm text-stone-500">Verificando seu resultado...</p>
+          </div>
+        ) : bloqueado ? (
+          <div className="flex flex-col items-center gap-5 py-8 px-2 text-center">
+            <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center">
+              <svg className="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="space-y-2">
+              <p className="text-base font-semibold text-[#3B2A14]">Limite de questionários atingido</p>
+              <p className="text-sm text-stone-500 leading-relaxed max-w-xs mx-auto">
+                Você atingiu o limite de{" "}
+                <strong>{bloqueado.isLogado ? "10" : "5"} questionários por hora</strong>.
+                Tente novamente em{" "}
+                <strong>{formatarTempoRestante(bloqueado.retryAfter)}</strong>.
+              </p>
+              {!bloqueado.isLogado && (
+                <p className="text-xs text-stone-400 mt-1">
+                  Usuários com conta têm limite de 10 questionários por hora.{" "}
+                  <button
+                    type="button"
+                    onClick={() => { reiniciar(); onFechar(); onLoginClick(); }}
+                    className="text-[#5C8A3C] font-medium hover:underline"
+                  >
+                    Fazer login
+                  </button>
+                  {" "}ou{" "}
+                  <button
+                    type="button"
+                    onClick={() => { reiniciar(); onFechar(); onCadastrarClick(); }}
+                    className="text-[#5C8A3C] font-medium hover:underline"
+                  >
+                    cadastrar-se
+                  </button>
+                  .
+                </p>
+              )}
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={fechar}
+              className="border-[#5C8A3C]/30 text-[#5C8A3C] hover:bg-[#EBF4E3]"
+            >
+              Fechar
+            </Button>
+          </div>
+        ) : !ramosRecomendados ? (
           <div className="space-y-6">
             {/* Barra de progresso */}
             <div>
