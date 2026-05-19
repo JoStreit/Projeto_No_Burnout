@@ -73,8 +73,14 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
   function buildParams(page: number) {
     const params = new URLSearchParams();
     if (ramo) params.set("ramo", ramo);
-    if (presencial && !remoto && paciente?.cidade) params.set("cidade", paciente.cidade);
-    else if (remoto && !presencial && abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
+    if (presencial && !remoto) {
+      params.set("atendimento", "Presencial");
+      if (paciente?.cidade) params.set("cidade", paciente.cidade);
+    } else if (remoto && !presencial) {
+      params.set("atendimento", "Online");
+      if (abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
+    }
+    // presencial + remoto: sem filtro de atendimento (ambos)
     params.set("limit", String(LIMIT));
     params.set("page", String(page));
     return params;
@@ -86,8 +92,14 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     try {
       const params = new URLSearchParams();
       if (ramo) params.set("ramo", ramo);
-      if (presencial && !remoto && paciente?.cidade) params.set("cidade", paciente.cidade);
-      else if (remoto && !presencial && abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
+      if (presencial && !remoto) {
+        params.set("atendimento", "Presencial");
+        if (paciente?.cidade) params.set("cidade", paciente.cidade);
+      } else if (remoto && !presencial) {
+        params.set("atendimento", "Online");
+        if (abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
+      }
+      // presencial + remoto: sem filtro de atendimento (ambos)
       params.set("limit", String(LIMIT));
       params.set("page", "1");
       const res = await fetch(`/api/profissionais?${params.toString()}`);
