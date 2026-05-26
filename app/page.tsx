@@ -521,6 +521,85 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── Para Profissionais ──────────────────────────────────────────── */}
+      <section className="bg-[#EBF4E3] py-20">
+        <div className="max-w-6xl mx-auto px-6">
+
+          <div className="text-center mb-14">
+            <span className="inline-block bg-[#5C8A3C]/15 text-[#5C8A3C] text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-full mb-5">
+              Para Profissionais de Saúde
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#3B2A14] mb-5">
+              Expanda seu alcance e conecte-se com quem precisa de você
+            </h2>
+            <p className="text-stone-500 text-base leading-relaxed max-w-2xl mx-auto">
+              Cadastre-se na plataforma, defina sua modalidade de atendimento e deixe o sistema trabalhar por você — pacientes compatíveis com seu perfil serão direcionados até você automaticamente.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
+
+            {/* Passo 1 */}
+            <div className="bg-white rounded-2xl p-7 border border-[#5C8A3C]/10 shadow-sm flex flex-col items-start gap-4">
+              <div className="w-12 h-12 bg-[#5C8A3C]/10 rounded-xl flex items-center justify-center shrink-0">
+                <svg className="w-6 h-6 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-[#3B2A14] text-base mb-2">1. Crie seu perfil</h3>
+                <p className="text-stone-500 text-sm leading-relaxed">
+                  Informe sua especialidade, número de registro profissional, modalidade de atendimento (presencial ou remoto) e área de cobertura.
+                </p>
+              </div>
+            </div>
+
+            {/* Passo 2 */}
+            <div className="bg-white rounded-2xl p-7 border border-[#5C8A3C]/10 shadow-sm flex flex-col items-start gap-4">
+              <div className="w-12 h-12 bg-[#5C8A3C]/10 rounded-xl flex items-center justify-center shrink-0">
+                <svg className="w-6 h-6 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-[#3B2A14] text-base mb-2">2. Seja indicado</h3>
+                <p className="text-stone-500 text-sm leading-relaxed">
+                  Nosso algoritmo analisa o questionário de cada paciente e recomenda automaticamente os profissionais com o perfil mais adequado às necessidades dele.
+                </p>
+              </div>
+            </div>
+
+            {/* Passo 3 */}
+            <div className="bg-white rounded-2xl p-7 border border-[#5C8A3C]/10 shadow-sm flex flex-col items-start gap-4">
+              <div className="w-12 h-12 bg-[#5C8A3C]/10 rounded-xl flex items-center justify-center shrink-0">
+                <svg className="w-6 h-6 text-[#5C8A3C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-[#3B2A14] text-base mb-2">3. Receba contatos</h3>
+                <p className="text-stone-500 text-sm leading-relaxed">
+                  Pacientes visualizam seu perfil e entram em contato diretamente. Mantenha seu cadastro ativo para continuar aparecendo nas buscas e recomendações.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="flex justify-center">
+            <Link href="/profissional">
+              <button className="inline-flex items-center gap-2 bg-[#5C8A3C] hover:bg-[#3A6624] text-white font-semibold px-10 py-4 rounded-2xl shadow-md shadow-[#5C8A3C]/25 hover:shadow-lg hover:shadow-[#5C8A3C]/30 transition-all duration-200 hover:-translate-y-0.5 text-base">
+                Quero me cadastrar como profissional
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
       {/* ─── FAQ ─────────────────────────────────────────────────────────── */}
       <section className="bg-[#7A5C2E] py-20">
         <div className="max-w-4xl mx-auto px-6">
