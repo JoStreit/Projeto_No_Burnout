@@ -264,38 +264,53 @@ export default function AnaliseGratuitaModal({
     const temPresencial   = prefs.includes("Presencial");
     const temRemotoBrasil = prefs.includes("RemotoBrasil");
     const temRemoToEstado = prefs.includes("RemoToEstado");
-    const temRemoto       = temRemotoBrasil || temRemoToEstado;
     const baseUrl = `/api/profissionais?ramo=${encodeURIComponent(ramo)}&limit=20`;
 
-    // Monta a URL de busca — mesma lógica do BuscarProfissionaisModal:
-    // presencial + remoto → sem filtro de atendimento (retorna ambos sem viés de pool)
-    let url: string;
-    if (prefs.length === 0 || (temPresencial && temRemoto)) {
-      // Sem preferência ou ambas as modalidades: sem filtro de atendimento nem localização
-      url = baseUrl;
-    } else if (temPresencial) {
-      // Só presencial: filtra por atendimento e cidade
-      url = `${baseUrl}&atendimento=Presencial${paciente.cidade ? `&cidade=${encodeURIComponent(paciente.cidade)}` : ""}`;
-    } else if (temRemotoBrasil) {
-      // Remoto todo o Brasil: sem filtro de localização
-      url = `${baseUrl}&atendimento=Online`;
-    } else if (temRemoToEstado && paciente.estado) {
-      // Remoto mesmo estado
-      url = `${baseUrl}&atendimento=Online&estado=${encodeURIComponent(paciente.estado)}`;
+    // Regra: profissionais presenciais SEMPRE devem ser da cidade do paciente.
+    // Cada modalidade gera uma URL separada; o resultado final é a união deduplicada.
+    const urls: string[] = [];
+
+    if (prefs.length === 0) {
+      // Sem preferência configurada → mostra todos (sem restrição de localização)
+      urls.push(baseUrl);
     } else {
-      url = baseUrl;
+      // Presencial → apenas profissionais da cidade do paciente
+      if (temPresencial && paciente.cidade) {
+        urls.push(`${baseUrl}&atendimento=Presencial&cidade=${encodeURIComponent(paciente.cidade)}`);
+      }
+      // Remoto Brasil → todos os profissionais online, sem filtro de localização
+      if (temRemotoBrasil) {
+        urls.push(`${baseUrl}&atendimento=Online`);
+      // Remoto mesmo estado → profissionais online do estado do paciente
+      } else if (temRemoToEstado && paciente.estado) {
+        urls.push(`${baseUrl}&atendimento=Online&estado=${encodeURIComponent(paciente.estado)}`);
+      }
+      // Fallback: se nenhuma URL foi montada (ex: presencial sem cidade cadastrada)
+      if (urls.length === 0) {
+        urls.push(baseUrl);
+      }
     }
 
-    fetch(url)
-      .then((r) => r.json())
-      .then((result) => {
-        const lista = (Array.isArray(result) ? result : (result.data ?? [])) as Profissional[];
-        // Fisher-Yates: garante rotatividade justa entre todos os profissionais
-        for (let i = lista.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [lista[i], lista[j]] = [lista[j], lista[i]];
+    Promise.all(urls.map((u) => fetch(u)))
+      .then((responses) => Promise.all(responses.map((r) => r.json())))
+      .then((results) => {
+        const seen = new Set<string>();
+        const merged: Profissional[] = [];
+        for (const result of results) {
+          const lista = (Array.isArray(result) ? result : (result.data ?? [])) as Profissional[];
+          for (const p of lista) {
+            if (!seen.has(p.id)) {
+              seen.add(p.id);
+              merged.push(p);
+            }
+          }
         }
-        const final = lista.slice(0, 5);
+        // Fisher-Yates: garante rotatividade justa entre todos os profissionais
+        for (let i = merged.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [merged[i], merged[j]] = [merged[j], merged[i]];
+        }
+        const final = merged.slice(0, 5);
         setProfissionais(final);
         final.forEach((p) => {
           fetch(`/api/profissionais/${p.id}/interacao`, {
