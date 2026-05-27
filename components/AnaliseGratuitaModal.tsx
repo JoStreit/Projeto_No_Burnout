@@ -192,8 +192,10 @@ interface Profissional {
   nome: string;
   ramo: string;
   cidade: string;
+  estado?: string;
   email: string;
   telefone?: string;
+  atendimento?: string[];
 }
 
 const COR_RAMO: Record<string, string> = {
@@ -259,56 +261,41 @@ export default function AnaliseGratuitaModal({
     setCarregandoProfs(true);
 
     const prefs = paciente.preferenciaBusca ?? [];
-    const temPresencial    = prefs.includes("Presencial");
-    const temRemotoBrasil  = prefs.includes("RemotoBrasil");
-    const temRemoToEstado  = prefs.includes("RemoToEstado");
-    // Busca mais do que 5 para ter pool suficiente para embaralhar
+    const temPresencial   = prefs.includes("Presencial");
+    const temRemotoBrasil = prefs.includes("RemotoBrasil");
+    const temRemoToEstado = prefs.includes("RemoToEstado");
+    const temRemoto       = temRemotoBrasil || temRemoToEstado;
     const baseUrl = `/api/profissionais?ramo=${encodeURIComponent(ramo)}&limit=20`;
 
-    const promises: Promise<Response>[] = [];
-
-    if (prefs.length === 0) {
-      // Sem preferência configurada → mostra todos
-      promises.push(fetch(baseUrl));
+    // Monta a URL de busca — mesma lógica do BuscarProfissionaisModal:
+    // presencial + remoto → sem filtro de atendimento (retorna ambos sem viés de pool)
+    let url: string;
+    if (prefs.length === 0 || (temPresencial && temRemoto)) {
+      // Sem preferência ou ambas as modalidades: sem filtro de atendimento nem localização
+      url = baseUrl;
+    } else if (temPresencial) {
+      // Só presencial: filtra por atendimento e cidade
+      url = `${baseUrl}&atendimento=Presencial${paciente.cidade ? `&cidade=${encodeURIComponent(paciente.cidade)}` : ""}`;
+    } else if (temRemotoBrasil) {
+      // Remoto todo o Brasil: sem filtro de localização
+      url = `${baseUrl}&atendimento=Online`;
+    } else if (temRemoToEstado && paciente.estado) {
+      // Remoto mesmo estado
+      url = `${baseUrl}&atendimento=Online&estado=${encodeURIComponent(paciente.estado)}`;
     } else {
-      if (temPresencial && paciente.cidade) {
-        promises.push(
-          fetch(`${baseUrl}&atendimento=Presencial&cidade=${encodeURIComponent(paciente.cidade)}`)
-        );
-      }
-      if (temRemotoBrasil) {
-        promises.push(fetch(`${baseUrl}&atendimento=Online`));
-      } else if (temRemoToEstado && paciente.estado) {
-        promises.push(
-          fetch(`${baseUrl}&atendimento=Online&estado=${encodeURIComponent(paciente.estado)}`)
-        );
-      }
-      // Fallback: se a combinação não gerou nenhuma busca (ex: presencial sem cidade)
-      if (promises.length === 0) {
-        promises.push(fetch(baseUrl));
-      }
+      url = baseUrl;
     }
 
-    Promise.all(promises)
-      .then((responses) => Promise.all(responses.map((r) => r.json())))
-      .then((results) => {
-        const seen = new Set<string>();
-        const merged: Profissional[] = [];
-        for (const result of results) {
-          const lista = (Array.isArray(result) ? result : (result.data ?? [])) as Profissional[];
-          for (const p of lista) {
-            if (!seen.has(p.id)) {
-              seen.add(p.id);
-              merged.push(p);
-            }
-          }
-        }
+    fetch(url)
+      .then((r) => r.json())
+      .then((result) => {
+        const lista = (Array.isArray(result) ? result : (result.data ?? [])) as Profissional[];
         // Fisher-Yates: garante rotatividade justa entre todos os profissionais
-        for (let i = merged.length - 1; i > 0; i--) {
+        for (let i = lista.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          [merged[i], merged[j]] = [merged[j], merged[i]];
+          [lista[i], lista[j]] = [lista[j], lista[i]];
         }
-        const final = merged.slice(0, 5);
+        const final = lista.slice(0, 5);
         setProfissionais(final);
         final.forEach((p) => {
           fetch(`/api/profissionais/${p.id}/interacao`, {
@@ -629,6 +616,15 @@ export default function AnaliseGratuitaModal({
                                   </span>
                                 </div>
                                 <p className="text-xs text-stone-400">📍 {p.cidade}</p>
+                                {p.atendimento && p.atendimento.length > 0 && (
+                                  <div className="flex gap-1 flex-wrap">
+                                    {p.atendimento.map((a) => (
+                                      <span key={a} className="text-xs bg-[#EBF4E3] text-[#5C8A3C] font-medium px-2 py-0.5 rounded-full">
+                                        {a}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
                                 <a
                                   href={`mailto:${p.email}`}
                                   onClick={() => registrarContato(p.id)}
@@ -775,6 +771,15 @@ export default function AnaliseGratuitaModal({
                               </span>
                             </div>
                             <p className="text-xs text-stone-400">📍 {p.cidade}</p>
+                            {p.atendimento && p.atendimento.length > 0 && (
+                              <div className="flex gap-1 flex-wrap">
+                                {p.atendimento.map((a) => (
+                                  <span key={a} className="text-xs bg-[#EBF4E3] text-[#5C8A3C] font-medium px-2 py-0.5 rounded-full">
+                                    {a}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                             <a
                               href={`mailto:${p.email}`}
                               onClick={() => registrarContato(p.id)}
