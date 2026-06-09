@@ -196,6 +196,7 @@ interface Profissional {
   email: string;
   telefone?: string;
   atendimento?: string[];
+  foto?: string;
 }
 
 const COR_RAMO: Record<string, string> = {
@@ -622,13 +623,22 @@ export default function AnaliseGratuitaModal({
                             profissionais.map((p) => (
                               <div
                                 key={p.id}
-                                className="bg-white rounded-lg px-3 py-2.5 border border-[#5C8A3C]/15 space-y-1"
+                                className="bg-white rounded-lg px-3 py-2.5 border border-[#5C8A3C]/15 space-y-1.5"
                               >
-                                <div className="flex items-center justify-between gap-2">
-                                  <p className="text-sm font-medium text-[#3B2A14]">{p.nome}</p>
-                                  <span className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0 bg-[#F5EDD0] text-[#7A5C2E]">
-                                    Psicólogo
-                                  </span>
+                                <div className="flex items-center gap-2.5">
+                                  <div className="w-10 h-10 rounded-full shrink-0 overflow-hidden bg-[#EBF4E3] border border-[#5C8A3C]/15 flex items-center justify-center">
+                                    {p.foto ? (
+                                      <img src={p.foto} alt={p.nome} className="w-full h-full object-cover" />
+                                    ) : (
+                                      <span className="text-sm font-bold text-[#5C8A3C]">{p.nome.charAt(0).toUpperCase()}</span>
+                                    )}
+                                  </div>
+                                  <div className="flex-1 flex items-center justify-between gap-2 min-w-0">
+                                    <p className="text-sm font-medium text-[#3B2A14] truncate">{p.nome}</p>
+                                    <span className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0 bg-[#F5EDD0] text-[#7A5C2E]">
+                                      Psicólogo
+                                    </span>
+                                  </div>
                                 </div>
                                 <p className="text-xs text-stone-400">📍 {p.cidade}</p>
                                 {p.atendimento && p.atendimento.length > 0 && (
@@ -777,13 +787,22 @@ export default function AnaliseGratuitaModal({
                         profissionais.map((p) => (
                           <div
                             key={p.id}
-                            className="bg-white rounded-lg px-3 py-2.5 border border-[#5C8A3C]/15 space-y-1"
+                            className="bg-white rounded-lg px-3 py-2.5 border border-[#5C8A3C]/15 space-y-1.5"
                           >
-                            <div className="flex items-center justify-between gap-2">
-                              <p className="text-sm font-medium text-[#3B2A14]">{p.nome}</p>
-                              <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${COR_RAMO[p.ramo] ?? "bg-stone-100 text-stone-600"}`}>
-                                {p.ramo}
-                              </span>
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-10 h-10 rounded-full shrink-0 overflow-hidden bg-[#EBF4E3] border border-[#5C8A3C]/15 flex items-center justify-center">
+                                {p.foto ? (
+                                  <img src={p.foto} alt={p.nome} className="w-full h-full object-cover" />
+                                ) : (
+                                  <span className="text-sm font-bold text-[#5C8A3C]">{p.nome.charAt(0).toUpperCase()}</span>
+                                )}
+                              </div>
+                              <div className="flex-1 flex items-center justify-between gap-2 min-w-0">
+                                <p className="text-sm font-medium text-[#3B2A14] truncate">{p.nome}</p>
+                                <span className={`text-xs font-medium px-2 py-0.5 rounded-full shrink-0 ${COR_RAMO[p.ramo] ?? "bg-stone-100 text-stone-600"}`}>
+                                  {p.ramo}
+                                </span>
+                              </div>
                             </div>
                             <p className="text-xs text-stone-400">📍 {p.cidade}</p>
                             {p.atendimento && p.atendimento.length > 0 && (
