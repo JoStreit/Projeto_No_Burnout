@@ -601,6 +601,16 @@ export function revogarTokenDB(token: string): void {
   if (!db.tokensRevogados) db.tokensRevogados = [];
   if (!db.tokensRevogados.includes(token)) {
     db.tokensRevogados.push(token);
+    // Remove tokens cujo TTL de 7 dias já passou para evitar crescimento ilimitado
+    const limite = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    db.tokensRevogados = db.tokensRevogados.filter((t) => {
+      try {
+        const { ts } = JSON.parse(Buffer.from(t.split(".")[0], "base64url").toString());
+        return ts && ts > limite;
+      } catch {
+        return false;
+      }
+    });
     salvarDB(db);
   }
 }

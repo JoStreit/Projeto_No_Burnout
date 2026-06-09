@@ -6,7 +6,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { logSeguranca } from "@/lib/security-log";
 
 export async function POST(request: NextRequest) {
-  const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+  const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "unknown";
   const { allowed, retryAfter } = checkRateLimit(`login-admin:${ip}`);
   if (!allowed) {
     logSeguranca("rate_limit", { ip, rota: "/api/admin/login" });
@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
   cookieStore.set("session_admin", token, {
     httpOnly: true,
     sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: 60 * 60 * 8,
   });
