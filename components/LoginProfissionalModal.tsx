@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,7 @@ interface Props {
 
 export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }: Props) {
   const { recarregarProfissional } = useAuth();
+  const router = useRouter();
   const [cpf, setCpf] = useState("");
   const [senha, setSenha] = useState("");
   const [erro, setErro] = useState("");
@@ -72,6 +74,7 @@ export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }
       } else {
         await recarregarProfissional();
         fechar();
+        router.push("/profissional");
       }
     } catch {
       setErro("Erro ao conectar com o servidor");
