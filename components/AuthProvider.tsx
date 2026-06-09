@@ -24,6 +24,7 @@ export interface ProfissionalSession {
   email: string;
   telefone?: string;
   atendimento: string[];
+  planosAtendidos?: string[];
   foto?: string;
   vigenciaInicio: string;
   vigenciaFim: string;

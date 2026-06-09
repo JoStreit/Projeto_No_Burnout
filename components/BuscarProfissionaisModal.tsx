@@ -11,6 +11,8 @@ import { useAuth } from "@/components/AuthProvider";
 
 const RAMOS = ["Fisioterapeuta", "Nutricionista", "Psicólogo", "Personal Trainer"];
 
+const PLANOS_PRINCIPAIS = ["Amil", "Bradesco Saúde", "Porto Saúde", "SulAmérica", "Unimed"];
+
 interface Profissional {
   id: string;
   nome: string;
@@ -20,6 +22,7 @@ interface Profissional {
   email: string;
   telefone?: string;
   atendimento: string[];
+  planosAtendidos?: string[];
   foto?: string;
 }
 
@@ -48,6 +51,8 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
   const [carregando, setCarregando]       = useState(false);
   const [carregandoMais, setCarregandoMais] = useState(false);
   const [pagina, setPagina]               = useState(1);
+  const [fotoAmpliada, setFotoAmpliada]   = useState<{ url: string; nome: string } | null>(null);
+  const [planoFiltro, setPlanoFiltro]     = useState("");
   const LIMIT = 10;
 
   useEffect(() => {
@@ -80,7 +85,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
       params.set("atendimento", "Online");
       if (abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
     }
-    // presencial + remoto: sem filtro de atendimento (ambos)
+    if (planoFiltro) params.set("plano", planoFiltro);
     params.set("limit", String(LIMIT));
     params.set("page", String(page));
     return params;
@@ -99,7 +104,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
         params.set("atendimento", "Online");
         if (abrangencia === "Estado" && paciente?.estado) params.set("estado", paciente.estado);
       }
-      // presencial + remoto: sem filtro de atendimento (ambos)
+      if (planoFiltro) params.set("plano", planoFiltro);
       params.set("limit", String(LIMIT));
       params.set("page", "1");
       const res = await fetch(`/api/profissionais?${params.toString()}`);
@@ -112,7 +117,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     } finally {
       setCarregando(false);
     }
-  }, [ramo, presencial, remoto, abrangencia, paciente]);
+  }, [ramo, presencial, remoto, abrangencia, planoFiltro, paciente]);
 
   async function carregarMais() {
     const proxPagina = pagina + 1;
@@ -143,6 +148,8 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
     setProfissionais([]);
     setTotalProfissionais(0);
     setPagina(1);
+    setFotoAmpliada(null);
+    setPlanoFiltro("");
     onFechar();
   }
 
@@ -282,6 +289,26 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
             </div>
           </div>
 
+          {/* Plano de Saúde */}
+          <div className="bg-[#EAF0F8] rounded-xl p-3 space-y-2">
+            <p className="text-xs font-bold text-[#2D5FA0] uppercase tracking-widest">Plano de Saúde</p>
+            <div className="flex gap-1.5 flex-wrap">
+              {["", ...PLANOS_PRINCIPAIS, "Outros"].map((plano) => (
+                <button
+                  key={plano || "todos"}
+                  onClick={() => setPlanoFiltro(plano)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${
+                    planoFiltro === plano
+                      ? "bg-[#2D5FA0] text-white shadow-sm"
+                      : "bg-white border border-[#2D5FA0]/20 text-stone-600 hover:border-[#2D5FA0]/50 hover:text-[#2D5FA0]"
+                  }`}
+                >
+                  {plano || "Todos"}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Botão buscar */}
           <button
             onClick={buscar}
@@ -329,7 +356,12 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-full bg-[#EBF4E3] border border-[#5C8A3C]/15 flex items-center justify-center shrink-0 overflow-hidden">
                         {p.foto ? (
-                          <img src={p.foto} alt={p.nome} className="w-full h-full object-cover" />
+                          <img
+                            src={p.foto}
+                            alt={p.nome}
+                            className="w-full h-full object-cover cursor-zoom-in"
+                            onClick={() => setFotoAmpliada({ url: p.foto!, nome: p.nome })}
+                          />
                         ) : (
                           <span className="text-lg font-bold text-[#5C8A3C]">
                             {p.nome.charAt(0).toUpperCase()}
@@ -358,6 +390,18 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
                           {p.atendimento.map((a) => (
                             <span key={a} className="text-xs bg-[#EBF4E3] text-[#5C8A3C] font-medium px-2 py-0.5 rounded-full">
                               {a}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {p.planosAtendidos && p.planosAtendidos.length > 0 && (
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <svg className="w-3.5 h-3.5 shrink-0 text-[#2D5FA0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                          </svg>
+                          {p.planosAtendidos.map((pl) => (
+                            <span key={pl} className="text-xs bg-[#EAF0F8] text-[#2D5FA0] font-medium px-2 py-0.5 rounded-full">
+                              {pl}
                             </span>
                           ))}
                         </div>
@@ -409,6 +453,34 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
             </>
           )}
         </div>
+        {/* ─── Lightbox foto ───────────────────────────────────────────── */}
+        {fotoAmpliada && (
+          <div
+            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/80 rounded-[inherit]"
+            onClick={() => setFotoAmpliada(null)}
+          >
+            <div
+              className="relative flex flex-col items-center gap-3 px-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={fotoAmpliada.url}
+                alt={fotoAmpliada.nome}
+                className="max-w-[80vw] max-h-[65vh] object-contain rounded-2xl shadow-2xl"
+              />
+              <p className="text-white font-semibold text-sm">{fotoAmpliada.nome}</p>
+            </div>
+            <button
+              onClick={() => setFotoAmpliada(null)}
+              className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 text-white transition"
+              aria-label="Fechar"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

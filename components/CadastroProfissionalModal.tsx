@@ -92,6 +92,8 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
   const inputFotoRef = useRef<HTMLInputElement>(null);
   const [atendOnline, setAtendOnline] = useState(false);
   const [atendPresencial, setAtendPresencial] = useState(false);
+  const [planosSelecionados, setPlanosSelecionados] = useState<string[]>([]);
+  const [outrosPlanos, setOutrosPlanos] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [aceitouTermos, setAceitouTermos] = useState(false);
@@ -176,12 +178,17 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
     if (atendOnline) atendimento.push("Online");
     if (atendPresencial) atendimento.push("Presencial");
 
+    const planosAtendidos: string[] = [...planosSelecionados];
+    outrosPlanos.split(",").map((p) => p.trim()).filter(Boolean).forEach((p) => {
+      if (!planosAtendidos.includes(p)) planosAtendidos.push(p);
+    });
+
     setCarregando(true);
     try {
       const res = await fetch("/api/profissionais", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, telefone: telefone || undefined, atendimento, foto: foto ?? undefined, senha, consentimentoLGPD: true }),
+        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, telefone: telefone || undefined, atendimento, planosAtendidos: planosAtendidos.length ? planosAtendidos : undefined, foto: foto ?? undefined, senha, consentimentoLGPD: true }),
       });
 
       const data = await res.json();
@@ -205,6 +212,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
     setNome(""); setCpf(""); setCarteirinha(""); setTelefone(""); setRamo("");
     setEstado(""); setCidade(""); setEmail(""); setFoto(null);
     setAtendOnline(false); setAtendPresencial(false);
+    setPlanosSelecionados([]); setOutrosPlanos("");
     setSenha(""); setConfirmarSenha(""); setAceitouTermos(false);
     setErros({}); setSucesso(false); setOpcoesCidades([]);
     onFechar();
@@ -404,6 +412,34 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
               {erros.atendimento && (
                 <p className="text-xs text-red-500">{erros.atendimento}</p>
               )}
+            </div>
+
+            {/* Planos de Saúde */}
+            <div className="space-y-2">
+              <Label>Planos de saúde atendidos <span className="text-stone-400 font-normal">(opcional)</span></Label>
+              <div className="flex flex-col gap-2">
+                {["Amil", "Bradesco Saúde", "Porto Saúde", "SulAmérica", "Unimed"].map((plano) => (
+                  <label key={plano} className="flex items-center gap-2 cursor-pointer select-none">
+                    <Checkbox
+                      checked={planosSelecionados.includes(plano)}
+                      onCheckedChange={(v) =>
+                        setPlanosSelecionados((prev) =>
+                          v ? [...prev, plano] : prev.filter((p) => p !== plano)
+                        )
+                      }
+                    />
+                    <span className="text-sm">{plano}</span>
+                  </label>
+                ))}
+                <div className="pt-1 space-y-1">
+                  <label className="text-sm font-medium text-stone-700">Outros</label>
+                  <Input
+                    value={outrosPlanos}
+                    onChange={(e) => setOutrosPlanos(e.target.value)}
+                    placeholder="Ex: Golden Cross, NotreDame (separe por vírgula)"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Senha */}

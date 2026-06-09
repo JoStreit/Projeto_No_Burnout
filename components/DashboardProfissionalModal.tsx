@@ -62,6 +62,8 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
   const inputFotoRef = useRef<HTMLInputElement>(null);
   const [atendOnline, setAtendOnline] = useState(false);
   const [atendPresencial, setAtendPresencial] = useState(false);
+  const [planosSelecionados, setPlanosSelecionados] = useState<string[]>([]);
+  const [outrosPlanos, setOutrosPlanos] = useState("");
   const [opcoesCidades, setOpcoesCidades] = useState<{ value: string; label: string }[]>([]);
   const [carregandoCidades, setCarregandoCidades] = useState(false);
   const [erroEdicao, setErroEdicao] = useState("");
@@ -91,6 +93,10 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
       setFoto(profissional.foto ?? null);
       setAtendOnline(profissional.atendimento.includes("Online"));
       setAtendPresencial(profissional.atendimento.includes("Presencial"));
+      const planosConhecidos = ["Amil", "Bradesco Saúde", "Porto Saúde", "SulAmérica", "Unimed"];
+      const planos = profissional.planosAtendidos ?? [];
+      setPlanosSelecionados(planos.filter((p) => planosConhecidos.includes(p)));
+      setOutrosPlanos(planos.filter((p) => !planosConhecidos.includes(p)).join(", "));
       setErroEdicao("");
     }
   }, [editando, profissional]);
@@ -157,13 +163,18 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
     if (atendOnline) atendimento.push("Online");
     if (atendPresencial) atendimento.push("Presencial");
 
+    const planosAtendidos: string[] = [...planosSelecionados];
+    outrosPlanos.split(",").map((p) => p.trim()).filter(Boolean).forEach((p) => {
+      if (!planosAtendidos.includes(p)) planosAtendidos.push(p);
+    });
+
     setSalvando(true);
     setErroEdicao("");
     try {
       const res = await fetch(`/api/profissionais/${profissional.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: nome.trim(), estado, cidade, atendimento, email: email.trim(), telefone: telefone.trim() || undefined, foto: foto ?? undefined }),
+        body: JSON.stringify({ nome: nome.trim(), estado, cidade, atendimento, planosAtendidos, email: email.trim(), telefone: telefone.trim() || undefined, foto: foto ?? undefined }),
       });
       const data = await res.json();
       if (!res.ok) setErroEdicao(data.erro);
@@ -328,6 +339,34 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
               </div>
             </div>
 
+            {/* Planos de Saúde */}
+            <div className="space-y-2">
+              <Label>Planos de saúde atendidos <span className="text-stone-400 font-normal">(opcional)</span></Label>
+              <div className="flex flex-col gap-2">
+                {["Amil", "Bradesco Saúde", "Porto Saúde", "SulAmérica", "Unimed"].map((plano) => (
+                  <label key={plano} className="flex items-center gap-2 cursor-pointer select-none">
+                    <Checkbox
+                      checked={planosSelecionados.includes(plano)}
+                      onCheckedChange={(v) =>
+                        setPlanosSelecionados((prev) =>
+                          v ? [...prev, plano] : prev.filter((p) => p !== plano)
+                        )
+                      }
+                    />
+                    <span className="text-sm">{plano}</span>
+                  </label>
+                ))}
+                <div className="pt-1 space-y-1">
+                  <label className="text-sm font-medium text-stone-700">Outros</label>
+                  <Input
+                    value={outrosPlanos}
+                    onChange={(e) => setOutrosPlanos(e.target.value)}
+                    placeholder="Ex: Golden Cross, NotreDame (separe por vírgula)"
+                  />
+                </div>
+              </div>
+            </div>
+
             {erroEdicao && (
               <div className="bg-red-50 border border-red-200 rounded-md px-3 py-2">
                 <p className="text-sm text-red-600">{erroEdicao}</p>
@@ -467,6 +506,18 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
                 </div>
               )}
               <Campo label="Atendimento" valor={profissional.atendimento.join(" · ")} />
+              {profissional.planosAtendidos && profissional.planosAtendidos.length > 0 && (
+                <div className="flex items-start justify-between gap-4 py-2 border-b border-gray-100">
+                  <span className="text-sm text-gray-500 shrink-0 w-28">Planos</span>
+                  <div className="flex flex-wrap gap-1 justify-end">
+                    {profissional.planosAtendidos.map((p) => (
+                      <span key={p} className="text-xs bg-blue-50 text-blue-700 font-medium px-2 py-0.5 rounded-full">
+                        {p}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
               <Campo label="Cadastrado em" valor={formatarData(profissional.criadoEm)} />
             </div>
           </div>

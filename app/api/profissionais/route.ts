@@ -31,7 +31,9 @@ export async function GET(request: NextRequest) {
       ? atendimentoParam
       : undefined;
 
-  const { data, total } = listarProfissionais({ ramo, cidade, estado, atendimento, limit, offset });
+  const plano = searchParams.get("plano") ?? undefined;
+
+  const { data, total } = listarProfissionais({ ramo, cidade, estado, atendimento, plano, limit, offset });
   return Response.json({ data, total, page, limit });
 }
 
@@ -46,7 +48,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { nome, cpf, carteirinha, ramo, estado, cidade, email, telefone, atendimento, foto, senha, consentimentoLGPD } = body;
+  const { nome, cpf, carteirinha, ramo, estado, cidade, email, telefone, atendimento, planosAtendidos, foto, senha, consentimentoLGPD } = body;
 
   if (!consentimentoLGPD) {
     return Response.json(
@@ -103,6 +105,7 @@ export async function POST(request: NextRequest) {
       email: email.trim(),
       ...(telefone?.trim() ? { telefone: telefone.trim() } : {}),
       atendimento,
+      ...(Array.isArray(planosAtendidos) && planosAtendidos.length ? { planosAtendidos } : {}),
       ...(foto ? { foto } : {}),
       senha,
       consentimentoLGPD: true,

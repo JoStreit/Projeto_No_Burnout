@@ -39,6 +39,7 @@ export interface Profissional {
   email: string;
   telefone?: string;
   atendimento: string[];
+  planosAtendidos?: string[];
   foto?: string;
   senhaHash: string;
   vigenciaInicio: string;
@@ -233,11 +234,14 @@ function expirarProfissionaisVencidos(): void {
   if (alterou) salvarDB(db);
 }
 
+const PLANOS_PRINCIPAIS = ["Amil", "Bradesco Saúde", "Porto Saúde", "SulAmérica", "Unimed"];
+
 export function listarProfissionais(filtros?: {
   ramo?: string;
   cidade?: string;
   estado?: string;
   atendimento?: string;
+  plano?: string;
   limit?: number;
   offset?: number;
   incluirExpirados?: boolean;
@@ -260,6 +264,15 @@ export function listarProfissionais(filtros?: {
   }
   if (filtros?.atendimento) {
     lista = lista.filter((p) => p.atendimento?.includes(filtros.atendimento!));
+  }
+  if (filtros?.plano) {
+    if (filtros.plano === "Outros") {
+      lista = lista.filter((p) =>
+        (p.planosAtendidos ?? []).some((pl) => !PLANOS_PRINCIPAIS.includes(pl))
+      );
+    } else {
+      lista = lista.filter((p) => (p.planosAtendidos ?? []).includes(filtros.plano!));
+    }
   }
   const total = lista.length;
   const offset = filtros?.offset ?? 0;
@@ -288,6 +301,7 @@ export function criarProfissional(dados: {
   email: string;
   telefone?: string;
   atendimento: string[];
+  planosAtendidos?: string[];
   foto?: string;
   senha: string;
   consentimentoLGPD?: boolean;
@@ -317,6 +331,7 @@ export function criarProfissional(dados: {
     email: dados.email.toLowerCase(),
     ...(dados.telefone ? { telefone: dados.telefone } : {}),
     atendimento: dados.atendimento,
+    ...(dados.planosAtendidos?.length ? { planosAtendidos: dados.planosAtendidos } : {}),
     ...(dados.foto ? { foto: dados.foto } : {}),
     senhaHash: bcrypt.hashSync(dados.senha, 10),
     vigenciaInicio: agora.toISOString(),
@@ -370,6 +385,7 @@ export function atualizarProfissional(
     estado?: string;
     cidade?: string;
     atendimento?: string[];
+    planosAtendidos?: string[];
     email?: string;
     telefone?: string;
     foto?: string;
@@ -392,6 +408,7 @@ export function atualizarProfissional(
     ...(dados.estado ? { estado: dados.estado } : {}),
     ...(dados.cidade ? { cidade: dados.cidade } : {}),
     ...(dados.atendimento ? { atendimento: dados.atendimento } : {}),
+    ...(dados.planosAtendidos !== undefined ? { planosAtendidos: dados.planosAtendidos.length ? dados.planosAtendidos : undefined } : {}),
     ...(dados.email ? { email: dados.email.toLowerCase() } : {}),
     ...(dados.telefone !== undefined ? { telefone: dados.telefone || undefined } : {}),
     ...(dados.foto !== undefined ? { foto: dados.foto } : {}),

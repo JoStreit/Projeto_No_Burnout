@@ -60,11 +60,12 @@ export async function PATCH(
   }
 
   // Atualização de perfil
-  const { nome, estado, cidade, atendimento, email, telefone, foto } = body;
+  const { nome, estado, cidade, atendimento, planosAtendidos, email, telefone, foto } = body;
   if (foto && foto.length > FOTO_MAX_BYTES)
     return Response.json({ erro: "Foto muito grande. Tamanho máximo: 2 MB" }, { status: 400 });
   try {
-    const profissional = atualizarProfissional(id, { nome, estado, cidade, atendimento, email, telefone, foto });
+    const planosValidos = Array.isArray(planosAtendidos) ? planosAtendidos.filter((p: unknown) => typeof p === "string" && p.trim()) : undefined;
+    const profissional = atualizarProfissional(id, { nome, estado, cidade, atendimento, planosAtendidos: planosValidos, email, telefone, foto });
     return Response.json(profissional);
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Erro ao atualizar";
