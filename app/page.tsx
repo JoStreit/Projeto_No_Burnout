@@ -256,13 +256,22 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col items-center md:items-start gap-4">
-              <Button
-                size="lg"
-                onClick={() => setAnaliseAberta(true)}
-                className="bg-[#5C8A3C] hover:bg-[#3A6624] text-white px-8 py-5 sm:px-14 sm:py-8 text-lg sm:text-xl rounded-2xl font-bold shadow-lg shadow-[#5C8A3C]/25 hover:shadow-xl hover:shadow-[#5C8A3C]/30 transition-all duration-200 hover:-translate-y-1 w-full sm:w-auto"
-              >
-                Fazer Análise Gratuita
-              </Button>
+              {profissional ? (
+                <Link
+                  href="/profissional"
+                  className="inline-flex items-center justify-center bg-[#7A3D18] hover:bg-[#662f12] text-white px-8 py-5 sm:px-14 sm:py-8 text-lg sm:text-xl rounded-2xl font-bold shadow-lg shadow-[#7A3D18]/25 hover:shadow-xl hover:shadow-[#7A3D18]/30 transition-all duration-200 hover:-translate-y-1 w-full sm:w-auto"
+                >
+                  Para Profissionais de Saúde
+                </Link>
+              ) : (
+                <Button
+                  size="lg"
+                  onClick={() => setAnaliseAberta(true)}
+                  className="bg-[#5C8A3C] hover:bg-[#3A6624] text-white px-8 py-5 sm:px-14 sm:py-8 text-lg sm:text-xl rounded-2xl font-bold shadow-lg shadow-[#5C8A3C]/25 hover:shadow-xl hover:shadow-[#5C8A3C]/30 transition-all duration-200 hover:-translate-y-1 w-full sm:w-auto"
+                >
+                  Fazer Análise Gratuita
+                </Button>
+              )}
 
               {paciente ? (
                 <Button
