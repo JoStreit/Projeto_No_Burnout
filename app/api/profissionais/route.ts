@@ -32,8 +32,9 @@ export async function GET(request: NextRequest) {
       : undefined;
 
   const plano = searchParams.get("plano") ?? undefined;
+  const temPlano = searchParams.get("temPlano") === "true";
 
-  const { data, total } = listarProfissionais({ ramo, cidade, estado, atendimento, plano, limit, offset });
+  const { data, total } = listarProfissionais({ ramo, cidade, estado, atendimento, plano, temPlano: temPlano || undefined, limit, offset });
   return Response.json({ data, total, page, limit });
 }
 

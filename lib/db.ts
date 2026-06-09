@@ -242,6 +242,7 @@ export function listarProfissionais(filtros?: {
   estado?: string;
   atendimento?: string;
   plano?: string;
+  temPlano?: boolean;
   limit?: number;
   offset?: number;
   incluirExpirados?: boolean;
@@ -273,6 +274,9 @@ export function listarProfissionais(filtros?: {
     } else {
       lista = lista.filter((p) => (p.planosAtendidos ?? []).includes(filtros.plano!));
     }
+  }
+  if (filtros?.temPlano) {
+    lista = lista.filter((p) => p.planosAtendidos && p.planosAtendidos.length > 0);
   }
   const total = lista.length;
   const offset = filtros?.offset ?? 0;
