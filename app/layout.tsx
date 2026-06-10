@@ -59,8 +59,9 @@ export default function RootLayout({
     <html
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <AuthProvider>{children}</AuthProvider>
         <footer className="mt-auto border-t py-4 px-4" style={{ backgroundColor: "#faf7f4", borderColor: "#ede0d4" }}>
           <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs" style={{ color: "#7a6352" }}>
