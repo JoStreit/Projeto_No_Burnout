@@ -24,7 +24,7 @@ export default function TermosServicoPage() {
           Termos de Uso
         </h1>
         <p className="text-sm mb-10" style={{ color: "#7a6352" }}>
-          Última atualização: 19 de maio de 2026
+          Última atualização: 10 de junho de 2026
         </p>
 
         <div className="space-y-8 text-sm leading-relaxed" style={{ color: "#3c2010" }}>
@@ -46,13 +46,23 @@ export default function TermosServicoPage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
-              2. Descrição do Serviço
+              2. Natureza do Serviço — Plataforma de Intermediação
             </h2>
+            <p className="mb-3">
+              O <strong>Calma Mente</strong> é uma plataforma digital de intermediação que
+              conecta pacientes a profissionais de saúde autônomos e independentes —
+              psicólogos, nutricionistas, fisioterapeutas e personal trainers.
+            </p>
+            <p className="mb-3">
+              A Calma Mente <strong>não presta serviços de saúde</strong>, não é empregadora
+              nem sócia dos profissionais cadastrados e não estabelece vínculo empregatício,
+              societário ou de qualquer outra natureza com esses profissionais. A relação
+              contratual pelo atendimento ocorre exclusivamente entre o paciente e o
+              profissional escolhido.
+            </p>
             <p>
-              O Calma Mente é uma plataforma digital gratuita que conecta pacientes a profissionais
-              de saúde — psicólogos, nutricionistas, fisioterapeutas e personal trainers. A
-              plataforma facilita a descoberta de profissionais, mas não é prestadora de serviços
-              de saúde e não substitui consultas, diagnósticos ou tratamentos médicos.
+              A plataforma não substitui consultas médicas, diagnósticos ou tratamentos
+              profissionais, e não deve ser utilizada em situações de emergência.
             </p>
           </section>
 
@@ -84,7 +94,116 @@ export default function TermosServicoPage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
-              4. Tratamento de Dados Pessoais (LGPD)
+              4. Responsabilidade dos Profissionais Cadastrados
+            </h2>
+            <p className="mb-3">
+              Ao se cadastrar na plataforma, o profissional declara, expressamente e sob sua{" "}
+              <strong>inteira e exclusiva responsabilidade</strong>, que:
+            </p>
+            <ul className="ml-4 space-y-2 list-disc">
+              <li>
+                Todas as informações fornecidas — incluindo nome completo, CPF, número de
+                registro profissional e ramo de atuação — são verdadeiras, atualizadas e de sua
+                titularidade.
+              </li>
+              <li>
+                Possui registro ativo e regular no conselho profissional competente (CRP, CREFITO,
+                CRN ou CREF) e está habilitado ao exercício da profissão declarada.
+              </li>
+              <li>
+                Atua em conformidade com as normas éticas e legais de sua categoria profissional.
+              </li>
+            </ul>
+            <p className="mt-3">
+              O cadastro com dados falsos ou de terceiros sem autorização constitui crime de
+              falsidade ideológica (art. 299 do Código Penal) e crime de falsidade de documento
+              (art. 297 do Código Penal), sujeitando o infrator às sanções civis e criminais
+              cabíveis, independentemente das medidas administrativas adotadas pela plataforma.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
+              5. Isenção de Responsabilidade por Fraude ou Falsidade
+            </h2>
+            <p className="mb-3">
+              A Calma Mente <strong>não realiza verificação prévia ou em tempo real</strong> da
+              autenticidade dos registros profissionais junto aos conselhos competentes. As
+              informações apresentadas nos perfis são de responsabilidade exclusiva de cada
+              profissional cadastrado.
+            </p>
+            <p className="mb-3">
+              Em razão disso, <strong>a Calma Mente não se responsabiliza</strong> por danos
+              decorrentes de:
+            </p>
+            <ul className="ml-4 space-y-2 list-disc">
+              <li>
+                Cadastros realizados com dados falsos, fraudulentos ou de terceiros.
+              </li>
+              <li>
+                Profissionais que não possuam registro válido no conselho declarado.
+              </li>
+              <li>
+                Atendimentos prestados por pessoa não habilitada ao exercício da profissão
+                informada.
+              </li>
+              <li>
+                Danos à saúde, morais ou materiais decorrentes de atendimentos realizados com
+                base em perfis fraudulentos.
+              </li>
+            </ul>
+            <p className="mt-3">
+              Recomendamos fortemente que pacientes verifiquem a validade do registro profissional
+              diretamente no site do conselho competente antes de iniciar qualquer atendimento:
+            </p>
+            <ul className="ml-4 mt-2 space-y-1 list-disc">
+              <li>
+                <strong>Psicólogo (CRP):</strong>{" "}
+                <a href="https://e-psi.cfp.org.br" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "#4a6741" }}>
+                  e-psi.cfp.org.br
+                </a>
+              </li>
+              <li>
+                <strong>Fisioterapeuta (CREFITO):</strong>{" "}
+                <a href="https://consulta.coffito.gov.br" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "#4a6741" }}>
+                  consulta.coffito.gov.br
+                </a>
+              </li>
+              <li>
+                <strong>Nutricionista (CRN):</strong>{" "}
+                <a href="https://www.cfn.org.br" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "#4a6741" }}>
+                  cfn.org.br
+                </a>
+              </li>
+              <li>
+                <strong>Personal Trainer (CREF):</strong>{" "}
+                <a href="https://www.confef.org.br" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: "#4a6741" }}>
+                  confef.org.br
+                </a>
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
+              6. Canal de Denúncia
+            </h2>
+            <p className="mb-3">
+              Caso você identifique um perfil fraudulento, conduta inadequada ou qualquer
+              violação destes Termos, reporte imediatamente pelo e-mail{" "}
+              <strong>contato@calmamentes.com.br</strong>.
+            </p>
+            <p>
+              A Calma Mente se reserva o direito de suspender ou excluir perfis mediante
+              denúncia fundamentada, sem prejuízo das medidas legais cabíveis contra o infrator.
+              A plataforma colaborará com autoridades competentes em investigações relacionadas
+              a fraudes ou crimes praticados por meio do serviço.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
+              7. Tratamento de Dados Pessoais (LGPD)
             </h2>
             <p>
               Ao criar sua conta, você consente expressamente com o tratamento dos seus dados
@@ -103,7 +222,7 @@ export default function TermosServicoPage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
-              5. Conteúdo Proibido
+              8. Conteúdo Proibido
             </h2>
             <p className="mb-2">É estritamente proibido:</p>
             <ul className="ml-4 space-y-1 list-disc">
@@ -118,7 +237,7 @@ export default function TermosServicoPage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
-              6. Exclusão de Conta
+              9. Exclusão de Conta
             </h2>
             <p>
               Você pode solicitar a exclusão da sua conta a qualquer momento pelo painel do seu
@@ -133,14 +252,19 @@ export default function TermosServicoPage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
-              7. Limitação de Responsabilidade
+              10. Limitação de Responsabilidade
             </h2>
-            <p>
-              O Calma Mente atua como intermediário entre pacientes e profissionais. Não nos
-              responsabilizamos pela qualidade dos serviços prestados pelos profissionais
-              cadastrados, por consultas realizadas fora da plataforma, ou por quaisquer danos
-              decorrentes do uso das informações disponíveis na plataforma.
+            <p className="mb-3">
+              A Calma Mente atua exclusivamente como plataforma de intermediação e não se
+              responsabiliza por:
             </p>
+            <ul className="ml-4 space-y-1 list-disc">
+              <li>A qualidade, adequação ou resultado dos serviços prestados pelos profissionais</li>
+              <li>Consultas, atendimentos ou acordos realizados fora da plataforma</li>
+              <li>Danos diretos, indiretos ou consequentes decorrentes da relação entre paciente e profissional</li>
+              <li>Informações falsas fornecidas por profissionais ou pacientes no cadastro</li>
+              <li>Indisponibilidade temporária da plataforma por manutenção ou falhas técnicas</li>
+            </ul>
             <p className="mt-3">
               A plataforma é fornecida &quot;como está&quot;, sem garantias de disponibilidade
               contínua ou ausência de erros.
@@ -149,7 +273,7 @@ export default function TermosServicoPage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
-              8. Propriedade Intelectual
+              11. Propriedade Intelectual
             </h2>
             <p>
               Todo o conteúdo da plataforma — incluindo código, design, textos e logotipos — é
@@ -160,7 +284,7 @@ export default function TermosServicoPage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
-              9. Alterações nos Termos
+              12. Alterações nos Termos
             </h2>
             <p>
               Podemos atualizar estes Termos periodicamente. Mudanças relevantes serão comunicadas
@@ -171,22 +295,28 @@ export default function TermosServicoPage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
-              10. Lei Aplicável e Foro
+              13. Lei Aplicável e Foro
             </h2>
             <p>
-              Estes Termos são regidos pelas leis da República Federativa do Brasil. Fica eleito
-              o foro da comarca de São Paulo/SP para dirimir quaisquer controvérsias decorrentes
-              deste instrumento, com renúncia a qualquer outro, por mais privilegiado que seja.
+              Estes Termos são regidos pelas leis da República Federativa do Brasil, especialmente
+              o Marco Civil da Internet (Lei 12.965/2014) e a Lei Geral de Proteção de Dados
+              (Lei 13.709/2018). Fica eleito o foro da comarca de São Paulo/SP para dirimir
+              quaisquer controvérsias decorrentes deste instrumento, com renúncia a qualquer
+              outro, por mais privilegiado que seja.
             </p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: "#4a6741" }}>
-              11. Contato
+              14. Contato
             </h2>
             <p>
-              Para dúvidas sobre estes Termos, entre em contato pelo e-mail{" "}
-              <strong>contato@calmamente.com.br</strong>.
+              Para dúvidas sobre estes Termos, denúncias ou solicitações relacionadas aos seus
+              dados, entre em contato pelo e-mail{" "}
+              <a href="mailto:contato@calmamentes.com.br" className="underline" style={{ color: "#4a6741" }}>
+                contato@calmamentes.com.br
+              </a>
+              .
             </p>
           </section>
 

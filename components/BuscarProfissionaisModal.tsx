@@ -11,6 +11,13 @@ import { useAuth } from "@/components/AuthProvider";
 
 const RAMOS = ["Fisioterapeuta", "Nutricionista", "Psicólogo", "Personal Trainer"];
 
+const CONSELHO_URL: Record<string, { sigla: string; url: string }> = {
+  "Psicólogo":       { sigla: "CRP",     url: "https://e-psi.cfp.org.br" },
+  Fisioterapeuta:    { sigla: "CREFITO", url: "https://consulta.coffito.gov.br" },
+  Nutricionista:     { sigla: "CRN",     url: "https://www.cfn.org.br" },
+  "Personal Trainer":{ sigla: "CREF",    url: "https://www.confef.org.br" },
+};
+
 const PLANOS_PRINCIPAIS = ["Amil", "Bradesco Saúde", "Porto Saúde", "SulAmérica", "Unimed"];
 
 interface Profissional {
@@ -410,6 +417,20 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
 
                     {/* Contatos */}
                     <div className="flex flex-col gap-1.5 pt-2.5 border-t border-stone-100">
+                      {CONSELHO_URL[p.ramo] && (
+                        <a
+                          href={CONSELHO_URL[p.ramo].url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-700 transition-colors"
+                          title={`Verificar registro no ${CONSELHO_URL[p.ramo].sigla}`}
+                        >
+                          <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          Verificar registro no {CONSELHO_URL[p.ramo].sigla}
+                        </a>
+                      )}
                       <a
                         href={`mailto:${p.email}`}
                         onClick={() => fetch(`/api/profissionais/${p.id}/interacao`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tipo: "contato" }) }).catch(() => {})}

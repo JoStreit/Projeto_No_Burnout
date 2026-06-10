@@ -56,6 +56,7 @@ type Erros = {
   senha?: string;
   confirmarSenha?: string;
   termos?: string;
+  veracidade?: string;
   geral?: string;
 };
 
@@ -97,6 +98,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const [aceitouTermos, setAceitouTermos] = useState(false);
+  const [declarouVeracidade, setDeclarouVeracidade] = useState(false);
 
   const [opcoesCidades, setOpcoesCidades] = useState<{ value: string; label: string }[]>([]);
   const [carregandoCidades, setCarregandoCidades] = useState(false);
@@ -165,6 +167,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
     if (!/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(senha)) novos.senha = "Mínimo 8 caracteres, uma maiúscula e um número";
     if (senha !== confirmarSenha) novos.confirmarSenha = "Senhas não conferem";
     if (!aceitouTermos) novos.termos = "Você deve aceitar a Política de Privacidade e os Termos de Uso para continuar";
+    if (!declarouVeracidade) novos.veracidade = "Você deve declarar a veracidade das informações para continuar";
 
     setErros(novos);
     return Object.keys(novos).length === 0;
@@ -213,7 +216,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
     setEstado(""); setCidade(""); setEmail(""); setFoto(null);
     setAtendOnline(false); setAtendPresencial(false);
     setPlanosSelecionados([]); setOutrosPlanos("");
-    setSenha(""); setConfirmarSenha(""); setAceitouTermos(false);
+    setSenha(""); setConfirmarSenha(""); setAceitouTermos(false); setDeclarouVeracidade(false);
     setErros({}); setSucesso(false); setOpcoesCidades([]);
     onFechar();
   }
@@ -492,6 +495,25 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
                 </label>
               </div>
               {erros.termos && <p className="text-xs text-red-500">{erros.termos}</p>}
+            </div>
+
+            {/* Declaração de veracidade */}
+            <div className="space-y-1">
+              <div className="flex items-start gap-2">
+                <Checkbox
+                  id="prof-veracidade"
+                  checked={declarouVeracidade}
+                  onCheckedChange={(v) => { setDeclarouVeracidade(!!v); limparErro("veracidade"); }}
+                  className={erros.veracidade ? "border-red-400" : ""}
+                />
+                <label htmlFor="prof-veracidade" className="text-xs text-gray-600 cursor-pointer leading-relaxed">
+                  Declaro, sob minha inteira responsabilidade, que todas as informações fornecidas
+                  são verdadeiras e que possuo registro ativo no conselho profissional competente.
+                  Estou ciente de que o cadastro com dados falsos constitui crime (art. 299 do
+                  Código Penal) e sujeita o infrator às sanções civis e criminais cabíveis.
+                </label>
+              </div>
+              {erros.veracidade && <p className="text-xs text-red-500">{erros.veracidade}</p>}
             </div>
 
             {erros.geral && (
