@@ -67,6 +67,7 @@ export default function RootLayout({
           <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs" style={{ color: "#7a6352" }}>
             <Link href="/politica-privacidade" className="hover:underline">Política de Privacidade</Link>
             <Link href="/termos-servico" className="hover:underline">Termos de Uso</Link>
+            <a href="mailto:contato@calmamentes.com.br" className="hover:underline">Fale Conosco</a>
             <span>© {new Date().getFullYear()} Calma Mente · LGPD (Lei 13.709/2018)</span>
           </div>
         </footer>
