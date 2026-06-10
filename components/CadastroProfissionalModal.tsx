@@ -191,7 +191,7 @@ export default function CadastroProfissionalModal({ aberto, onFechar, onLoginCli
       const res = await fetch("/api/profissionais", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, telefone: telefone || undefined, atendimento, planosAtendidos: planosAtendidos.length ? planosAtendidos : undefined, foto: foto ?? undefined, senha, consentimentoLGPD: true }),
+        body: JSON.stringify({ nome, cpf, carteirinha, ramo, estado, cidade, email, telefone: telefone || undefined, atendimento, planosAtendidos: planosAtendidos.length ? planosAtendidos : undefined, foto: foto ?? undefined, senha, consentimentoLGPD: true, declaracaoVeracidade: true }),
       });
 
       const data = await res.json();

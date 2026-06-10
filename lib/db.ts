@@ -47,6 +47,7 @@ export interface Profissional {
   status: "Ativo" | "Inativo";
   criadoEm: string;
   consentimentoLGPD?: string;
+  declaracaoVeracidade?: string;
   vezesSugerido?: number;
   cliquesContato?: number;
 }
@@ -309,6 +310,7 @@ export function criarProfissional(dados: {
   foto?: string;
   senha: string;
   consentimentoLGPD?: boolean;
+  declaracaoVeracidade?: boolean;
 }): ProfissionalPublico {
   const db = lerDB();
   const cpfLimpo = dados.cpf.replace(/\D/g, "");
@@ -343,6 +345,7 @@ export function criarProfissional(dados: {
     status: "Ativo",
     criadoEm: agora.toISOString(),
     consentimentoLGPD: dados.consentimentoLGPD ? agora.toISOString() : undefined,
+    declaracaoVeracidade: dados.declaracaoVeracidade ? agora.toISOString() : undefined,
   };
 
   db.profissionais.push(profissional);

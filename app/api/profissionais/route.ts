@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { nome, cpf, carteirinha, ramo, estado, cidade, email, telefone, atendimento, planosAtendidos, foto, senha, consentimentoLGPD } = body;
+  const { nome, cpf, carteirinha, ramo, estado, cidade, email, telefone, atendimento, planosAtendidos, foto, senha, consentimentoLGPD, declaracaoVeracidade } = body;
 
   if (!consentimentoLGPD) {
     return Response.json(
@@ -110,6 +110,7 @@ export async function POST(request: NextRequest) {
       ...(foto ? { foto } : {}),
       senha,
       consentimentoLGPD: true,
+      declaracaoVeracidade: !!declaracaoVeracidade,
     });
 
     // Auto-login após cadastro
