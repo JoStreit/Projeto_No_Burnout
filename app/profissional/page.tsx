@@ -339,7 +339,7 @@ export default function ProfissionalPage() {
               </p>
               <Button
                 onClick={() => setCadastroAberto(true)}
-                className="bg-[#5C8A3C] hover:bg-[#3A6624] text-white px-8 py-4 rounded-2xl font-bold shadow-md shadow-[#5C8A3C]/20 transition-all hover:-translate-y-0.5"
+                className="bg-[#5C8A3C] hover:bg-[#3A6624] text-white px-12 py-6 text-lg rounded-2xl font-bold shadow-md shadow-[#5C8A3C]/20 transition-all hover:-translate-y-0.5 w-full sm:w-auto"
               >
                 Quero fazer parte
               </Button>
