@@ -305,29 +305,29 @@ export default function AnaliseGratuitaModal({
         if (temPresencial && paciente?.cidade) {
           fetches.push(
             fetchJson(`${base}&atendimento=Presencial&cidade=${encodeURIComponent(paciente.cidade)}`)
-              .then((d) => cidadeProfs.push(...d))
+              .then((d) => { cidadeProfs.push(...d); })
           );
         }
         // Estado presencial sempre buscado para servir de fallback
         if (temPresencial && paciente?.estado) {
           fetches.push(
             fetchJson(`${base}&atendimento=Presencial&estado=${encodeURIComponent(paciente.estado)}`)
-              .then((d) => estadoProfs.push(...d))
+              .then((d) => { estadoProfs.push(...d); })
           );
         }
         if (temRemotoBrasil) {
           fetches.push(
             fetchJson(`${base}&atendimento=Online`)
-              .then((d) => onlineProfs.push(...d))
+              .then((d) => { onlineProfs.push(...d); })
           );
         } else if (temRemoToEstado && paciente?.estado) {
           fetches.push(
             fetchJson(`${base}&atendimento=Online&estado=${encodeURIComponent(paciente.estado)}`)
-              .then((d) => onlineProfs.push(...d))
+              .then((d) => { onlineProfs.push(...d); })
           );
         }
 
-        if (fetches.length === 0) fetches.push(fetchJson(base).then((d) => cidadeProfs.push(...d)));
+        if (fetches.length === 0) fetches.push(fetchJson(base).then((d) => { cidadeProfs.push(...d); }));
 
         await Promise.all(fetches);
 
