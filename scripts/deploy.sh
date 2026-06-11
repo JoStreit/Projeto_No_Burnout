@@ -9,7 +9,7 @@ cd "$APP_DIR"
 git pull origin main
 
 echo "📦 Instalando dependências..."
-npm ci --omit=dev
+npm ci
 
 echo "🔨 Construindo aplicação..."
 npm run build
