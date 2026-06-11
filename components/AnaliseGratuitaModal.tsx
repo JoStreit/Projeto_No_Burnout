@@ -302,14 +302,14 @@ export default function AnaliseGratuitaModal({
         // Dispara todas as buscas em paralelo
         const fetches: Promise<void>[] = [];
 
-        if (temPresencial && paciente.cidade) {
+        if (temPresencial && paciente?.cidade) {
           fetches.push(
             fetchJson(`${base}&atendimento=Presencial&cidade=${encodeURIComponent(paciente.cidade)}`)
               .then((d) => cidadeProfs.push(...d))
           );
         }
         // Estado presencial sempre buscado para servir de fallback
-        if (temPresencial && paciente.estado) {
+        if (temPresencial && paciente?.estado) {
           fetches.push(
             fetchJson(`${base}&atendimento=Presencial&estado=${encodeURIComponent(paciente.estado)}`)
               .then((d) => estadoProfs.push(...d))
@@ -320,7 +320,7 @@ export default function AnaliseGratuitaModal({
             fetchJson(`${base}&atendimento=Online`)
               .then((d) => onlineProfs.push(...d))
           );
-        } else if (temRemoToEstado && paciente.estado) {
+        } else if (temRemoToEstado && paciente?.estado) {
           fetches.push(
             fetchJson(`${base}&atendimento=Online&estado=${encodeURIComponent(paciente.estado)}`)
               .then((d) => onlineProfs.push(...d))
