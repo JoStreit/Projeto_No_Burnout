@@ -91,20 +91,21 @@ export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }
 
   return (
     <Dialog open={aberto} onOpenChange={fechar}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="max-w-sm max-h-[92vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-teal-700">
             {telaEsqueci ? "Recuperar senha" : "Área do Profissional"}
           </DialogTitle>
         </DialogHeader>
 
+        <div className="overflow-y-auto flex-1 min-h-0">
         {telaEsqueci ? (
           sucessoReset ? (
             <div className="space-y-4">
               <div className="bg-teal-50 border border-teal-200 rounded-xl p-4 text-sm text-teal-700">
                 Se o CPF estiver cadastrado, você receberá um e-mail com o link de redefinição em breve.
               </div>
-              <Button variant="outline" className="w-full" onClick={() => { setTelaEsqueci(false); setSucessoReset(false); }}>
+              <Button variant="outline" className="w-full min-h-[44px]" onClick={() => { setTelaEsqueci(false); setSucessoReset(false); }}>
                 Voltar ao login
               </Button>
             </div>
@@ -119,6 +120,7 @@ export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }
                   onChange={(e) => { setCpfReset(formatarCPF(e.target.value)); setErroReset(""); }}
                   placeholder="000.000.000-00"
                   maxLength={14}
+                  inputMode="numeric"
                 />
               </div>
               {erroReset && (
@@ -126,10 +128,10 @@ export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }
                   <p className="text-sm text-red-600">{erroReset}</p>
                 </div>
               )}
-              <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700" disabled={carregandoReset}>
+              <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700 min-h-[44px]" disabled={carregandoReset}>
                 {carregandoReset ? "Enviando..." : "Enviar link de recuperação"}
               </Button>
-              <button type="button" onClick={() => setTelaEsqueci(false)} className="w-full text-sm text-gray-400 hover:text-gray-600">
+              <button type="button" onClick={() => setTelaEsqueci(false)} className="w-full text-sm text-gray-400 hover:text-gray-600 py-2 min-h-[44px]">
                 Voltar ao login
               </button>
             </form>
@@ -145,6 +147,7 @@ export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }
                   onChange={(e) => { setCpf(formatarCPF(e.target.value)); setErro(""); }}
                   placeholder="000.000.000-00"
                   maxLength={14}
+                  inputMode="numeric"
                 />
               </div>
 
@@ -189,6 +192,7 @@ export default function LoginProfissionalModal({ aberto, onFechar, onCadastrar }
             )}
           </>
         )}
+        </div>
       </DialogContent>
     </Dialog>
   );

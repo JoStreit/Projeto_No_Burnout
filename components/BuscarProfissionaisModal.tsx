@@ -173,7 +173,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
       <DialogContent className="w-[95vw] sm:w-[90vw] sm:max-w-[1100px] max-h-[96vh] flex flex-col bg-[#FFFDF0] border-0 p-0 overflow-hidden gap-0">
 
         {/* ─── Cabeçalho ───────────────────────────────────────────────── */}
-        <div className="bg-[#5C8A3C] px-6 pt-6 pb-5">
+        <div className="bg-[#5C8A3C] px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-white">
               Buscar Profissionais
@@ -185,7 +185,7 @@ export default function BuscarProfissionaisModal({ aberto, onFechar, ramoInicial
         </div>
 
         {/* ─── Filtros ─────────────────────────────────────────────────── */}
-        <div className="bg-white border-b border-stone-100 px-6 py-4 space-y-4">
+        <div className="bg-white border-b border-stone-100 px-4 sm:px-6 py-3 sm:py-4 space-y-4">
 
           {/* Campo de busca */}
           <div className="relative">

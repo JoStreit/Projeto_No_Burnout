@@ -494,7 +494,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
               <Campo label="E-mail" valor={profissional.email} />
               {profissional.telefone && (
                 <div className="flex items-start justify-between gap-4 py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-500 shrink-0 w-28">Telefone</span>
+                  <span className="text-sm text-gray-500 shrink-0 w-20 sm:w-28">Telefone</span>
                   <a
                     href={`https://wa.me/55${profissional.telefone.replace(/\D/g, "")}`}
                     target="_blank"
@@ -508,7 +508,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
               <Campo label="Atendimento" valor={profissional.atendimento.join(" · ")} />
               {profissional.planosAtendidos && profissional.planosAtendidos.length > 0 && (
                 <div className="flex items-start justify-between gap-4 py-2 border-b border-gray-100">
-                  <span className="text-sm text-gray-500 shrink-0 w-28">Planos</span>
+                  <span className="text-sm text-gray-500 shrink-0 w-20 sm:w-28">Planos</span>
                   <div className="flex flex-wrap gap-1 justify-end">
                     {profissional.planosAtendidos.map((p) => (
                       <span key={p} className="text-xs bg-blue-50 text-blue-700 font-medium px-2 py-0.5 rounded-full">
@@ -530,7 +530,7 @@ export default function DashboardProfissionalModal({ aberto, onFechar, iniciarEd
 function Campo({ label, valor }: { label: string; valor: string }) {
   return (
     <div className="flex items-start justify-between gap-4 py-2 border-b border-gray-100 last:border-0">
-      <span className="text-sm text-gray-500 shrink-0 w-28">{label}</span>
+      <span className="text-sm text-gray-500 shrink-0 w-20 sm:w-28">{label}</span>
       <span className="text-sm font-medium text-gray-800 text-right">{valor}</span>
     </div>
   );

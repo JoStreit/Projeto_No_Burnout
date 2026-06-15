@@ -59,17 +59,17 @@ export default function CookieBanner() {
           </Link>
           , em conformidade com a LGPD (Lei 13.709/2018).
         </p>
-        <div className="flex gap-2 shrink-0">
+        <div className="flex gap-2 shrink-0 w-full sm:w-auto">
           <Link
             href="/politica-privacidade"
-            className="px-4 py-2 rounded text-xs font-medium border transition-colors"
+            className="flex-1 sm:flex-none flex items-center justify-center px-4 py-3 min-h-[44px] rounded-lg text-xs font-medium border transition-colors"
             style={{ borderColor: "#7a6352", color: "#ede0d4" }}
           >
             Saiba mais
           </Link>
           <button
             onClick={aceitar}
-            className="px-4 py-2 rounded text-xs font-semibold transition-colors"
+            className="flex-1 sm:flex-none px-4 py-3 min-h-[44px] rounded-lg text-xs font-semibold transition-colors"
             style={{ backgroundColor: "#4a6741", color: "#fff" }}
           >
             Aceitar e continuar
